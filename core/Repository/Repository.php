@@ -7,6 +7,6 @@ namespace Core\Repository;
 /**
  * 仓库 - 基类.
  */
-class Repository extends \Kernel\Repository\AbstractRepository
+abstract class Repository extends \Kernel\Repository\AbstractRepository
 {
 }

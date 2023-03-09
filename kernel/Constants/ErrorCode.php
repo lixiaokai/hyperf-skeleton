@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Core\Constants;
+namespace Kernel\Constants;
 
 use Hyperf\Constants\Annotation\Constants;
-use Kernel\Constants\BaseConstants;
 
 /**
  * 错误代码 - 枚举类.

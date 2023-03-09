@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Exception;
 
 use Hyperf\Server\Exception\ServerException;
-use Core\Constants\ErrorCode;
+use kernel\Constants\ErrorCode;
 
 class BusinessException extends ServerException
 {

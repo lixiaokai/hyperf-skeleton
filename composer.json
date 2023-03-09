@@ -80,6 +80,6 @@
             "Composer\\Config::disableProcessTimeout",
             "composer dump-autoload -o && php ./bin/hyperf.php server:watch"
         ],
-        "kill": "kill -QUIT $(lsof -i:9502 | grep LISTEN | awk '{print $2}')"
+        "kill": "kill -QUIT $(lsof -i:9501 | grep LISTEN | awk '{print $2}')"
     }
 }

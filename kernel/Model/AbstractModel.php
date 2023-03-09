@@ -8,7 +8,7 @@ use Hyperf\Contract\ConfigInterface;
 use Hyperf\Database\Model\Concerns\CamelCase;
 use Hyperf\DbConnection\Model\Model;
 
-abstract class BaseModel extends Model
+abstract class AbstractModel extends Model
 {
     use CamelCase;
 

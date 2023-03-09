@@ -10,7 +10,7 @@ use Hyperf\HttpServer\Contract\RequestInterface;
 /**
  * 控制器 - 抽象基类.
  */
-abstract class BaseController
+abstract class AbstractController
 {
     #[Inject]
     protected RequestInterface $request;

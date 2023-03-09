@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Kernel\Repository;
+namespace Kernel\Repository\Traits;
 
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\Database\Model\Builder;

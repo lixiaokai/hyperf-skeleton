@@ -11,7 +11,7 @@ use Hyperf\HttpServer\Annotation\PatchMapping;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\PutMapping;
 use Hyperf\HttpServer\Annotation\RequestMapping;
-use Kernel\Aspect\BaseAspect;
+use Kernel\Aspect\AbstractAspect;
 use Kernel\Helper\UtilsHelper;
 
 /**
@@ -20,7 +20,7 @@ use Kernel\Helper\UtilsHelper;
  * 说明：通过切入路由注解实现
  */
 #[Aspect]
-class RequestLogAspect extends BaseAspect
+class RequestLogAspect extends AbstractAspect
 {
     public array $annotations = [
         RequestMapping::class,

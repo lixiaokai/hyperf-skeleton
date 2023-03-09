@@ -2,7 +2,6 @@
 
 namespace Kernel\Aspect;
 
-use Hyperf\Di\Aop\AbstractAspect;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Logger\LoggerFactory;
 use Psr\Log\LoggerInterface;
@@ -10,7 +9,7 @@ use Psr\Log\LoggerInterface;
 /**
  * 切面 - 抽象基类.
  */
-abstract class BaseAspect extends AbstractAspect
+abstract class AbstractAspect extends \Hyperf\Di\Aop\AbstractAspect
 {
     protected RequestInterface $request;
 

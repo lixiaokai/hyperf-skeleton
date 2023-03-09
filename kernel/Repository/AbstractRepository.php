@@ -12,11 +12,12 @@ use Hyperf\Database\Model\ModelNotFoundException;
 use Kernel\Exception\BusinessException;
 use Kernel\Exception\DataSaveException;
 use Kernel\Exception\NotFoundException;
+use Kernel\Repository\Traits\Searchable;
 
 /**
  * 仓库 - 抽象基类.
  */
-abstract class BaseRepository
+abstract class AbstractRepository
 {
     use Searchable;
 

@@ -13,6 +13,7 @@ return [
         // 这里的 http 对应 config/autoload/server.php 中 server 所对应的 name 值
         'http' => [
             \Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class, // Http - 异常处理器
+            \Kernel\Exception\Handler\ValidationExceptionHandler::class,      // 验证 - 异常处理器
             \Kernel\Exception\Handler\CommonExceptionHandler::class,          // 公共 - 自定义异常处理器
             \Kernel\Exception\Handler\AppExceptionHandler::class,             // 托底 - 异常处理器
         ],

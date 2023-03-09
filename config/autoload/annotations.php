@@ -1,19 +1,21 @@
 <?php
 
 declare(strict_types=1);
+
 /**
- * This file is part of Hyperf.
+ * 注解 - 配置文件.
  *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ * @see https://hyperf.wiki/3.0/#/zh-cn/annotation
  */
 return [
     'scan' => [
+        // 注解扫描的目录
         'paths' => [
             BASE_PATH . '/app',
+            BASE_PATH . '/core',
+            BASE_PATH . '/kernel',
         ],
+        // 忽略的注解名
         'ignore_annotations' => [
             'mixin',
         ],

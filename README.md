@@ -154,7 +154,7 @@ composer kill
 ├─ public         // 对外公共资源目录
 │  ├─attachment   // 本地附件存储
 │  ├─static       // 静态资源目录
-├─ storage     // 语言文件
+├─ storage        // 语言文件
 ```
 
 ## 2. [ 根目录 ] 增加 "文件夹" 时需修改如下 3 处位置

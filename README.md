@@ -73,18 +73,18 @@ https://hyperf.wiki/3.0/#/zh-cn/quick-start/questions
 
 **为什么 ？**
 
-> ![存在类 'xxxxx' 的其他声明](/Users/admin/wwwroot/hyperf/hyperf-skeleton/doc/res/runtimeExcludeWarn.png)
+> ![存在类 'xxxxx' 的其他声明](doc/res/runtimeExcludeWarn.png)
 > 1. 如上，由于该目录下会生成代码类似的代理文件，如果不设置排除 PhpStorm 的类名会出现波浪线，鼠标放上去会提示 [ 存在类 'xxxxx' 的其他声明 ]
 > 
-> ![按住 `Ctrl` 跳转时出现 2 个选择声明](/Users/admin/wwwroot/hyperf/hyperf-skeleton/doc/res/runtimeExcludeWarnSelectionDeclaration.png)
+> ![按住 `Ctrl` 跳转时出现 2 个选择声明](doc/res/runtimeExcludeWarnSelectionDeclaration.png)
 > 2. 如上，按住 `Ctrl` 跳转时出现 2 个选择声明，需要手动选择正确的声明文件
 
 ## 2. .php-cs-fixer.php 团队代码风格统一和质量检测配置
 
-![php cs fixer 质量检查打钩](/Users/admin/wwwroot/hyperf/hyperf-skeleton/doc/res/phpCsFixerConfigSelect.png)
+![php cs fixer 质量检查打钩](doc/res/phpCsFixerConfigSelect.png)
 1. 打钩启用：设置 -> 搜索 `php cs fixer` 然后勾上启用
 
-![php cs fixer 质量检查配置 ](/Users/admin/wwwroot/hyperf/hyperf-skeleton/doc/res/phpCsFixerConfig.png)
+![php cs fixer 质量检查配置 ](doc/res/phpCsFixerConfig.png)
 2. 配置检测执行脚本，如果验证不通过注意看错误提示信息，比如默认 php 版本是否 8.0.x 等会导致这里检测失败
 
 ## 3. 推荐安装插件 ( Plugins )

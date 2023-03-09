@@ -1,18 +1,16 @@
 <?php
 
 declare(strict_types=1);
+
 /**
- * This file is part of Hyperf.
+ * 路由 - 配置文件.
  *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ * 说明：使用注解的方式注册路由，该配置忽略即可.
+ * @see https://hyperf.wiki/3.0/#/zh-cn/router
  */
 use Hyperf\HttpServer\Router\Router;
 
-Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Controller\IndexController@index');
-
-Router::get('/favicon.ico', function () {
-    return '';
-});
+// 网站图标
+Router::get('/favicon.ico', fn () => '');
+// 健康检查
+Router::get('/health', fn () => ['code' => 200, 'message' => 'ok']);

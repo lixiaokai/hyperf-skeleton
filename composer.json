@@ -75,6 +75,11 @@
         "start": [
             "Composer\\Config::disableProcessTimeout",
             "php ./bin/hyperf.php start"
-        ]
+        ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "composer dump-autoload -o && php ./bin/hyperf.php server:watch"
+        ],
+        "kill": "kill -QUIT $(lsof -i:9502 | grep LISTEN | awk '{print $2}')"
     }
 }

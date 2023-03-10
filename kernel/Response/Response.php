@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Kernel\Response;
 
+use Hyperf\Context\Context;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\Utils\Codec\Json;
-use Hyperf\Context\Context;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * 响应类.
+ *
+ * @see \Hyperf\HttpServer\Response 参考
  */
 class Response
 {
@@ -42,7 +44,6 @@ class Response
     protected function toJson(): ResponseInterface
     {
         return $this->response()
-            ->withStatus(200)
             ->withAddedHeader('content-type', 'application/json; charset=utf-8')
             ->withBody(new SwooleStream(Json::encode([
                 'code' => 200,

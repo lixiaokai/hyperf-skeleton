@@ -49,10 +49,10 @@ class ValidatorFactoryResolvedListener implements ListenerInterface
      */
     protected function registerMobile(ValidatorFactoryInterface $validatorFactory): void
     {
-        $validatorFactory->extend('price', function ($attribute, $value, $parameters, $validator) {
-            return (bool) preg_match('/^\d+(?:\.\d{1,2})?$/', (string) $value);
+        $validatorFactory->extend('mobile', function ($attribute, $value, $parameters, $validator) {
+            return (bool) preg_match('/^1\d{10}$/', (string) $value);
         });
-        $validatorFactory->replacer('price', function ($message, $attribute, $rule, $parameters) {
+        $validatorFactory->replacer('mobile', function ($message, $attribute, $rule, $parameters) {
             return str_replace(':attribute', $attribute, $message);
         });
     }

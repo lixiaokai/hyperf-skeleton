@@ -8,7 +8,7 @@ use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\Logger\LoggerFactory;
 use Hyperf\Utils\Codec\Json;
-use Kernel\Exception\BaseException;
+use Kernel\Exception\AbstractException;
 use Kernel\Exception\DataSaveException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -26,7 +26,7 @@ class CommonExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * @param BaseException $throwable
+     * @param AbstractException $throwable
      */
     public function handle(\Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
@@ -50,7 +50,7 @@ class CommonExceptionHandler extends ExceptionHandler
 
     public function isValid(\Throwable $throwable): bool
     {
-        return $throwable instanceof BaseException;
+        return $throwable instanceof AbstractException;
     }
 
     /**

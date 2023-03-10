@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Kernel\Exception;
 
-class DataSaveException extends BaseException
+class DataSaveException extends AbstractException
 {
     public function __construct(string $message = '数据保存异常', int $code = 500)
     {

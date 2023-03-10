@@ -10,7 +10,7 @@ use Hyperf\Server\Exception\ServerException;
 /**
  * 异常 - 抽象基类.
  */
-abstract class BaseException extends ServerException
+abstract class AbstractException extends ServerException
 {
     public function __construct(?string $message = null, int $code = 0, \Throwable $previous = null)
     {

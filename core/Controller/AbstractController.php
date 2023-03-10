@@ -7,6 +7,6 @@ namespace Core\Controller;
 /**
  * 控制器 - 基类.
  */
-abstract class Controller extends \Kernel\Controller\AbstractController
+abstract class AbstractController extends \Kernel\Controller\AbstractController
 {
 }

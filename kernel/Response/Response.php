@@ -26,19 +26,28 @@ class Response
         $this->message = $message;
     }
 
+    /**
+     * 输出空数据.
+     */
     public static function withEmpty(): ResponseInterface
     {
         return (new self())->toJson();
     }
 
-    public static function withData(mixed $data = []): ResponseInterface
-    {
-        return (new self($data))->toJson();
-    }
-
-    public static function success(mixed $data = [], string $message = '操作成功'): ResponseInterface
+    /**
+     * 输出数据.
+     */
+    public static function withData(mixed $data = [], string $message = '操作成功'): ResponseInterface
     {
         return (new self($data, $message))->toJson();
+    }
+
+    /**
+     * 执行成功.
+     */
+    public static function success(string $message = '操作成功'): ResponseInterface
+    {
+        return (new self([], $message))->toJson();
     }
 
     protected function toJson(): ResponseInterface

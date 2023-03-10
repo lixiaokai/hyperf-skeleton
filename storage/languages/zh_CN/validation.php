@@ -148,12 +148,11 @@ return [
     'price' => ':attribute 格式不正确',
     'mobile' => ':attribute 格式不正确',
 
-    // Todo: 以下 4 个是自带的，还需验证
-    'phone_number' => ':attribute 必须为一个有效的电话号码',
-    'telephone_number' => ':attribute 必须为一个有效的手机号码',
-    'chinese_word' => ':attribute 必须包含以下有效字符 (中文/英文，数字, 下划线)',
-    'sequential_array' => ':attribute 必须是一个有序数组',
-
+    // 以下 4 个是自带的，但没有实现对应的验证器，这里先注释掉
+    // 'phone_number' => ':attribute 必须为一个有效的电话号码',
+    // 'telephone_number' => ':attribute 必须为一个有效的手机号码',
+    // 'chinese_word' => ':attribute 必须包含以下有效字符 (中文/英文，数字, 下划线)',
+    // 'sequential_array' => ':attribute 必须是一个有序数组',
 
     /*
     |--------------------------------------------------------------------------

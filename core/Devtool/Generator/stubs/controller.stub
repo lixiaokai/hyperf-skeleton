@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Admin\Controller;
+namespace %NAMESPACE%;
 
 use Core\Controller\AbstractController;
 use Core\Request\SearchRequest;

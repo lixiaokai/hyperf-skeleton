@@ -7,7 +7,7 @@ namespace App\Demo\Collection;
 use Core\Resource\AbstractCollection;
 
 /**
- * 基础用户 - 列表 - 集合.
+ * 测试 - 列表 - 集合.
  */
 class TestCollection extends AbstractCollection
 {

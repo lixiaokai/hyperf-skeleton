@@ -12,16 +12,16 @@ class FormatHelper
     /**
      * 日期转字符串.
      */
-    public static function toDateString(Carbon|string $dt, ?string $default = ''): ?string
+    public static function toDateString(?Carbon $dt, ?string $default = ''): string
     {
-        return $dt instanceof Carbon ? $dt->format('Y-m-d') : (is_string($dt) ? $dt : $default);
+        return $dt?->format('Y-m-d') ?? $default;
     }
 
     /**
      * 日期时间转字符串.
      */
-    public static function toDateTimeString(Carbon|string $dt, ?string $default = ''): ?string
+    public static function toDateTimeString(?Carbon $dt, ?string $default = ''): string
     {
-        return $dt instanceof Carbon ? $dt->format('Y-m-d H:i:s') : (is_string($dt) ? $dt : $default);
+        return $dt?->toDateTimeString() ?? $default;
     }
 }

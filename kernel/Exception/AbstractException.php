@@ -6,13 +6,14 @@ namespace Kernel\Exception;
 
 use Kernel\Constants\ErrorCode;
 use Hyperf\Server\Exception\ServerException;
+use Throwable;
 
 /**
  * 异常 - 抽象基类.
  */
 abstract class AbstractException extends ServerException
 {
-    public function __construct(?string $message = null, int $code = 0, \Throwable $previous = null)
+    public function __construct(?string $message = null, int $code = 0, Throwable $previous = null)
     {
         is_null($message) && $message = ErrorCode::getMessage($code);
         parent::__construct($message, $code, $previous);

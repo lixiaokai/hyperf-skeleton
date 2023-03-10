@@ -8,6 +8,7 @@ use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 /**
  * 托底 - 异常处理器.
@@ -20,7 +21,7 @@ class AppExceptionHandler extends ExceptionHandler
     {
     }
 
-    public function handle(\Throwable $throwable, ResponseInterface $response): ResponseInterface
+    public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
         // 阻止异常冒泡
         $this->stopPropagation();
@@ -34,7 +35,7 @@ class AppExceptionHandler extends ExceptionHandler
             ->withBody(new SwooleStream('Internal Server Error.'));
     }
 
-    public function isValid(\Throwable $throwable): bool
+    public function isValid(Throwable $throwable): bool
     {
         return true;
     }
@@ -42,7 +43,7 @@ class AppExceptionHandler extends ExceptionHandler
     /**
      * 记录 - 日志.
      */
-    private function log(\Throwable $throwable): void
+    private function log(Throwable $throwable): void
     {
         $this->logger->error(sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
         $this->logger->error($throwable->getTraceAsString());

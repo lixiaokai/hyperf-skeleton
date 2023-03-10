@@ -12,6 +12,7 @@ use Kernel\Exception\AbstractException;
 use Kernel\Exception\DataSaveException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 /**
  * 公共 - 异常处理器.
@@ -28,7 +29,7 @@ class CommonExceptionHandler extends ExceptionHandler
     /**
      * @param AbstractException $throwable
      */
-    public function handle(\Throwable $throwable, ResponseInterface $response): ResponseInterface
+    public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
         // 阻止异常冒泡
         $this->stopPropagation();
@@ -48,7 +49,7 @@ class CommonExceptionHandler extends ExceptionHandler
             ));
     }
 
-    public function isValid(\Throwable $throwable): bool
+    public function isValid(Throwable $throwable): bool
     {
         return $throwable instanceof AbstractException;
     }
@@ -56,7 +57,7 @@ class CommonExceptionHandler extends ExceptionHandler
     /**
      * 记录 - 日志.
      */
-    private function log(\Throwable $throwable): void
+    private function log(Throwable $throwable): void
     {
         $message = sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile());
 

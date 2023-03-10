@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Kernel\Repository;
 
+use Exception;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\Collection;
@@ -53,7 +54,7 @@ abstract class AbstractRepository
     {
         try {
             return $this->modelClass::create($data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->log($e);
             throw new DataSaveException('数据保存异常');
         }
@@ -63,7 +64,7 @@ abstract class AbstractRepository
     {
         try {
             $model->update($data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->log($e);
             throw new DataSaveException('数据更新异常');
         }
@@ -75,13 +76,13 @@ abstract class AbstractRepository
     {
         try {
             return $model->delete();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->log($e);
             throw new DataSaveException('数据删除异常');
         }
     }
 
-    private function log(\Exception $e): void
+    private function log(Exception $e): void
     {
         $this->logger->error(sprintf('%s[%s] in %s', $e->getMessage(), $e->getLine(), $e->getFile()));
         $this->logger->error($e->getTraceAsString());

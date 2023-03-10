@@ -5,9 +5,9 @@ declare(strict_types=1);
 /**
  * PhpCsFixer.
  *
+ * @see https://www.jetbrains.com/help/phpstorm/using-php-cs-fixer.html PhpStorm 配置教程
  * @see https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/master/doc/rules/index.rst 内置规则
  */
-
 $header = <<<'EOF'
 EOF;
 
@@ -44,6 +44,10 @@ return (new PhpCsFixer\Config())
             'annotations' => [
                 'author',
             ],
+        ],
+        // 全局命名空间
+        'global_namespace_import' => [
+            'import_classes' => true, // 类全局命名空间必须使用 use 导入
         ],
         // use 排序
         'ordered_imports' => [

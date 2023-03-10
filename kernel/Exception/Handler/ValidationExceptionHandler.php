@@ -9,6 +9,7 @@ use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\Utils\Codec\Json;
 use Hyperf\Validation\ValidationException;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 /**
  * 验证类 - 异常处理器.
@@ -18,7 +19,7 @@ class ValidationExceptionHandler extends ExceptionHandler
     /**
      * @param ValidationException $throwable
      */
-    public function handle(\Throwable $throwable, ResponseInterface $response): ResponseInterface
+    public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
         // 阻止异常冒泡
         $this->stopPropagation();
@@ -32,7 +33,7 @@ class ValidationExceptionHandler extends ExceptionHandler
             ])));
     }
 
-    public function isValid(\Throwable $throwable): bool
+    public function isValid(Throwable $throwable): bool
     {
         return $throwable instanceof ValidationException;
     }

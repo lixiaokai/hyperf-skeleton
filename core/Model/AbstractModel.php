@@ -7,6 +7,6 @@ namespace Core\Model;
 /**
  * 模型 - 基类.
  */
-abstract class Model extends \Kernel\Model\AbstractModel
+abstract class AbstractModel extends \Kernel\Model\AbstractModel
 {
 }

@@ -7,6 +7,6 @@ namespace Core\Service;
 /**
  * 服务 - 基类.
  */
-abstract class Service extends \Kernel\Service\AbstractService
+abstract class AbstractService extends \Kernel\Service\AbstractService
 {
 }

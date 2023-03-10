@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Kernel\Resource;
 
+use Carbon\Carbon;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Resource\Json\JsonResource;
+use Kernel\Helper\FormatHelper;
 
 /**
  * API 资源 - 抽象基类.
@@ -70,5 +72,15 @@ abstract class AbstractResource extends JsonResource
         foreach ($this->addToWith as $item) {
             $item && method_exists($this, $item) && $this->with[$item] = $this->{$item}();
         }
+    }
+
+    public function toDateString(?Carbon $dt, ?string $default = ''): string
+    {
+        return FormatHelper::toDateString($dt, $default);
+    }
+
+    public function toDateTimeString(?Carbon $dt, ?string $default = ''): string
+    {
+        return FormatHelper::toDateTimeString($dt, $default);
     }
 }

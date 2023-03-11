@@ -117,6 +117,19 @@ namespace PHPSTORM_META {
 }
 ```
 
+## 5. PhpStorm 自动化单元测试配置
+
+![PhpStorm 自动化单元测试配置](doc/res/testConfig.png)
+
+步骤 1：如上图，指定 PHPUnit 库路径并保存即可
+
+![PhpStorm 快速创建单元测试](doc/res/testCreate.png)
+
+步骤 2：如上图，鼠标放到类名或方法名中，按下 ( MacOS：Alt + Enter ) 然后选择 [ 创建新的 PHP 测试 ] ，这时会弹出一个提示框，根据操作即可
+
+![运行测试](doc/res/testRun.png)
+
+步骤 3：如上图，写好测试代码，点左侧三角图标运行即可
 
 # 六、常用命令
 

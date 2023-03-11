@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Kernel\Constants;
 
-use Hyperf\Constants\AbstractConstants;
-
 /**
  * 枚举常量 - 抽象基类.
  */
-abstract class BaseConstants extends AbstractConstants
+abstract class AbstractConstants extends \Hyperf\Constants\AbstractConstants
 {
     /**
      * 获取 - 所有常量.

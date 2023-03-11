@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Core\Constants;
 
 use Hyperf\Constants\Annotation\Constants;
-use Kernel\Constants\BaseConstants;
 
 /**
  * 通用状态 - 常量.
@@ -13,7 +12,7 @@ use Kernel\Constants\BaseConstants;
  * @method static string getText(string $code)
  */
 #[Constants]
-class Status extends BaseConstants
+class Status extends AbstractConstants
 {
     /**
      * @Text("启用")

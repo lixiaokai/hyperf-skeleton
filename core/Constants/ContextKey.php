@@ -3,7 +3,6 @@
 namespace Core\Constants;
 
 use Hyperf\Constants\Annotation\Constants;
-use Kernel\Constants\BaseConstants;
 
 /**
  * 上下文 Key - 常量.
@@ -11,7 +10,7 @@ use Kernel\Constants\BaseConstants;
  * @method static string getText(string $code)
  */
 #[Constants]
-class ContextKey extends BaseConstants
+class ContextKey extends AbstractConstants
 {
     /**
      * 用户 UID.

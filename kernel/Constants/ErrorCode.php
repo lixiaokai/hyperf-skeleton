@@ -10,7 +10,7 @@ use Hyperf\Constants\Annotation\Constants;
  * 错误代码 - 枚举类.
  */
 #[Constants]
-class ErrorCode extends BaseConstants
+class ErrorCode extends AbstractConstants
 {
     /**
      * @Message("未登录")

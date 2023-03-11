@@ -14,6 +14,7 @@ use Yadakhov\InsertOnDuplicateKey;
  * 权限 - 模型.
  *
  * @property int    $id           权限菜单 ID
+ * @property int    $parentId     父 ID
  * @property string $platform     终端平台 ( admin-总后台 seller-卖家 )
  * @property string $route        路由 ( method + route 组成 )
  * @property string $attachRoutes 附加路由
@@ -35,6 +36,7 @@ class Permission extends AbstractModel
 
     protected array $fillable = [
         'id',
+        'parent_id',
         'platform',
         'route',
         'attach_routes',
@@ -48,6 +50,7 @@ class Permission extends AbstractModel
 
     protected array $casts = [
         'id' => 'integer',
+        'parent_id' => 'integer',
         'attach_routes' => 'json',
         'sort' => 'integer',
         'created_at' => 'datetime',

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Service\Collector;
 
-use Core\Constants\Platform;
 use Core\Model\Permission;
-use Core\Service\Collector\Result\RouteResult;
 use Exception;
 use Hyperf\DbConnection\Annotation\Transactional;
 use Hyperf\Di\Annotation\AnnotationCollector;
@@ -14,6 +12,8 @@ use Hyperf\Utils\Codec\Json;
 use Hyperf\Utils\Collection;
 use Kernel\Annotation\Permission\AttachPermissions;
 use Kernel\Exception\BusinessException;
+use Kernel\Service\Collector\Result\RouteResult;
+use Kernel\Service\Collector\RoutesCollector;
 use phpDocumentor\Reflection\DocBlockFactory;
 use ReflectionMethod;
 

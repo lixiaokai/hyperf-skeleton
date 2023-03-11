@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Core\Service\Collector\Result;
-
-use Hyperf\Utils\Str;
+namespace Kernel\Service\Collector\Result;
 
 /**
  * 路由值 - 结果类.

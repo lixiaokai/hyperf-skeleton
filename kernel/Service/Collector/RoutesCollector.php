@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Core\Service\Collector;
+namespace Kernel\Service\Collector;
 
-use Core\Service\Collector\Result\RouteResult;
 use Hyperf\HttpServer\Router\DispatcherFactory;
 use Hyperf\HttpServer\Router\Handler;
 use Hyperf\HttpServer\Router\RouteCollector;
 use Hyperf\Utils\Collection;
 use Hyperf\Utils\Str;
+use Kernel\Service\Collector\Result\RouteResult;
 use Psr\Container\ContainerInterface;
 
 /**

@@ -22,6 +22,11 @@ abstract class AbstractRepository
 {
     use Searchable;
 
+    /**
+     * 模型 class.
+     *
+     * 属性类型 Model 仅作为 IDE 提醒
+     */
     protected Model|string $modelClass;
 
     public function __construct(protected StdoutLoggerInterface $logger)

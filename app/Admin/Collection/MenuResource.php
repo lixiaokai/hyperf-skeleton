@@ -7,7 +7,7 @@ namespace App\Admin\Collection;
 use Core\Model\Menu;
 
 /**
- * 惨淡 - 列表 - 资源.
+ * 菜单 - 列表 - 资源.
  *
  * @property Menu $resource
  */

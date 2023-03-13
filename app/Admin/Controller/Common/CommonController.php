@@ -31,8 +31,8 @@ class CommonController extends AbstractController
     #[GetMapping('menu')]
     public function menu(): ResponseInterface
     {
-        $menus = $this->service->trees(Platform::ADMIN, Status::ENABLE);
+        $menuTrees = $this->service->trees(Platform::ADMIN, Status::ENABLE);
 
-        return Response::withData($menus);
+        return Response::withData($menuTrees);
     }
 }

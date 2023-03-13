@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin\Controller\Rbac;
 
+use App\Admin\Middleware\AuthMiddleware;
 use App\Admin\Resource\MenuResource;
 use App\Admin\Request\Rbac\MenuRequest;
 use Core\Constants\Platform;
@@ -13,6 +14,7 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
+use Hyperf\HttpServer\Annotation\Middlewares;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\PutMapping;
 use Kernel\Response\Response;
@@ -22,6 +24,7 @@ use Psr\Http\Message\ResponseInterface;
  * 菜单 - 控制器.
  */
 #[Controller('admin/rbac/menu')]
+#[Middlewares([AuthMiddleware::class])]
 class MenuController extends AbstractController
 {
     #[Inject]

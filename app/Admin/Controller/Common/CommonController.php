@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin\Controller\Common;
 
+use App\Admin\Middleware\AuthMiddleware;
 use Core\Constants\Platform;
 use Core\Constants\Status;
 use Core\Controller\AbstractController;
@@ -11,6 +12,7 @@ use Core\Service\Rbac\MenuService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
+use Hyperf\HttpServer\Annotation\Middlewares;
 use Kernel\Response\Response;
 use Psr\Http\Message\ResponseInterface;
 
@@ -20,6 +22,7 @@ use Psr\Http\Message\ResponseInterface;
  * 需要登录但不需要权限验证的接口
  */
 #[Controller('admin/common')]
+#[Middlewares([AuthMiddleware::class])]
 class CommonController extends AbstractController
 {
     #[Inject]

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Core\Model\Traits;
 
+use Core\Constants\Status;
+
 trait AdminActionTrail
 {
     /**
@@ -34,5 +36,21 @@ trait AdminActionTrail
         }
 
         return $permission->contains('route', $route);
+    }
+
+    /**
+     * 是否 - 启用.
+     */
+    public function isEnable(): bool
+    {
+        return $this->user->status === Status::ENABLE;
+    }
+
+    /**
+     * 是否 - 禁用.
+     */
+    public function isDisable(): bool
+    {
+        return $this->user->status === Status::DISABLE;
     }
 }

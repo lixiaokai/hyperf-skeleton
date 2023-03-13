@@ -9,6 +9,7 @@ use Core\Model\Menu;
 /**
  * 菜单 - 列表 - 资源.
  *
+ * @deprecated 没用到待废弃
  * @property Menu $resource
  */
 class MenuResource extends \App\Admin\Resource\MenuResource

@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Admin\Controller\Rbac;
 
-use App\Admin\Collection\MenuCollection;
 use App\Admin\Collection\MenuResource;
 use App\Admin\Request\Rbac\MenuRequest;
 use Core\Constants\Platform;
 use Core\Controller\AbstractController;
-use Core\Request\SearchRequest;
 use Core\Service\Rbac\MenuService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -33,11 +31,11 @@ class MenuController extends AbstractController
      * 菜单 - 列表.
      */
     #[GetMapping('')]
-    public function index(SearchRequest $request): ResponseInterface
+    public function index(): ResponseInterface
     {
-        $menu = $this->service->search($request->searchParams(), Platform::ADMIN);
+        $menuTrees = $this->service->trees(Platform::ADMIN);
 
-        return MenuCollection::make($menu);
+        return Response::withData($menuTrees);
     }
 
     /**

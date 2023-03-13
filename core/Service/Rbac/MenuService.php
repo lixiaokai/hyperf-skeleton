@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Core\Service\Rbac;
 
 use Core\Exception\BusinessException;
@@ -19,6 +21,12 @@ class MenuService extends AbstractService
     #[Inject]
     protected MenuRepository $repo;
 
+    /**
+     * 菜单 - 列表 ( 查询分页 ).
+     *
+     * @param array       $searchParams 查询参数
+     * @param null|string $platform     终端平台
+     */
     public function search(array $searchParams = [], string $platform = null): PaginatorInterface
     {
         $query = $this->repo->getQuery()
@@ -26,6 +34,17 @@ class MenuService extends AbstractService
             ->orderByDesc('id');
 
         return $this->repo->search($searchParams, $query);
+    }
+
+    /**
+     * 菜单 - 列表 ( 树 ).
+     *
+     * @param null|string $platform 终端平台
+     * @param null|string $status   状态
+     */
+    public function trees(string $platform = null, string $status = null): array
+    {
+        return $this->repo->getTrees($platform, $status);
     }
 
     /**

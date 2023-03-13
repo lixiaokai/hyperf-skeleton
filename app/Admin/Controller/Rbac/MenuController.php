@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin\Controller\Rbac;
 
-use App\Admin\Collection\MenuResource;
+use App\Admin\Resource\MenuResource;
 use App\Admin\Request\Rbac\MenuRequest;
 use Core\Constants\Platform;
 use Core\Controller\AbstractController;

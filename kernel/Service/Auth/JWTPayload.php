@@ -34,19 +34,15 @@ class JWTPayload
      */
     public int $uid;
 
-    public string $iatString;
-
-    public string $expString;
-
     public function __construct(array|object $parameters)
     {
+        $this->init(); // 初始化
+
         foreach ((array) $parameters as $key => $val) {
             if (property_exists($this, $key)) {
                 $this->{$key} = $val;
             }
         }
-
-        $this->init();
     }
 
     public static function make(...$parameters): self
@@ -62,19 +58,38 @@ class JWTPayload
             'iat' => $this->iat,
             'exp' => $this->exp,
             'uid' => $this->uid,
-            'expString' => $this->expString,
-            'iatString' => $this->iatString,
         ];
     }
 
-    private function init(): void
+    public function getIatString(): string
     {
-        $time = time();
+        return date('Y-m-d H:i:s', $this->iat);
+    }
 
-        empty($this->iat) && $this->iat = $time;
-        empty($this->exp) && $this->exp = $time - 86400 * 30; // 30 天
+    public function getExpString(): string
+    {
+        return date('Y-m-d H:i:s', $this->exp);
+    }
 
-        $this->iatString = date('Y-m-d H:i:s', $this->iat);
-        $this->expString = date('Y-m-d H:i:s', $this->exp);
+    public function setIat(int $timestamp): self
+    {
+        $this->iat = $timestamp;
+
+        return $this;
+    }
+
+    public function setExp(int $daysExp = 14): self
+    {
+        $this->exp = time() + 86400 * $daysExp;
+
+        return $this;
+    }
+
+    protected function init(): void
+    {
+        $timestamp = time();
+
+        $this->setIat($timestamp);
+        $this->setExp();
     }
 }

@@ -3,6 +3,7 @@
 namespace HyperfTest\Service\Auth;
 
 use Kernel\Service\Auth\JWTAuth;
+use Kernel\Service\Auth\JWTPayload;
 use PHPUnit\Framework\TestCase;
 
 class JWTServiceTest extends TestCase
@@ -13,11 +14,14 @@ class JWTServiceTest extends TestCase
     public function testEncode()
     {
         $uid = 1;
-        $jwtToken = JWTAuth::encode($uid);
-        $jwtPayload = JWTAuth::decode($jwtToken);
+        $JWToken = JWTAuth::encode(
+            JWTPayload::make(['uid' => $uid])
+        );
+        $jwtPayload = JWTAuth::decode($JWToken->token);
         var_dump([
-            '$jwtToken' => $jwtToken,
-            '$jwtPayload' => $jwtPayload,
+            '$JWToken' => $JWToken->token,
+            '$jwtPayload->getIatString()' => $jwtPayload->getIatString(),
+            '$jwtPayload->getExpString()' => $jwtPayload->getExpString(),
         ]);
 
         self::assertTrue(true);

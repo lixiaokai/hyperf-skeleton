@@ -12,7 +12,6 @@ use Firebase\JWT\Key;
 use Firebase\JWT\SignatureInvalidException;
 use Kernel\Exception\BusinessException;
 use Kernel\Exception\UnauthorizedException;
-use Psr\Http\Message\ServerRequestInterface;
 use UnexpectedValueException;
 
 /**
@@ -21,15 +20,26 @@ use UnexpectedValueException;
 class JWTAuth
 {
     /**
+     * 获取 - 请求 UID.
+     */
+    public static function uid(): int
+    {
+        static $uid;
+        ! $uid && $uid = JWTAuth::decode(JWTUtil::getRequestToken())->uid;
+
+        return $uid;
+    }
+
+    /**
      * 编码 - JWT.
      *
      * @see JWTServiceTest::testEncode()
      */
-    public static function encode(int $uid): string
+    public static function encode(JWTPayload $payload): JWToken
     {
-        $jwtPayload = JWTPayload::make(['uid' => $uid]);
+        $token = JWT::encode($payload->toArray(), self::key(), 'HS256');
 
-        return JWT::encode($jwtPayload->toArray(), self::key(), 'HS256');
+        return JWToken::make($token, $payload); // 字符串转成类
     }
 
     /**
@@ -59,14 +69,6 @@ class JWTAuth
         }
 
         throw new UnauthorizedException($message);
-    }
-
-    /**
-     * 获取 - 客户端请求 token.
-     */
-    public static function getClientToken(ServerRequestInterface $request): string
-    {
-        return trim(str_ireplace('bearer', '', $request->getHeaderLine('authorization')));
     }
 
     /**

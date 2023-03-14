@@ -8,7 +8,7 @@ use Core\Model\Menu;
 use Core\Resource\AbstractResource;
 
 /**
- * 菜单 - 列表 - 资源.
+ * 菜单 - 资源.
  *
  * @property Menu $resource
  */

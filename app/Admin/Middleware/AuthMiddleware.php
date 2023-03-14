@@ -26,8 +26,7 @@ class AuthMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $uid = $this->getUid($request);
-        $this->setUser($uid);
+        $this->setUser();
 
         return $handler->handle($request);
     }
@@ -37,11 +36,11 @@ class AuthMiddleware implements MiddlewareInterface
      *
      * 以便全局上调用
      */
-    protected function setUser(int $uid)
+    protected function setUser()
     {
-        $admin = $this->getUser($uid);
+        $admin = $this->getUser();
 
-        Context::set(ContextKey::UID, $uid);
+        Context::set(ContextKey::UID, $admin->id);
         Context::set(ContextKey::ADMIN, $admin);
         Context::set(ContextKey::USER, $admin->user);
     }
@@ -49,11 +48,11 @@ class AuthMiddleware implements MiddlewareInterface
     /**
      * 获取 - 用户信息.
      */
-    protected function getUser(int $uid): Admin
+    protected function getUser(): Admin
     {
-        $admin = $this->adminService->get($uid);
+        $admin = $this->adminService->getById(self::getUid());
         if ($admin->isDisable()) {
-            throw new BusinessException('该用户已被禁用，请联系管理员');
+            throw new BusinessException('账号已禁用，请联系管理员');
         }
 
         return $admin;
@@ -64,11 +63,22 @@ class AuthMiddleware implements MiddlewareInterface
      *
      * 通过 JWT Token 获取
      */
-    protected function getUid(ServerRequestInterface $request): int
+    protected static function getUid(): int
     {
-        $jwtToken = JWTAuth::getClientToken($request);
-        $jwtPayload = JWTAuth::decode($jwtToken);
+        return self::injectUidForDev() ?? JWTAuth::uid();
+    }
 
-        return $jwtPayload->uid;
+    /**
+     * 注入 - uid.
+     *
+     * 开发环境可临时取消下面注释来注入 uid 实现快速切换用户
+     */
+    protected static function injectUidForDev(): ?int
+    {
+        // if (config('app_env') === 'dev') {
+        //     return 1;
+        // }
+
+        return null;
     }
 }

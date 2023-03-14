@@ -21,9 +21,9 @@ use Psr\Http\Message\ResponseInterface;
  *
  * 需要登录但不需要权限验证的接口
  */
-#[Controller('admin/common')]
+#[Controller('admin/common/menu')]
 #[Middlewares([AuthMiddleware::class])]
-class CommonController extends AbstractController
+class MenuController extends AbstractController
 {
     #[Inject]
     protected MenuService $service;
@@ -31,8 +31,8 @@ class CommonController extends AbstractController
     /**
      * 菜单 - 列表 ( 树 ).
      */
-    #[GetMapping('menu')]
-    public function menu(): ResponseInterface
+    #[GetMapping('')]
+    public function listTrees(): ResponseInterface
     {
         $menuTrees = $this->service->trees(Platform::ADMIN, Status::ENABLE);
 

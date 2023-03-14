@@ -26,12 +26,26 @@ class UserService extends AbstractService
     }
 
     /**
-     * 用户 - 详情.
+     * 用户 - 详情 ( 根据 ID ).
      */
-    public function get(int $id): User
+    public function getById(int $id): User
     {
         try {
             $user = $this->repo->getById($id);
+        } catch (NotFoundException) {
+            throw new NotFoundException('用户信息不存在');
+        }
+
+        return $user;
+    }
+
+    /**
+     * 用户 - 详情 ( 根据手机号 ).
+     */
+    public function getByPhone(string $phone): User
+    {
+        try {
+            $user = $this->repo->getByPhone($phone);
         } catch (NotFoundException) {
             throw new NotFoundException('用户信息不存在');
         }

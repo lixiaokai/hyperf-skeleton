@@ -7,6 +7,8 @@ namespace Core\Repository;
 use Core\Model\User;
 use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Model;
+use Hyperf\Database\Model\ModelNotFoundException;
+use Kernel\Exception\NotFoundException;
 
 /**
  * 用户信息 - 仓库类.
@@ -19,4 +21,13 @@ use Hyperf\Database\Model\Model;
 class UserRepository extends AbstractRepository
 {
     protected Model|string $modelClass = User::class;
+
+    public function getByPhone(string $phone): Model|User
+    {
+        try {
+            return $this->modelClass::where('phone', $phone)->firstOrFail();
+        } catch (ModelNotFoundException) {
+            throw new NotFoundException();
+        }
+    }
 }

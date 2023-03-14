@@ -19,4 +19,9 @@ use Hyperf\Database\Model\Model;
 class AdminRepository extends AbstractRepository
 {
     protected Model|string $modelClass = Admin::class;
+
+    public function getByPhone(string $phone): Admin
+    {
+
+    }
 }

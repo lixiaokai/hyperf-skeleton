@@ -32,11 +32,11 @@ class AdminService extends AbstractService
     /**
      * 总后台用户 - 详情.
      */
-    public function get(int $id): Admin
+    public function getById(int $id): Admin
     {
         try {
             $admin = $this->repo->getById($id);
-        } catch (BusinessException $e) {
+        } catch (BusinessException) {
             throw new BusinessException('该用户不存在');
         }
 

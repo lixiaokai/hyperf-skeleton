@@ -7,6 +7,7 @@ namespace Core\Model;
 use Carbon\Carbon;
 use Core\Model\Traits\StatusTrait;
 use Core\Model\Traits\UserActionTrail;
+use Core\Model\Traits\UserAuthTrail;
 
 /**
  * 基础用户 - 模型.
@@ -25,6 +26,7 @@ class User extends AbstractModel
 {
     use StatusTrait;
     use UserActionTrail;
+    use UserAuthTrail;
 
     protected ?string $table = 'user';
 

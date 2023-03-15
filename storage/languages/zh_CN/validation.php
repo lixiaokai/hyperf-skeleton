@@ -50,7 +50,7 @@ return [
     'dimensions' => ':attribute 具有无效的图片尺寸',
     'distinct' => ':attribute 字段具有重复值',
     'email' => ':attribute 必须是一个合法的电子邮件地址',
-    'exists' => '选定的 :attribute 是无效的',
+    'exists' => ':attribute 已存在',
     'file' => ':attribute 必须是一个文件',
     'filled' => ':attribute 的字段是必填的',
     'gt' => [

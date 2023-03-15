@@ -50,7 +50,7 @@ class MenuService extends AbstractService
     /**
      * 菜单 - 详情.
      */
-    public function get(int $id): Menu
+    public function getById(int $id): Menu
     {
         try {
             $menu = $this->repo->getById($id);

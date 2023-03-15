@@ -47,7 +47,7 @@ class MenuController extends AbstractController
     #[GetMapping('{id}')]
     public function show(int $id): ResponseInterface
     {
-        $menu = $this->service->get($id);
+        $menu = $this->service->getById($id);
 
         return MenuResource::make($menu);
     }
@@ -69,7 +69,7 @@ class MenuController extends AbstractController
     #[PutMapping('{id}')]
     public function update(MenuRequest $request, int $id): ResponseInterface
     {
-        $menu = $this->service->get($id);
+        $menu = $this->service->getById($id);
         $menu = $this->service->update($menu, $request->validated(MenuRequest::SCENE_UPDATE));
 
         return Response::withData(MenuResource::make($menu));
@@ -81,7 +81,7 @@ class MenuController extends AbstractController
     #[DeleteMapping('{id}')]
     public function delete(int $id): ResponseInterface
     {
-        $menu = $this->service->get($id);
+        $menu = $this->service->getById($id);
         $this->service->delete($menu);
 
         return Response::success();
@@ -93,7 +93,7 @@ class MenuController extends AbstractController
     #[PutMapping('{id}/enable')]
     public function enable(int $id): ResponseInterface
     {
-        $menu = $this->service->get($id);
+        $menu = $this->service->getById($id);
         $this->service->enable($menu);
 
         return Response::success();
@@ -105,7 +105,7 @@ class MenuController extends AbstractController
     #[PutMapping('{id}/disable')]
     public function disable(int $id): ResponseInterface
     {
-        $menu = $this->service->get($id);
+        $menu = $this->service->getById($id);
         $this->service->disable($menu);
 
         return Response::success();

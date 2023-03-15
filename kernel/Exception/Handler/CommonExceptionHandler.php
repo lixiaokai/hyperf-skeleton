@@ -10,6 +10,7 @@ use Hyperf\Logger\LoggerFactory;
 use Hyperf\Utils\Codec\Json;
 use Kernel\Exception\AbstractException;
 use Kernel\Exception\DataSaveException;
+use Kernel\Exception\Format\ExceptionMessage;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -57,14 +58,18 @@ class CommonExceptionHandler extends ExceptionHandler
     /**
      * 记录 - 日志.
      */
-    private function log(Throwable $throwable): void
+    private function log(Throwable $t): void
     {
-        $message = sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile());
+        $message = ExceptionMessage::format($t);
 
         switch (true) {
-            case $throwable instanceof DataSaveException:
+            case $t instanceof DataSaveException:
+                // 先前错误
+                $this->logger->error(ExceptionMessage::format($t->getPrevious()));
+
+                // 当前错误
                 $this->logger->error($message);
-                $this->logger->error($throwable->getTraceAsString());
+                // $this->logger->error($throwable->getTraceAsString());
                 break;
             default:
                 $this->logger->warning($message);

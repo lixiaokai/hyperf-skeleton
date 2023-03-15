@@ -45,7 +45,7 @@ abstract class AbstractRepository
     {
         try {
             return $this->modelClass::findOrFail($id, $columns);
-        } catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException) {
             throw new NotFoundException();
         }
     }
@@ -60,8 +60,7 @@ abstract class AbstractRepository
         try {
             return $this->modelClass::create($data);
         } catch (Exception $e) {
-            $this->log($e);
-            throw new DataSaveException('数据保存异常');
+            throw new DataSaveException(message: '数据保存异常', previous: $e);
         }
     }
 
@@ -70,8 +69,7 @@ abstract class AbstractRepository
         try {
             $model->update($data);
         } catch (Exception $e) {
-            $this->log($e);
-            throw new DataSaveException('数据更新异常');
+            throw new DataSaveException(message: '数据更新异常', previous: $e);
         }
 
         return $model;
@@ -82,14 +80,7 @@ abstract class AbstractRepository
         try {
             return $model->delete();
         } catch (Exception $e) {
-            $this->log($e);
-            throw new DataSaveException('数据删除异常');
+            throw new DataSaveException(message: '数据删除异常', previous: $e);
         }
-    }
-
-    private function log(Exception $e): void
-    {
-        $this->logger->error(sprintf('%s[%s] in %s', $e->getMessage(), $e->getLine(), $e->getFile()));
-        $this->logger->error($e->getTraceAsString());
     }
 }

@@ -7,6 +7,7 @@ namespace Kernel\Exception\Handler;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
+use Kernel\Exception\Format\ExceptionMessage;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -43,9 +44,9 @@ class AppExceptionHandler extends ExceptionHandler
     /**
      * 记录 - 日志.
      */
-    private function log(Throwable $throwable): void
+    private function log(Throwable $t): void
     {
-        $this->logger->error(sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
-        $this->logger->error($throwable->getTraceAsString());
+        $this->logger->error(ExceptionMessage::format($t));
+        $this->logger->error($t->getTraceAsString());
     }
 }

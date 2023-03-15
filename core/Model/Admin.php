@@ -16,11 +16,11 @@ use Hyperf\Utils\Collection as UCollection;
 /**
  * 总后台用户 - 模型.
  *
- * @property int         $id        用户 ID
- * @property null|string $name      用户名
- * @property string      $phone     手机号
- * @property Carbon      $createdAt 创建时间
- * @property Carbon      $updatedAt 修改时间
+ * @property int     $id        用户 ID
+ * @property ?string $name      用户名
+ * @property string  $phone     手机号
+ * @property Carbon  $createdAt 创建时间
+ * @property Carbon  $updatedAt 修改时间
  *
  * @property User              $user  基础用户
  * @property Collection|Role[] $roles 角色 ( 多条 )

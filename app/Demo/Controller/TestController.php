@@ -45,7 +45,7 @@ class TestController extends AbstractController
     #[GetMapping('{id}')]
     public function show(int $id): ResponseInterface
     {
-        $test = $this->service->get($id);
+        $test = $this->service->getById($id);
 
         return TestResource::make($test);
     }
@@ -67,7 +67,7 @@ class TestController extends AbstractController
     #[PutMapping('{id}')]
     public function update(TestRequest $request, int $id): ResponseInterface
     {
-        $test = $this->service->get($id);
+        $test = $this->service->getById($id);
         $test = $this->service->update($test, $request->validated(TestRequest::SCENE_UPDATE));
 
         return Response::withData(TestResource::make($test));
@@ -79,7 +79,7 @@ class TestController extends AbstractController
     #[DeleteMapping('{id}')]
     public function delete(int $id): ResponseInterface
     {
-        $test = $this->service->get($id);
+        $test = $this->service->getById($id);
         $this->service->delete($test);
 
         return Response::success();
@@ -91,7 +91,7 @@ class TestController extends AbstractController
     #[PutMapping('{id}/enable')]
     public function enable(int $id): ResponseInterface
     {
-        $test = $this->service->get($id);
+        $test = $this->service->getById($id);
         $this->service->enable($test);
 
         return Response::success();
@@ -103,7 +103,7 @@ class TestController extends AbstractController
     #[PutMapping('{id}/disable')]
     public function disable(int $id): ResponseInterface
     {
-        $test = $this->service->get($id);
+        $test = $this->service->getById($id);
         $this->service->disable($test);
 
         return Response::success();

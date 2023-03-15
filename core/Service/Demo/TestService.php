@@ -28,7 +28,7 @@ class TestService extends AbstractService
     /**
      * 详情.
      */
-    public function get(int $id): Test
+    public function getById(int $id): Test
     {
         try {
             $test = $this->repo->getById($id);

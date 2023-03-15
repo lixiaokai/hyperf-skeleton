@@ -13,8 +13,8 @@ use Hyperf\Utils\Collection;
  *
  * @property string $status 状态 ( enable-启用 disable-禁用 )
  *
- * @property Collection $statusKeyValue 状态 - keyValue
  * @property string     $statusText     状态 - 文字
+ * @property Collection $statusKeyValue 状态 - keyValue
  *
  * @method static Builder enable()  查询 [ 已启用 ] 作用域
  * @method static Builder disable() 查询 [ 已禁用 ] 作用域

@@ -2,50 +2,50 @@
 
 namespace HyperfTest\Model;
 
-use Core\Model\Admin;
+use Core\Model\UserAdmin;
 use PHPUnit\Framework\TestCase;
 
 class AdminTest extends TestCase
 {
     /**
-     * @see Admin::user()
+     * @see UserAdmin::user()
      */
     public function testUser()
     {
-        $admin = Admin::find(1);
+        $admin = UserAdmin::find(1);
         var_dump($admin->user->toArray());
 
         self::assertTrue(true);
     }
 
     /**
-     * @see Admin::roles()
+     * @see UserAdmin::roles()
      */
     public function testRoles()
     {
-        $admin = Admin::find(1);
+        $admin = UserAdmin::find(1);
         var_dump($admin->roles->toArray());
 
         self::assertTrue(true);
     }
 
     /**
-     * @see Admin::getPermissions()
+     * @see UserAdmin::getPermissions()
      */
     public function testGetPermissions()
     {
-        $admin = Admin::find(1);
+        $admin = UserAdmin::find(1);
         var_dump($admin->getPermissions()->toArray());
 
         self::assertTrue(true);
     }
 
     /**
-     * @see Admin::getMenus()
+     * @see UserAdmin::getMenus()
      */
     public function testGetMenus()
     {
-        $admin = Admin::find(1);
+        $admin = UserAdmin::find(1);
         var_dump($admin->getMenus()->toArray());
 
         self::assertTrue(true);

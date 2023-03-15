@@ -30,4 +30,9 @@ class UserRepository extends AbstractRepository
             throw new NotFoundException();
         }
     }
+
+    public function updateOrCreate(array $attributes, $values = []): Model|User
+    {
+        return $this->modelClass::updateOrCreate($attributes, $values);
+    }
 }

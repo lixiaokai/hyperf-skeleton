@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Core\Service\User;
 
+use Core\Contract\UserInterface;
 use Core\Exception\BusinessException;
 use Core\Exception\NotFoundException;
 use Core\Model\User;
@@ -71,6 +74,24 @@ class UserService extends AbstractService
         }
 
         return $this->repo->update($user, $data);
+    }
+
+    /**
+     * 用户 - 创建|修改.
+     *
+     * 用户基础信息不能独立创建,
+     * 创建之后需要再执行回调函数创建实际对应的扩展用户 ( 例: 总后台用户 )
+     *
+     * @param  string        $phone    手机号
+     * @param  array         $data     用户数据
+     * @param  callable      $callable 回调函数
+     * @return UserInterface 返回回调函数执行后的结果
+     */
+    public function updateOrCreateByPhone(string $phone, array $data, callable $callable): UserInterface
+    {
+        $user = $this->repo->updateOrCreate(['phone' => $phone], $data);
+
+        return $callable($user);
     }
 
     /**

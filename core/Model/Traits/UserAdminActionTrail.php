@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Model\Traits;
 
-trait AdminActionTrail
+trait UserAdminActionTrail
 {
     /**
      * 能否 - 修改.
@@ -36,18 +36,10 @@ trait AdminActionTrail
     }
 
     /**
-     * 是否 - 启用.
+     * 检查 - 密码是否相同.
      */
-    public function isEnable(): bool
+    public function checkPassword(string $password): bool
     {
-        return $this->user->isEnable();
-    }
-
-    /**
-     * 是否 - 禁用.
-     */
-    public function isDisable(): bool
-    {
-        return $this->user->isDisable();
+        return password_verify($password, $this->password);
     }
 }

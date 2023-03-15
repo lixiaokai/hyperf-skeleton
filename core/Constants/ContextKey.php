@@ -25,5 +25,5 @@ class ContextKey extends AbstractConstants
     /**
      * 总后台用户模型.
      */
-    public const ADMIN = 'admin';
+    public const USER_ADMIN = 'userAdmin';
 }

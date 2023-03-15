@@ -6,8 +6,8 @@ namespace App\Admin\Middleware;
 
 use Core\Constants\ContextKey;
 use Core\Exception\BusinessException;
-use Core\Model\Admin;
-use Core\Service\Admin\AdminService;
+use Core\Model\UserAdmin;
+use Core\Service\User\UserAdminService;
 use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;
 use Kernel\Service\Auth\JWTAuth;
@@ -22,7 +22,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class AuthMiddleware implements MiddlewareInterface
 {
     #[Inject]
-    protected AdminService $adminService;
+    protected UserAdminService $userAdminService;
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -38,24 +38,24 @@ class AuthMiddleware implements MiddlewareInterface
      */
     protected function setUser()
     {
-        $admin = $this->getUser();
+        $userAdmin = $this->getUser();
 
-        Context::set(ContextKey::UID, $admin->id);
-        Context::set(ContextKey::ADMIN, $admin);
-        Context::set(ContextKey::USER, $admin->user);
+        Context::set(ContextKey::UID, $userAdmin->id);
+        Context::set(ContextKey::USER_ADMIN, $userAdmin);
+        Context::set(ContextKey::USER, $userAdmin->user);
     }
 
     /**
      * 获取 - 用户信息.
      */
-    protected function getUser(): Admin
+    protected function getUser(): UserAdmin
     {
-        $admin = $this->adminService->getById(self::getUid());
-        if ($admin->isDisable()) {
+        $userAdmin = $this->userAdminService->getByUserId(self::getUid());
+        if ($userAdmin->isDisable()) {
             throw new BusinessException('账号已禁用，请联系管理员');
         }
 
-        return $admin;
+        return $userAdmin;
     }
 
     /**

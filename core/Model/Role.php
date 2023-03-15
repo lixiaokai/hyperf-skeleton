@@ -36,7 +36,7 @@ use Hyperf\Database\Model\Relations\HasMany;
  * @property Collection|Menu[]       $menus       菜单 ( 多条 )
  * @property Collection|Permission[] $permissions 权限 ( 多条 )
  * @property Collection|User[]       $users       用户 ( 多条 )
- * @property Admin[]|Collection      $admins      总后台用户 ( 多条 )
+ * @property UserAdmin[]|Collection      $admins      总后台用户 ( 多条 )
  *
  * @see RoleTest::class
  */
@@ -121,6 +121,6 @@ class Role extends AbstractModel
      */
     public function admins(): BelongsToMany
     {
-        return $this->belongsToMany(Admin::class, 'role_user', 'role_id', 'user_id');
+        return $this->belongsToMany(UserAdmin::class, 'role_user', 'role_id', 'user_id');
     }
 }

@@ -5,7 +5,7 @@ namespace PHPSTORM_META {
     override(\Psr\Container\ContainerInterface::get(0), map(['' => '@']));
     override(\Hyperf\Context\Context::get(), map([
         'user' => \Core\Model\User::class,
-        'admin' => \Core\Model\Admin::class,
+        'userAdmin' => \Core\Model\UserAdmin::class,
         '' => '@'
     ]));
     override(\make(0), map(['' => '@']));

@@ -19,12 +19,4 @@ trait UserActionTrail
     {
         return false;
     }
-
-    /**
-     * 检查 - 密码是否相同.
-     */
-    public function checkPassword(string $password): bool
-    {
-        return password_verify($password, $this->password);
-    }
 }

@@ -31,6 +31,17 @@ class JWTAuth
     }
 
     /**
+     * 获取 - 某用户 token.
+     */
+    public static function token(int $uid, int $daysExp = null): JWToken
+    {
+        $JWTPayload = JWTPayload::make(['uid' => $uid]);
+        $daysExp && $JWTPayload->setExp($daysExp);
+
+        return self::encode($JWTPayload);
+    }
+
+    /**
      * 编码 - JWT.
      *
      * @see JWTServiceTest::testEncode()

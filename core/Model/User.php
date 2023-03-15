@@ -6,10 +6,8 @@ namespace Core\Model;
 
 use Carbon\Carbon;
 use Core\Contract\UserInterface;
-use Core\Model\Casts\PasswordHash;
 use Core\Model\Traits\StatusTrait;
 use Core\Model\Traits\UserActionTrail;
-use Core\Model\Traits\UserAuthTrail;
 use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Relations\BelongsToMany;
 use Hyperf\Database\Model\Relations\HasOne;
@@ -33,7 +31,6 @@ class User extends AbstractModel implements UserInterface
 {
     use StatusTrait;
     use UserActionTrail;
-    use UserAuthTrail;
 
     protected ?string $table = 'user';
 

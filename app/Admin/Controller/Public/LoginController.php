@@ -7,7 +7,7 @@ namespace App\Admin\Controller\Public;
 use App\Admin\Request\Public\LoginRequest;
 use App\Admin\Resource\Public\LoginResource;
 use Core\Controller\AbstractController;
-use Core\Service\User\UserAuthService;
+use Core\Service\User\UserAdminAuthService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\PostMapping;
@@ -22,7 +22,7 @@ use Psr\Http\Message\ResponseInterface;
 class LoginController extends AbstractController
 {
     #[Inject]
-    protected UserAuthService $userAuthService;
+    protected UserAdminAuthService $userAuthService;
 
     /**
      * 账号登录.
@@ -31,8 +31,8 @@ class LoginController extends AbstractController
     public function login(LoginRequest $request): ResponseInterface
     {
         ['phone' => $phone, 'password' => $password] = $request->validated();
-        $user = $this->userAuthService->login($phone, $password);
+        $userAdmin = $this->userAuthService->login($phone, $password);
 
-        return LoginResource::make($user);
+        return LoginResource::make($userAdmin);
     }
 }

@@ -52,7 +52,10 @@ class AuthMiddleware implements MiddlewareInterface
     {
         $userAdmin = $this->userAdminService->getByUserId(self::getUid());
         if ($userAdmin->isDisable()) {
-            throw new BusinessException('账号已禁用，请联系管理员');
+            throw new BusinessException('当前账号已禁用，请联系管理员');
+        }
+        if ($userAdmin->user->isDisable()) {
+            throw new BusinessException('基础账号已禁用，请联系管理员');
         }
 
         return $userAdmin;

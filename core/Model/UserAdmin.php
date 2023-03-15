@@ -15,6 +15,9 @@ use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Relations\BelongsTo;
 use Hyperf\Database\Model\Relations\BelongsToMany;
 use Hyperf\Utils\Collection as UCollection;
+use Kernel\Service\Auth\JWTAuth;
+use Kernel\Service\Auth\JWToken;
+use Kernel\Service\Auth\JWTUtil;
 
 /**
  * 总后台用户 - 模型.
@@ -93,6 +96,14 @@ class UserAdmin extends AbstractModel implements UserInterface
             ->where(Menu::column('status'), Status::ENABLE)
             ->get()
             ->whereIn('route', $routes);
+    }
+
+    /**
+     * 获取 - JWT.
+     */
+    public function getJWToken(int $daysExp = 14): JWToken
+    {
+        return JWTAuth::token($this->userId, $daysExp);
     }
 
     /**

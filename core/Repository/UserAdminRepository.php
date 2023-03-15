@@ -23,9 +23,6 @@ class UserAdminRepository extends AbstractRepository
 {
     protected Model|string $modelClass = UserAdmin::class;
 
-    /**
-     * 总后台用户 - 详情.
-     */
     public function getByUserId(int $userId, array $columns = ['*']): Model|UserAdmin
     {
         try {
@@ -35,9 +32,15 @@ class UserAdminRepository extends AbstractRepository
         }
     }
 
-    /**
-     * 总后台用户 - 启用.
-     */
+    public function getByPhone(string $phone): Model|UserAdmin
+    {
+        try {
+            return $this->modelClass::where('phone', $phone)->firstOrFail();
+        } catch (ModelNotFoundException) {
+            throw new NotFoundException('用户信息不存在');
+        }
+    }
+
     public function enable(UserAdmin $userAdmin): UserAdmin
     {
         $userAdmin->status = Status::ENABLE;
@@ -46,9 +49,6 @@ class UserAdminRepository extends AbstractRepository
         return $userAdmin;
     }
 
-    /**
-     * 总后台用户 - 禁用.
-     */
     public function disable(UserAdmin $userAdmin): UserAdmin
     {
         $userAdmin->status = Status::DISABLE;

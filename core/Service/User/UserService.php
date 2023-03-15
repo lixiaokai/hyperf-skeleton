@@ -36,7 +36,7 @@ class UserService extends AbstractService
         try {
             $user = $this->repo->getById($id);
         } catch (NotFoundException) {
-            throw new NotFoundException('用户信息不存在');
+            throw new NotFoundException('基础用户不存在');
         }
 
         return $user;
@@ -47,13 +47,7 @@ class UserService extends AbstractService
      */
     public function getByPhone(string $phone): User
     {
-        try {
-            $user = $this->repo->getByPhone($phone);
-        } catch (NotFoundException) {
-            throw new NotFoundException('用户信息不存在');
-        }
-
-        return $user;
+        return $this->repo->getByPhone($phone);
     }
 
     /**

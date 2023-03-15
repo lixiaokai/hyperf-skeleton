@@ -24,9 +24,9 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * 总后台用户管理 - 控制器.
  */
-#[Controller('admin/rbac/admin')]
+#[Controller('admin/rbac/user-admin')]
 #[Middlewares([AuthMiddleware::class])]
-class AdminController extends AbstractController
+class UserAdminController extends AbstractController
 {
     #[Inject]
     protected UserAdminService $service;

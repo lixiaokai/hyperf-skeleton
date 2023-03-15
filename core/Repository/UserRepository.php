@@ -27,7 +27,7 @@ class UserRepository extends AbstractRepository
         try {
             return $this->modelClass::where('phone', $phone)->firstOrFail();
         } catch (ModelNotFoundException) {
-            throw new NotFoundException();
+            throw new NotFoundException('基础用户不存在');
         }
     }
 

@@ -60,6 +60,14 @@ class UserAdminService extends AbstractService
     }
 
     /**
+     * 总后台用户 - 详情 ( 根据手机号 ).
+     */
+    public function getByPhone(string $phone): UserAdmin
+    {
+        return $this->repo->getByPhone($phone);
+    }
+
+    /**
      * 总后台用户 - 创建.
      */
     #[Transactional]

@@ -17,8 +17,7 @@ class UserAdminResource extends AbstractResource
     public function toArray(): array
     {
         return [
-            'id' => $this->resource->id,
-            'userId' => $this->resource->userId,
+            'id' => $this->resource->userId,
             'name' => $this->resource->name,
             'phone' => $this->resource->phone,
             'status' => $this->resource->status,

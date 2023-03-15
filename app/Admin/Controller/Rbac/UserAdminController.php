@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Admin\Controller\Rbac;
 
-use App\Admin\Collection\UserAdminCollection;
+use App\Admin\Collection\Rbac\UserAdminCollection;
 use App\Admin\Middleware\AuthMiddleware;
 use App\Admin\Request\Rbac\UserAdminRequest;
-use App\Admin\Resource\UserAdminResource;
+use App\Admin\Resource\Rbac\UserAdminResource;
 use Core\Controller\AbstractController;
 use Core\Request\SearchRequest;
 use Core\Service\User\UserAdminService;

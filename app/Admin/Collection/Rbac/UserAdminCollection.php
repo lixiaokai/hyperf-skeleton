@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Admin\Collection;
+namespace App\Admin\Collection\Rbac;
 
 use Core\Resource\AbstractCollection;
 

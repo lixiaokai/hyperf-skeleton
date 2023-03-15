@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Admin\Controller\Rbac;
 
 use App\Admin\Middleware\AuthMiddleware;
-use App\Admin\Resource\MenuResource;
 use App\Admin\Request\Rbac\MenuRequest;
+use App\Admin\Resource\Rbac\MenuResource;
 use Core\Constants\Platform;
 use Core\Controller\AbstractController;
 use Core\Service\Rbac\MenuService;

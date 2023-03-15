@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Admin\Resource;
+namespace App\Admin\Resource\Rbac;
 
 use Core\Model\Menu;
 use Core\Resource\AbstractResource;

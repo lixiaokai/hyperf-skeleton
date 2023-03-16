@@ -91,8 +91,13 @@ class UserAdminController extends AbstractController
     /**
      * 总后台用户管理 - 重置密码.
      */
-    public function resetPassword(): ResponseInterface
+    #[PutMapping('{userId}/reset-password')]
+    public function resetPassword(UserAdminRequest $request, int $userId): ResponseInterface
     {
+        ['password' => $password] = $request->validated(UserAdminRequest::SCENE_RESET_PASSWORD);
+        $userAdmin = $this->service->getByUserId($userId);
+        $this->service->resetPassword($userAdmin, $password);
+
         return Response::success();
     }
 

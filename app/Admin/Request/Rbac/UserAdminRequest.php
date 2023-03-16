@@ -7,15 +7,17 @@ use Core\Request\FormRequest;
 use Hyperf\Validation\Rule;
 
 /**
- * 总后台用户 - 创建|修改 - 请求类.
+ * 总后台用户 - 创建|修改|重置密码 - 请求类.
  */
 class UserAdminRequest extends FormRequest
 {
     public const SCENE_UPDATE = 'update';
 
+    public const SCENE_RESET_PASSWORD = 'resetPassword';
+
     protected array $scenes = [
-        // 修改时需要验证且提交的字段
         self::SCENE_UPDATE => ['roleIds', 'name', 'phone', 'status'],
+        self::SCENE_RESET_PASSWORD => ['password', 'confirmPassword'],
     ];
 
     public function rules(): array

@@ -140,4 +140,12 @@ class UserAdminService extends AbstractService
     {
         return $this->repo->disable($userAdmin);
     }
+
+    /**
+     * 总后台用户 - 重置密码.
+     */
+    public function resetPassword(UserAdmin $userAdmin, string $password): UserAdmin
+    {
+        return $this->repo->resetPassword($userAdmin, $password);
+    }
 }

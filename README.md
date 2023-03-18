@@ -12,7 +12,7 @@ Dockerfile 的各个版本： [hyperf/hyperf-docker](https://github.com/hyperf/h
 当你不想使用 Docker 作为运行环境的基础时，你需要确保你的操作环境满足以下要求:
 
 - PHP >= 8.0
-- ext-swoole >= 4.5 ( php.ini swoole.use_shortname=Off 配置为关闭 )
+- [ext-swoole](https://pecl.php.net/package/swoole) >= 5.0 ( php.ini swoole.use_shortname=Off 配置为关闭 )
 - ext-json
 - ext-pcntl
 - ext-openssl ( 如需要使用到 HTTPS )
@@ -20,6 +20,9 @@ Dockerfile 的各个版本： [hyperf/hyperf-docker](https://github.com/hyperf/h
 - ext-redis ( 如需要使用到 Redis 客户端 )
 - ext-protobuf ( 如需要使用到 gRPC 服务端或客户端 )
 
+> 依赖性注意：
+> 1. swoole 4.8.x 需要 php7.2 +
+> 2. swoole 5.x.x 需要 php8.0 +
 
 # 三、安装或更新依赖
 
@@ -169,6 +172,14 @@ composer kill
 │  ├─static       // 静态资源目录
 ├─ storage        // 语言文件
 ```
+
+说明：
+1. 建议使用注解路由 ( 不使用配置路由 )，直接在对应的控制器上写注解即可
+2. MVC 模式上加了服务层 ( Service ) 和仓库层 ( Repository )
+3. 分层调用顺序：控制层 -> 服务层 ( 业务逻辑层，可以调用其他服务层 ) -> 仓库层 ( 数据逻辑层 ) -> 模型层
+4. 关于视图层 ( 即 API 资源层 )：在控制器中获取服务层的返回数据，传入 API 资源层然后返回即可
+5. 关于验证层：在控制器中以参数的形式注入方法即可，然后调用 `$request->validated()` 获取验证后的数据
+6. 具体可参考演示控制器 [app/Demo/Controller/TestController.php](app/Demo/Controller/TestController.php)
 
 ## 2. [ 根目录 ] 增加 "文件夹" 时需修改如下 3 处位置
 

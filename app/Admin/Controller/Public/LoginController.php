@@ -6,6 +6,8 @@ namespace App\Admin\Controller\Public;
 
 use App\Admin\Request\Public\LoginRequest;
 use App\Admin\Resource\Public\LoginResource;
+use Core\Annotation\LoginLimit;
+use Core\Constants\Platform;
 use Core\Controller\AbstractController;
 use Core\Service\User\UserAdminAuthService;
 use Hyperf\Di\Annotation\Inject;
@@ -27,7 +29,7 @@ class LoginController extends AbstractController
     /**
      * 账号登录.
      */
-    #[PostMapping('')]
+    #[PostMapping(''), LoginLimit(id: 'phone', prefix: Platform::ADMIN)]
     public function login(LoginRequest $request): ResponseInterface
     {
         ['phone' => $phone, 'password' => $password] = $request->validated();

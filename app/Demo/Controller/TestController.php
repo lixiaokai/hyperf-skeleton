@@ -52,6 +52,16 @@ class TestController extends AbstractController
 
     /**
      * 测试 - 创建.
+     *
+     * 如果创建成功不需要返回详情数据，不需要传参，可使用 success() 方法
+     * @example return Response::success()
+     * ```
+     * [
+     *     'code' => 200,
+     *     'message' => '操作成功',
+     *     'data' => [],
+     * ]
+     * ```
      */
     #[PostMapping('')]
     public function create(TestRequest $request): ResponseInterface

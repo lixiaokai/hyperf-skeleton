@@ -17,7 +17,6 @@ use Hyperf\Database\Model\Relations\BelongsToMany;
 use Hyperf\Utils\Collection as UCollection;
 use Kernel\Service\Auth\JWTAuth;
 use Kernel\Service\Auth\JWToken;
-use Kernel\Service\Auth\JWTUtil;
 
 /**
  * 总后台用户 - 模型.

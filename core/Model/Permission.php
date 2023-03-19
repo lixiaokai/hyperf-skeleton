@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Core\Model;
 
 use Carbon\Carbon;
+use Core\Model\Traits\PermissionActionTrail;
 use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Relations\BelongsToMany;
 use Hyperf\Database\Model\SoftDeletes;
@@ -29,6 +30,7 @@ use Yadakhov\InsertOnDuplicateKey;
  */
 class Permission extends AbstractModel
 {
+    use PermissionActionTrail;
     use SoftDeletes;
     use InsertOnDuplicateKey;
 

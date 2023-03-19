@@ -30,6 +30,13 @@ return [
         Constant::OPTION_MAX_REQUEST => 100000,
         Constant::OPTION_SOCKET_BUFFER_SIZE => 2 * 1024 * 1024,
         Constant::OPTION_BUFFER_OUTPUT_SIZE => 2 * 1024 * 1024,
+
+        /*
+         * 静态资源 - 配置.
+         * @see https://hyperf.wiki/3.0/#/zh-cn/filesystem?id=%e9%85%8d%e7%bd%ae%e9%9d%99%e6%80%81%e8%b5%84%e6%ba%90
+         */
+        // Constant::OPTION_DOCUMENT_ROOT => BASE_PATH . '/public', // 静态资源目录
+        // Constant::OPTION_ENABLE_STATIC_HANDLER => true,          // 是否启用静态资源
     ],
     'callbacks' => [
         Event::ON_WORKER_START => [Hyperf\Framework\Bootstrap\WorkerStartCallback::class, 'onWorkerStart'],

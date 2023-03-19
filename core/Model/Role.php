@@ -33,10 +33,9 @@ use Hyperf\Database\Model\Relations\HasMany;
  * @property Role                    $parent      父级角色
  * @property Collection|Role[]       $children    子级角色 ( 多条 )
  * @property Collection|Role[]       $siblings    同级角色 ( 多条 )
- * @property Collection|Menu[]       $menus       菜单 ( 多条 )
  * @property Collection|Permission[] $permissions 权限 ( 多条 )
  * @property Collection|User[]       $users       用户 ( 多条 )
- * @property UserAdmin[]|Collection      $admins      总后台用户 ( 多条 )
+ * @property Collection|UserAdmin[]  $admins      总后台用户 ( 多条 )
  *
  * @see RoleTest::class
  */
@@ -99,11 +98,6 @@ class Role extends AbstractModel
     public function siblings(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id', 'parent_id');
-    }
-
-    public function menus(): BelongsToMany
-    {
-        return $this->belongsToMany(Menu::class, 'role_menu');
     }
 
     public function permissions(): BelongsToMany

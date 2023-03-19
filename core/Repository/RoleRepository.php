@@ -49,11 +49,11 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
-     * 角色 - 修改 - 关联权限菜单.
+     * 角色 - 绑定权限.
      */
-    public function updateMenus(Role $role, array $menuIds): array
+    public function bindPermissions(Role $role, array $permissionIds): array
     {
-        return $role->menus()->sync($menuIds);
+        return $role->permissions()->sync($permissionIds);
     }
 
     /**

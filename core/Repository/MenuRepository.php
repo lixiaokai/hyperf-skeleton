@@ -14,7 +14,7 @@ use Hyperf\Database\Model\Model;
 use Kernel\Helper\TreeHelper;
 
 /**
- * 权限菜单 - 仓库类.
+ * 菜单 - 仓库类.
  *
  * @method Menu              getById(int $id)
  * @method Collection|Menu[] getByIds(array $ids, array $columns = ['*'])

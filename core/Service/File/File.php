@@ -39,7 +39,7 @@ class File
             $attachment = $attachmentService->getByHash($hash);
 
             // [ 附件记录 ] 存在，但 [ 附件文件 ] 不存在则上传 + 更新记录
-            if (make(Filesystem::class)->fileExists($attachment->path)) {
+            if (! make(Filesystem::class)->fileExists($attachment->path)) {
                 $path = $upload->handle($uploadedFile);
                 $attachment = $attachmentService->update($attachment, self::buildData($uploadedFile, $path, $hash));
             }

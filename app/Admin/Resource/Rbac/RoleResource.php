@@ -26,8 +26,8 @@ class RoleResource extends AbstractResource
             'status' => $this->resource->status, // 状态
             'statusText' => $this->resource->statusText, // 状态 - 文字
             'sort' => $this->resource->sort, // 排序
-            'created_at' => $this->toDateTimeString($this->resource->createdAt), // 创建时间
-            'updated_at' => $this->toDateTimeString($this->resource->updatedAt), // 修改时间
+            'createdAt' => $this->toDateTimeString($this->resource->createdAt), // 创建时间
+            'updatedAt' => $this->toDateTimeString($this->resource->updatedAt), // 修改时间
         ];
     }
 }

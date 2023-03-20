@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Service\Rbac;
 
+use Core\Constants\Platform;
 use Core\Exception\BusinessException;
 use Core\Exception\NotFoundException;
 use Core\Model\Menu;
@@ -64,9 +65,13 @@ class MenuService extends AbstractService
     /**
      * 菜单 - 创建.
      */
-    public function create(array $data): Menu
+    public function create(array $data, string $platform = Platform::ADMIN): Menu
     {
-        return $this->repo->create($data);
+        if (! Platform::has($platform)) {
+            throw new BusinessException("终端平台类型值 {$platform} 是不允许的");
+        }
+
+        return $this->repo->create($data, $platform);
     }
 
     /**

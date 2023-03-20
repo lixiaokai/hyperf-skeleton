@@ -18,7 +18,6 @@ use Kernel\Helper\TreeHelper;
  *
  * @method Menu              getById(int $id)
  * @method Collection|Menu[] getByIds(array $ids, array $columns = ['*'])
- * @method Menu              create(array $data)
  * @method Menu              update(Menu $model, array $data)
  */
 class MenuRepository extends AbstractRepository
@@ -64,6 +63,18 @@ class MenuRepository extends AbstractRepository
         return TreeHelper::toTrees(
             $this->getList($platform, $status)->toArray()
         );
+    }
+
+    /**
+     * 菜单 - 创建.
+     */
+    public function create(array $data, string $platform = null): Model|Menu
+    {
+        if ($platform) {
+            $data = array_merge($data, compact('platform'));
+        }
+
+        return parent::create($data);
     }
 
     /**

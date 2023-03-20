@@ -21,7 +21,7 @@ use Kernel\Response\Response;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * 菜单 - 控制器.
+ * 菜单管理 - 控制器.
  */
 #[Controller('admin/rbac/menu')]
 #[Middlewares([AuthMiddleware::class])]
@@ -31,7 +31,7 @@ class MenuController extends AbstractController
     protected MenuService $service;
 
     /**
-     * 菜单 - 列表.
+     * 菜单管理 - 列表.
      */
     #[GetMapping('')]
     public function index(): ResponseInterface
@@ -42,7 +42,7 @@ class MenuController extends AbstractController
     }
 
     /**
-     * 菜单 - 详情.
+     * 菜单管理 - 详情.
      */
     #[GetMapping('{id}')]
     public function show(int $id): ResponseInterface
@@ -53,7 +53,7 @@ class MenuController extends AbstractController
     }
 
     /**
-     * 菜单 - 创建.
+     * 菜单管理 - 创建.
      */
     #[PostMapping('')]
     public function create(MenuRequest $request): ResponseInterface
@@ -64,7 +64,7 @@ class MenuController extends AbstractController
     }
 
     /**
-     * 菜单 - 修改.
+     * 菜单管理 - 修改.
      */
     #[PutMapping('{id}')]
     public function update(MenuRequest $request, int $id): ResponseInterface
@@ -76,7 +76,7 @@ class MenuController extends AbstractController
     }
 
     /**
-     * 菜单 - 删除.
+     * 菜单管理 - 删除.
      */
     #[DeleteMapping('{id}')]
     public function delete(int $id): ResponseInterface
@@ -88,7 +88,7 @@ class MenuController extends AbstractController
     }
 
     /**
-     * 菜单 - 启用.
+     * 菜单管理 - 启用.
      */
     #[PutMapping('{id}/enable')]
     public function enable(int $id): ResponseInterface
@@ -100,7 +100,7 @@ class MenuController extends AbstractController
     }
 
     /**
-     * 菜单 - 禁用.
+     * 菜单管理 - 禁用.
      */
     #[PutMapping('{id}/disable')]
     public function disable(int $id): ResponseInterface

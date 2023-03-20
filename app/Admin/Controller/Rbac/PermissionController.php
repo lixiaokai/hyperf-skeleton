@@ -21,7 +21,7 @@ use Kernel\Response\Response;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * 权限 - 控制器.
+ * 权限管理 - 控制器.
  */
 #[Controller('admin/rbac/permission')]
 #[Middlewares([AuthMiddleware::class])]
@@ -31,7 +31,7 @@ class PermissionController extends AbstractController
     protected PermissionService $service;
 
     /**
-     * 权限 - 列表.
+     * 权限管理 - 列表.
      */
     #[GetMapping('')]
     public function index(): ResponseInterface
@@ -42,7 +42,7 @@ class PermissionController extends AbstractController
     }
 
     /**
-     * 权限 - 详情.
+     * 权限管理 - 详情.
      */
     #[GetMapping('{id}')]
     public function show(int $id): ResponseInterface
@@ -53,7 +53,7 @@ class PermissionController extends AbstractController
     }
 
     /**
-     * 权限 - 创建.
+     * 权限管理 - 创建.
      */
     public function create(PermissionRequest $request): ResponseInterface
     {
@@ -63,7 +63,7 @@ class PermissionController extends AbstractController
     }
 
     /**
-     * 权限 - 收集.
+     * 权限管理 - 收集.
      */
     #[PostMapping('')]
     public function collect(): ResponseInterface
@@ -74,7 +74,7 @@ class PermissionController extends AbstractController
     }
 
     /**
-     * 权限 - 修改.
+     * 权限管理 - 修改.
      */
     #[PutMapping('{id}')]
     public function update(PermissionRequest $request, int $id): ResponseInterface
@@ -86,7 +86,7 @@ class PermissionController extends AbstractController
     }
 
     /**
-     * 权限 - 删除.
+     * 权限管理 - 删除.
      */
     #[DeleteMapping('{id}')]
     public function delete(int $id): ResponseInterface

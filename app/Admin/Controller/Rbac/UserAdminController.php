@@ -22,7 +22,7 @@ use Kernel\Response\Response;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * 总后台用户管理 - 控制器.
+ * 用户管理 - 控制器.
  */
 #[Controller('admin/rbac/user-admin')]
 #[Middlewares([AuthMiddleware::class])]
@@ -32,7 +32,7 @@ class UserAdminController extends AbstractController
     protected UserAdminService $service;
 
     /**
-     * 总后台用户管理 - 列表.
+     * 用户管理 - 列表.
      */
     #[GetMapping('')]
     public function index(SearchRequest $request): ResponseInterface
@@ -43,7 +43,7 @@ class UserAdminController extends AbstractController
     }
 
     /**
-     * 总后台用户管理 - 详情.
+     * 用户管理 - 详情.
      */
     #[GetMapping('{userId}')]
     public function show(int $userId): ResponseInterface
@@ -54,7 +54,7 @@ class UserAdminController extends AbstractController
     }
 
     /**
-     * 总后台用户管理 - 创建.
+     * 用户管理 - 创建.
      */
     #[PostMapping('')]
     public function create(UserAdminRequest $request): ResponseInterface
@@ -65,7 +65,7 @@ class UserAdminController extends AbstractController
     }
 
     /**
-     * 总后台用户管理 - 修改.
+     * 用户管理 - 修改.
      */
     #[PutMapping('{userId}')]
     public function update(UserAdminRequest $request, int $userId): ResponseInterface
@@ -77,7 +77,7 @@ class UserAdminController extends AbstractController
     }
 
     /**
-     * 总后台用户管理 - 删除.
+     * 用户管理 - 删除.
      */
     #[DeleteMapping('{userId}')]
     public function delete(int $userId): ResponseInterface
@@ -89,7 +89,7 @@ class UserAdminController extends AbstractController
     }
 
     /**
-     * 总后台用户管理 - 重置密码.
+     * 用户管理 - 重置密码.
      */
     #[PutMapping('{userId}/reset-password')]
     public function resetPassword(UserAdminRequest $request, int $userId): ResponseInterface
@@ -102,7 +102,7 @@ class UserAdminController extends AbstractController
     }
 
     /**
-     * 总后台用户管理 - 启用.
+     * 用户管理 - 启用.
      */
     #[PutMapping('{userId}/enable')]
     public function enable(int $userId): ResponseInterface
@@ -114,7 +114,7 @@ class UserAdminController extends AbstractController
     }
 
     /**
-     * 总后台用户管理 - 禁用.
+     * 用户管理 - 禁用.
      */
     #[PutMapping('{userId}/disable')]
     public function disable(int $userId): ResponseInterface

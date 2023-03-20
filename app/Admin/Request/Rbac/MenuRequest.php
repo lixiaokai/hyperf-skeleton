@@ -6,7 +6,6 @@ namespace App\Admin\Request\Rbac;
 
 use Core\Constants\Status;
 use Core\Model\Menu;
-use Core\Model\Permission;
 use Core\Request\FormRequest;
 use Hyperf\Validation\Rule;
 use Hyperf\Validation\Rules\Exists;
@@ -26,15 +25,9 @@ class MenuRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'parentId' => [
-                'bail', 'nullable', 'integer',
-                $this->parentIdExists(),
-            ],
+            'parentId' => ['bail', 'integer', $this->parentIdExists()],
             'path' => ['bail', 'required', 'string', 'max:100'],
-            'route' => [
-                'bail', 'required', 'string', 'max:100',
-                Rule::exists(Permission::table(), 'route'),
-            ],
+            'route' => ['bail', 'string', 'max:100', $this->routeExists()],
             'name' => ['bail', 'required', 'string', 'max:20'],
             'desc' => ['bail', 'string', 'max:250'],
             'icon' => ['bail', 'string', 'max:50'],
@@ -62,6 +55,18 @@ class MenuRequest extends FormRequest
     {
         $parentId = $this->input('parentId');
         if ($parentId > 0) {
+            return Rule::exists(Menu::table(), 'id')->where('status', Status::ENABLE);
+        }
+
+        return null;
+    }
+
+    protected function routeExists(): ?Exists
+    {
+        $route = $this->input('route');
+
+        // 有值时才验证
+        if ($route) {
             return Rule::exists(Menu::table(), 'id')->where('status', Status::ENABLE);
         }
 

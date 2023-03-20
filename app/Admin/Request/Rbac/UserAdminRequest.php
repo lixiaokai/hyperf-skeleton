@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Admin\Request\Rbac;
 
 use Core\Constants\Status;
+use Core\Model\Role;
+use Core\Model\UserAdmin;
 use Core\Request\FormRequest;
 use Hyperf\Validation\Rule;
 
@@ -28,12 +30,12 @@ class UserAdminRequest extends FormRequest
             'roleIds' => ['bail', 'required', 'array'],
             'roleIds.*' => [
                 'bail', 'required', 'integer',
-                Rule::exists('role', 'id')->where('status', Status::ENABLE),
+                Rule::exists(Role::table(), 'id')->where('status', Status::ENABLE),
             ],
             'name' => ['bail', 'required', 'string', 'max:20'],
             'phone' => [
-                'bail', 'mobile',
-                Rule::unique('user_admin', 'phone')->ignore($this->route('userId'), 'user_id'),
+                'bail', 'required', 'mobile',
+                Rule::unique(UserAdmin::table(), 'phone')->ignore($this->route('userId'), 'user_id'),
             ],
             'password' => ['bail', 'required', 'string', 'min:6'],
             'confirmPassword' => ['bail', 'required', 'same:password'],

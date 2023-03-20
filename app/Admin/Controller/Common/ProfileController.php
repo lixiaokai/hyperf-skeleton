@@ -6,7 +6,7 @@ namespace App\Admin\Controller\Common;
 
 use App\Admin\Middleware\AuthMiddleware;
 use App\Admin\Request\Common\ProfileResetPasswordRequest;
-use App\Admin\Resource\Common\MyProFileResource;
+use App\Admin\Resource\Common\ProFileResource;
 use Core\Constants\ContextKey;
 use Core\Controller\AbstractController;
 use Core\Service\User\UserAdminService;
@@ -38,7 +38,7 @@ class ProfileController extends AbstractController
         $uid = Context::get(ContextKey::UID);
         $userAdmin = $this->userAdminService->getByUserId($uid);
 
-        return MyProFileResource::make($userAdmin);
+        return ProFileResource::make($userAdmin);
     }
 
     /**

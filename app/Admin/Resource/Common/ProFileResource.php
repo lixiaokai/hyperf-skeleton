@@ -13,7 +13,7 @@ use Core\Resource\AbstractResource;
  *
  * @property UserAdmin $resource
  */
-class MyProFileResource extends AbstractResource
+class ProFileResource extends AbstractResource
 {
     public function toArray(): array
     {
@@ -23,7 +23,7 @@ class MyProFileResource extends AbstractResource
             'phone' => $this->resource->phone,
             'status' => $this->resource->status,
             'statusText' => $this->resource->statusText,
-            'roles' => $this->resource->roles()->orderByDesc('sort')->get()->map(function (Role $role) {
+            'roles' => $this->resource->roles->sortBy('sort')->map(function (Role $role) {
                 return [
                     'id' => $role->id,
                     'name' => $role->name,

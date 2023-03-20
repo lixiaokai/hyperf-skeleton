@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Core\Model\Traits;
 
+use Core\Constants\Status;
+use Core\Model\Role;
+use Hyperf\Context\Context;
+
 trait UserAdminActionTrail
 {
     /**
@@ -24,15 +28,18 @@ trait UserAdminActionTrail
 
     /**
      * 是否 - 有权限.
+     *
+     * @see UserAdminActionTrailTest::testCan()
      */
     public function can(string $route): bool
     {
-        static $permission;
-        if (empty($routers)) {
-            $permission = $this->getPermissions();
-        }
-
-        return $permission->contains('route', $route);
+        $id = 'Permission:' . $route;
+        return Context::getOrSet($id, function () use ($route) {
+            if ($this->isAdministrator()) {
+                return true;
+            }
+            return $this->getPermissions()->contains('route', $route);
+        });
     }
 
     /**
@@ -41,5 +48,20 @@ trait UserAdminActionTrail
     public function checkPassword(string $password): bool
     {
         return password_verify($password, (string) $this->password);
+    }
+
+    /**
+     * 是否 - 超级管理员.
+     *
+     * 检查拥有的角色中是否包含超管角色
+     *
+     * @see UserAdminActionTrailTest::testIsAdministrator()
+     */
+    public function isAdministrator(): bool
+    {
+        return $this->roles()
+            ->where(Role::column('status'), Status::ENABLE)
+            ->get()
+            ->contains(fn (Role $role) => $role->isAdministrator());
     }
 }

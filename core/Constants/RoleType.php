@@ -9,27 +9,24 @@ use Hyperf\Constants\Annotation\Constants;
 /**
  * 角色类型 - 常量.
  *
+ * 说明：不是所有终端都有该类型，一般用于某终端有 [ 系统角色 ] 和 [ 自定义角色 ] 时使用
+ *
  * @method static string getText(string $code)
  * @method static string getPlatformKey(string $code) 该 [ 角色类型 ] 所属平台的 Key
  */
 #[Constants]
 class RoleType extends AbstractConstants
 {
-    /**
-     * @Text("总后台角色")
-     * @PlatformKey("admin")
-     */
-    public const ADMIN = 'admin';
 
 //    /**
-//     * @Text("租户默认角色")
+//     * @Text("租户系统角色")
 //     * @PlatformKey("tenant")
 //     */
-//    public const TENANT_DEFAULT = 'tenantDefault';
+//    public const TENANT_DEFAULT = 'system';
 //
 //    /**
 //     * @Text("租户自定义角色")
 //     * @PlatformKey("tenant")
 //     */
-//    public const TENANT_CUSTOM = 'tenantCustom';
+//    public const TENANT_CUSTOM = 'custom';
 }

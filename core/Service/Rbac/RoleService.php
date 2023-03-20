@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Service\Rbac;
 
+use Core\Constants\Platform;
 use Core\Model\Role;
 use Core\Repository\RoleRepository;
 use Core\Service\AbstractService;
@@ -46,9 +47,13 @@ class RoleService extends AbstractService
     /**
      * 角色 - 创建.
      */
-    public function create(array $data): Role
+    public function create(array $data, string $platform = Platform::ADMIN): Role
     {
-        return $this->repo->create($data);
+        if (! Platform::has($platform)) {
+            throw new \Core\Exception\BusinessException("终端平台类型值 {$platform} 是不允许的");
+        }
+
+        return $this->repo->create($data, $platform);
     }
 
     /**

@@ -17,7 +17,6 @@ use Hyperf\Database\Model\Model;
  *
  * @method Role              getById(int $id)
  * @method Collection|Role[] getByIds(array $ids, array $columns = ['*'])
- * @method Role              create(array $data)
  * @method Role              update(Role $model, array $data)
  */
 class RoleRepository extends AbstractRepository
@@ -49,11 +48,15 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
-     * 角色 - 绑定权限.
+     * 角色 - 创建.
      */
-    public function bindPermissions(Role $role, array $permissionIds): array
+    public function create(array $data, string $platform = null): Model|Role
     {
-        return $role->permissions()->sync($permissionIds);
+        if ($platform) {
+            $data = array_merge($data, compact('platform'));
+        }
+
+        return parent::create($data);
     }
 
     /**
@@ -76,5 +79,13 @@ class RoleRepository extends AbstractRepository
         $role->save();
 
         return $role;
+    }
+
+    /**
+     * 角色 - 绑定权限.
+     */
+    public function bindPermissions(Role $role, array $permissionIds): array
+    {
+        return $role->permissions()->sync($permissionIds);
     }
 }

@@ -16,10 +16,7 @@ class RolePermissionRequest extends FormRequest
     {
         return [
             'permissionIds' => ['bail', 'array'],
-            'permissionIds.*' => [
-                'bail', 'integer',
-                Rule::exists(Permission::table(), 'id')->where('status', Status::ENABLE),
-            ],
+            'permissionIds.*' => ['bail', 'integer', Rule::exists(Permission::table(), 'id')],
         ];
     }
 

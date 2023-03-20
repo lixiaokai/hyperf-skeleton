@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Core\Model;
 
 use Carbon\Carbon;
+use Core\Constants\Platform;
 use Core\Constants\RoleType;
 use Core\Model\Traits\RoleActionTrail;
 use Core\Model\Traits\StatusTrait;
@@ -16,17 +17,18 @@ use Hyperf\Database\Model\Relations\HasMany;
 /**
  * 角色 - 模型.
  *
- * @property int    $id        角色 ID
- * @property int    $parentId  父 ID
- * @property string $platform  终端平台 ( @see \Core\Constants\Platform::class )
- * @property string $type      类型 ( @see \Core\Constants\RoleType::class )
- * @property string $name      名称
- * @property string $remark    备注
- * @property int    $sort      排序
- * @property string $status    状态 ( enable-启用 disable-禁用 )
- * @property Carbon $createdAt 创建时间
- * @property Carbon $updatedAt 修改时间
+ * @property int     $id        角色 ID
+ * @property int     $parentId  父 ID ( 当有租户模式时可能会用到 )
+ * @property string  $platform  终端平台 ( @see \Core\Constants\Platform::class )
+ * @property ?string $type      类型 ( @see \Core\Constants\RoleType::class )
+ * @property string  $name      名称
+ * @property string  $remark    备注
+ * @property int     $sort      排序
+ * @property string  $status    状态 ( enable-启用 disable-禁用 )
+ * @property Carbon  $createdAt 创建时间
+ * @property Carbon  $updatedAt 修改时间
  *
+ * @property string $platformText    终端平台 - 文字
  * @property string $typePlatformKey 类型所属终端平台 - key
  * @property string $typeText        类型 - 文字
  *
@@ -74,6 +76,11 @@ class Role extends AbstractModel
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function getPlatformTextAttribute(): string
+    {
+        return Platform::getText($this->platform);
+    }
 
     public function getTypeTextAttribute(): string
     {

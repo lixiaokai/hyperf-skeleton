@@ -39,6 +39,11 @@ class UserAdminAuthService extends UserAdminService
         // Todo: 旧 $token 处理  ( 放入带有过期时间的黑名单队列中 )
         // Todo: $refreshToken 处理
 
-        return Context::get(ContextKey::USER_ADMIN);
+        $userAdmin = Context::get(ContextKey::USER_ADMIN);
+        if ($userAdmin === null) {
+            throw new BusinessException('用户未登录');
+        }
+
+        return $userAdmin;
     }
 }

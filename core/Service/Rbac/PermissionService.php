@@ -102,24 +102,25 @@ class PermissionService extends AbstractService
      *
      * @see https://hyperf.wiki/3.0/#/zh-cn/command
      */
-    public function collect(): int
+    public function collect(): void
     {
-        $command = 'collect:permissions';
-        $params = ['command' => $command];
+        // 异步协程处理
+        co(function () {
+            $command = 'collect:permissions';
+            $params = ['command' => $command];
 
-        $input = new ArrayInput($params);
-        $output = new NullOutput();
+            $input = new ArrayInput($params);
+            $output = new NullOutput();
 
-        /* @var $application Application */
-        $application = $this->container->get(ApplicationInterface::class);
-        $application->setAutoExit(false);
+            /* @var $application Application */
+            $application = $this->container->get(ApplicationInterface::class);
+            $application->setAutoExit(false);
 
-        try {
-            $exitCode = $application->find($command)->run($input, $output);
-        } catch (ExceptionInterface $e) {
-            throw new BusinessException($e->getMessage());
-        }
-
-        return $exitCode;
+            try {
+                $application->find($command)->run($input, $output);
+            } catch (ExceptionInterface $e) {
+                throw new BusinessException($e->getMessage());
+            }
+        });
     }
 }

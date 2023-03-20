@@ -88,13 +88,22 @@ class UserAdmin extends AbstractModel implements UserInterface
      */
     public function getMenus(): array|UCollection
     {
-        $routes = $this->getPermissions()->pluck('route');
-
-        return Menu::query()
+        // 1. 获取所有启用的菜单
+        $menus = Menu::query()
             ->where(Menu::column('platform'), Platform::ADMIN)
             ->where(Menu::column('status'), Status::ENABLE)
-            ->get()
-            ->whereIn('route', $routes);
+            ->get();
+
+        // 2. 如果不是超管
+        if (! $this->isAdministrator()) {
+            // 2.1. 获取我的权限路由
+            $routes = $this->getPermissions()->pluck('route');
+
+            // 2.2. 获取有权限路由的菜单 ( 集合 where 时会保留索引，这里去掉索引 )
+            $menus = $menus->whereIn('route', $routes)->values();
+        }
+
+        return $menus;
     }
 
     /**

@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Admin\Controller\Common;
 
 use App\Admin\Middleware\AuthMiddleware;
-use Core\Constants\Platform;
-use Core\Constants\Status;
 use Core\Controller\AbstractController;
-use Core\Service\Rbac\MenuService;
+use Core\Service\User\UserAdminMenuService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
@@ -26,7 +24,7 @@ use Psr\Http\Message\ResponseInterface;
 class MenuController extends AbstractController
 {
     #[Inject]
-    protected MenuService $service;
+    protected UserAdminMenuService $service;
 
     /**
      * 菜单 - 列表 ( 树 ).
@@ -34,8 +32,8 @@ class MenuController extends AbstractController
     #[GetMapping('')]
     public function listTrees(): ResponseInterface
     {
-        $menuTrees = $this->service->trees(Platform::ADMIN, Status::ENABLE);
+        $menuTrees = $this->service->getMenuTrees();
 
-        return Response::withData($menuTrees);
+        return Response::withData($menuTrees, ''); // 不输出提示
     }
 }

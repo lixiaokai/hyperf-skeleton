@@ -22,6 +22,7 @@ class UserAdminResource extends AbstractResource
             'phone' => $this->resource->phone,
             'status' => $this->resource->status,
             'statusText' => $this->resource->statusText,
+            'roleIds' => $this->resource->roles->pluck('id'),
             'createdAt' => $this->toDateTimeString($this->resource->createdAt),
             'updatedAt' => $this->toDateTimeString($this->resource->updatedAt),
         ];

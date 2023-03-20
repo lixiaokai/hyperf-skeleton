@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Admin\Controller\Common;
 
 use App\Admin\Middleware\AuthMiddleware;
-use App\Admin\Request\Rbac\UserAdminRequest;
+use App\Admin\Request\Common\ProfileResetPasswordRequest;
 use App\Admin\Resource\Common\MyProFileResource;
 use Core\Constants\ContextKey;
 use Core\Controller\AbstractController;
@@ -45,10 +45,10 @@ class ProfileController extends AbstractController
      * 我的 - 修改密码.
      */
     #[PutMapping('reset-password')]
-    public function resetPassword(UserAdminRequest $request): ResponseInterface
+    public function resetPassword(ProfileResetPasswordRequest $request): ResponseInterface
     {
         $userAdmin = Context::get(ContextKey::USER_ADMIN);
-        ['password' => $password] = $request->validated(UserAdminRequest::SCENE_RESET_PASSWORD);
+        ['password' => $password] = $request->validated();
         $this->userAdminService->resetPassword($userAdmin, $password);
 
         return Response::success();

@@ -13,6 +13,9 @@
     - [x] [文件上传](https://github.com/thephpleague/flysystem) ( 支持: 本地 | FTP | 阿里云 | 腾讯云 | 七牛云 | AWS S3 | 内存 )
     - [x] 菜单列表 ( 树 )
     - [x] 用户刷新 Token
+    - [x] 个人中心
+      - [x] 我的 - 详情
+      - [x] 我的 - 修改密码
   - 用户管理
     - [x] 列表
     - [x] 详情

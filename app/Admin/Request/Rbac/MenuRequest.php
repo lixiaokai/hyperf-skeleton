@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Admin\Request\Rbac;
 
 use Core\Constants\Status;
+use Core\Model\Menu;
+use Core\Model\Permission;
 use Core\Request\FormRequest;
 use Hyperf\Validation\Rule;
+use Hyperf\Validation\Rules\Exists;
 
 /**
  * 菜单 - 创建|修改 - 请求类.
@@ -23,21 +26,27 @@ class MenuRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'parentId' => ['bail', 'nullable', 'integer'],
+            'parentId' => [
+                'bail', 'nullable', 'integer',
+                $this->parentIdExists(),
+            ],
             'path' => ['bail', 'required', 'string', 'max:100'],
-            'route' => ['bail', 'required', 'string', 'max:100'],
+            'route' => [
+                'bail', 'required', 'string', 'max:100',
+                Rule::exists(Permission::table(), 'route'),
+            ],
             'name' => ['bail', 'required', 'string', 'max:20'],
             'desc' => ['bail', 'string', 'max:250'],
             'icon' => ['bail', 'string', 'max:50'],
-            'status' => ['bail', 'string', Rule::in(Status::codes())],
-            'sort' => ['bail', 'integer', 'max:9999'],
+            'status' => ['bail', 'required', 'string', Rule::in(Status::codes())],
+            'sort' => ['bail', 'integer', 'between:0,9999'],
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'parentId' => '父 ID',
+            'parentId' => '上级菜单',
             'platform' => '终端平台',
             'path' => '前端路由',
             'route' => '后端路由',
@@ -47,5 +56,15 @@ class MenuRequest extends FormRequest
             'status' => '状态',
             'sort' => '排序',
         ];
+    }
+
+    protected function parentIdExists(): ?Exists
+    {
+        $parentId = $this->input('parentId');
+        if ($parentId > 0) {
+            return Rule::exists(Menu::table(), 'id')->where('status', Status::ENABLE);
+        }
+
+        return null;
     }
 }

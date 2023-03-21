@@ -13,8 +13,6 @@ use Hyperf\Command\Annotation\Command;
 #[Command]
 class CollectPermissionsCommand extends AbstractCommand
 {
-    private float $startTime;
-
     public function __construct()
     {
         parent::__construct('collect:permissions');
@@ -29,5 +27,6 @@ class CollectPermissionsCommand extends AbstractCommand
     public function handle(): void
     {
         make(PermissionsCollector::class)->handle();
+        $this->_timerStop();
     }
 }

@@ -14,7 +14,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 abstract class AbstractCommand extends HyperfCommand
 {
-    private Stopwatch $stopwatch;
+    protected Stopwatch $stopwatch;
 
     public function __construct(string $name = null)
     {
@@ -23,15 +23,16 @@ abstract class AbstractCommand extends HyperfCommand
         $this->_timerStart();
     }
 
-    public function __destruct()
-    {
-        $this->_timerStop();
-    }
+    // 注意：这里不能用析构函数，测试用户会报错
+    // public function __destruct()
+    // {
+    //     $this->_timerStop();
+    // }
 
     /**
      * 定时器 - 开始.
      */
-    private function _timerStart()
+    protected function _timerStart()
     {
         $this->stopwatch = new Stopwatch();
         $this->stopwatch->start(__CLASS__);
@@ -40,11 +41,12 @@ abstract class AbstractCommand extends HyperfCommand
     /**
      * 定时器 - 结束.
      */
-    private function _timerStop()
+    protected function _timerStop()
     {
         $stopwatchEvent = $this->stopwatch->stop(__CLASS__);
         $duration = $stopwatchEvent->getDuration() / 1000; // 执行时间
         $memory = $stopwatchEvent->getMemory() / 1024 / 1024; // 消耗内存
+
         $this->info("耗时: {$duration}s | 消耗内存: {$memory}MB");
     }
 }

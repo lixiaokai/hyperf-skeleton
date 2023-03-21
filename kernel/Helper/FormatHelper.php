@@ -28,13 +28,13 @@ class FormatHelper
     }
 
     /**
-     * 字节数格式化.
+     * 字节数转可读性字符串.
      *
      * @param  int    $bytes    文件大小 ( 字节数 )
      * @param  int    $decimals 保留多少位小数
      * @return string 带单位的文件大小字符串
      */
-    public static function formatBytes(int $bytes, int $decimals = 2): string
+    public static function bytesToString(int $bytes, int $decimals = 2): string
     {
         $units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB'];
         $key = floor((strlen((string) $bytes) - 1) / 3); // 舍去法取整

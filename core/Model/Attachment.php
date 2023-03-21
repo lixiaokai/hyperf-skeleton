@@ -70,6 +70,6 @@ class Attachment extends AbstractModel
 
     public function getSizeTextAttribute(): string
     {
-        return FormatHelper::formatBytes($this->size);
+        return FormatHelper::bytesToString($this->size);
     }
 }

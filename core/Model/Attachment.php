@@ -7,6 +7,7 @@ namespace Core\Model;
 use Carbon\Carbon;
 use Core\Constants\StorageMode;
 use Hyperf\Database\Model\SoftDeletes;
+use Kernel\Helper\FormatHelper;
 use League\Flysystem\Filesystem;
 
 /**
@@ -26,6 +27,7 @@ use League\Flysystem\Filesystem;
  *
  * @property string $fullPath        完整路径
  * @property string $storageModeText 存储方式 - 文字
+ * @property string $sizeText        附件大小 - 文字 ( 更好可读性 )
  */
 class Attachment extends AbstractModel
 {
@@ -64,5 +66,10 @@ class Attachment extends AbstractModel
     public function getStorageModeTextAttribute(): string
     {
         return StorageMode::getText($this->storageMode);
+    }
+
+    public function getSizeTextAttribute(): string
+    {
+        return FormatHelper::formatBytes($this->size);
     }
 }

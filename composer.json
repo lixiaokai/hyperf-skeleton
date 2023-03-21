@@ -32,6 +32,7 @@
         "hyperf/redis": "~3.0.0",
         "hyperf/resource": "~3.0.0",
         "hyperf/validation": "~3.0.0",
+        "overtrue/easy-sms": "^2.4",
         "phpdocumentor/reflection-docblock": "^5.3",
         "yadakhov/insert-on-duplicate-key": "^1.3"
     },

@@ -31,15 +31,17 @@ class SmsService extends AbstractService
 
     /**
      * 发送 - 短信.
+     *
+     * @see SmsServiceTest::testSend()
      */
-    public function send(string|array $mobile, MessageInterface|array $message, array $gateways = [])
+    public function send(string|array $phone, MessageInterface|array $message, array $gateways = [])
     {
         if (! $this->isEnable()) {
             throw new BusinessException('短信配置未开启');
         }
 
         try {
-            $this->easySms->send($mobile, $message, $gateways);
+            $this->easySms->send($phone, $message, $gateways);
         } catch (InvalidArgumentException $e) {
             throw new BusinessException($e->getMessage());
         } catch (NoGatewayAvailableException $e) {

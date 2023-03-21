@@ -120,6 +120,11 @@ https://hyperf.wiki/3.0/#/zh-cn/quick-start/questions
 
 # 五、PhpStorm 推荐配置
 
+- 授人以渔 你懂的: https://github.com/lixiaokai/ja-netfilter-all
+- PhpStorm 2022.3 最新变化: https://www.jetbrains.com.cn/phpstorm/whatsnew/
+- PhpStorm 2022.2 最新变化: https://www.jetbrains.com.cn/phpstorm/whatsnew/2022-2/
+- PhpStorm 2022.1 最新变化: https://www.jetbrains.com.cn/phpstorm/whatsnew/2022-1/
+
 ## 1. /runtime 目录设为排除目录
 
 在左侧项目目录中选择根目录中的 runtime 文件夹 > 鼠标右键 > Mark Directory as ( 中文：将目录标记为 ) > Excluded ( 中文：已排除 )

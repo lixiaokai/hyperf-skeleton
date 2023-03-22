@@ -12,8 +12,8 @@ class SmsLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => ['required', 'mobile', 'exists:user_admin,phone'],
-            'code' => ['required', 'min:4'],
+            'phone' => ['bail', 'required', 'string', 'mobile', 'exists:user_admin,phone'],
+            'code' => ['bail', 'required', 'string', 'min:4'],
         ];
     }
 

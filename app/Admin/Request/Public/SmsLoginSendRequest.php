@@ -14,8 +14,8 @@ class SmsLoginSendRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => ['required', 'mobile', 'exists:user_admin,phone', function ($attribute, $value, $fail) {
-                if (make(CaptchaService::class)->canRenewGenCode((int) $value, CaptchaType::LOGIN)) {
+            'phone' => ['bail', 'required', 'string', 'mobile', 'exists:user_admin,phone', function ($attribute, $value, $fail) {
+                if (make(CaptchaService::class)->canRenewGenCode((string) $value, CaptchaType::LOGIN)) {
                     return true;
                 }
                 return $fail('1 分钟仅可发送 1 次，请稍后再试');

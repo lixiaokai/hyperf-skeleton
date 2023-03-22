@@ -47,6 +47,6 @@ abstract class AbstractCommand extends HyperfCommand
         $duration = $stopwatchEvent->getDuration() / 1000; // 执行时间
         $memory = $stopwatchEvent->getMemory() / 1024 / 1024; // 消耗内存
 
-        $this->info("耗时: {$duration}s | 消耗内存: {$memory}MB");
+        $this->info("耗时: {$duration} S | 消耗内存: {$memory} MB");
     }
 }

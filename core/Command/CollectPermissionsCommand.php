@@ -27,6 +27,7 @@ class CollectPermissionsCommand extends AbstractCommand
     public function handle(): void
     {
         make(PermissionsCollector::class)->handle();
-        $this->_timerStop();
+
+        $this->_timerStop(); // 输出耗时和内存使用量
     }
 }

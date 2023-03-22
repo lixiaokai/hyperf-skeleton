@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Core\Service\Captcha;
 
+use Core\Constants\CaptchaType;
+use Core\Exception\BusinessException;
 use Core\Service\AbstractService;
 use Exception;
 use Hyperf\Di\Annotation\Inject;
@@ -29,8 +31,12 @@ class CaptchaService extends AbstractService
      *
      * @see CaptchaCodeServiceTest::testGenCode()
      */
-    public function genCode(int $mobile, string $type): CodeResult
+    public function genCode(string $mobile, string $type): CodeResult
     {
+        if (! CaptchaType::has($type)) {
+            throw new BusinessException("验证码类型 {$type} 是无效的");
+        }
+
         try {
             // 生成 4 位随机数字字符串，左侧补 0
             $code = str_pad((string) random_int(1, 9999), 4, '0', STR_PAD_LEFT);
@@ -46,7 +52,7 @@ class CaptchaService extends AbstractService
     /**
      * 验证 - code.
      */
-    public function hasCode(int $mobile, string $code, string $type): bool
+    public function hasCode(string $mobile, string $code, string $type): bool
     {
         $codeCache = $this->get($mobile, $type);
         $isExists = $codeCache === $code;
@@ -71,9 +77,9 @@ class CaptchaService extends AbstractService
      *
      * 说明：60 秒到期后才可以再次获取.
      *
-     * @see CaptchaCodeServiceTest::testCanRenewGenCode()
+     * @see CaptchaServiceTest::testCanRenewGenCode()
      */
-    public function canRenewGenCode(int $mobile, string $type, int $keepSecond = 60): bool
+    public function canRenewGenCode(string $mobile, string $type, int $keepSecond = 60): bool
     {
         $ttl = $this->redis->ttl(self::key($mobile, $type)); // 剩余存活秒数
 
@@ -98,11 +104,11 @@ class CaptchaService extends AbstractService
     /**
      * 设置验证码 到 Redis.
      *
-     * @param int    $mobile 手机号
+     * @param string $mobile 手机号
      * @param string $code   验证码
      * @param string $type   验证类型
      */
-    protected function set(int $mobile, string $code, string $type): bool
+    protected function set(string $mobile, string $code, string $type): bool
     {
         return $this->redis->set(self::key($mobile, $type), $code, ['ex' => $this->expire]);
     }
@@ -110,10 +116,10 @@ class CaptchaService extends AbstractService
     /**
      * 获取验证码 从 Redis.
      *
-     * @param int    $mobile 手机号
+     * @param string $mobile 手机号
      * @param string $type   验证类型
      */
-    protected function get(int $mobile, string $type): string
+    protected function get(string $mobile, string $type): string
     {
         return (string) $this->redis->get(self::key($mobile, $type));
     }
@@ -121,10 +127,10 @@ class CaptchaService extends AbstractService
     /**
      * 删除验证码 从 Redis.
      *
-     * @param int    $mobile 手机号
+     * @param string $mobile 手机号
      * @param string $type   验证类型
      */
-    protected function del(int $mobile, string $type): void
+    protected function del(string $mobile, string $type): void
     {
         $this->redis->del(self::key($mobile, $type));
     }
@@ -134,10 +140,10 @@ class CaptchaService extends AbstractService
      *
      * 设置到 redis 的唯一 key
      *
-     * @param int    $mobile 手机号
+     * @param string $mobile 手机号
      * @param string $type   验证类型
      */
-    protected static function key(int $mobile, string $type): string
+    protected static function key(string $mobile, string $type): string
     {
         return "captcha:{$type}:{$mobile}";
     }

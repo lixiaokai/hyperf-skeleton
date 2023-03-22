@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Core\Service\Captcha;
 
-use Carbon\Carbon;
 use Core\Service\AbstractService;
 use Exception;
 use Hyperf\Di\Annotation\Inject;
@@ -30,7 +29,7 @@ class CaptchaService extends AbstractService
      *
      * @see CaptchaCodeServiceTest::testGenCode()
      */
-    public function genCode(int $mobile, string $type): string
+    public function genCode(int $mobile, string $type): CodeResult
     {
         try {
             // 生成 4 位随机数字字符串，左侧补 0
@@ -39,9 +38,9 @@ class CaptchaService extends AbstractService
             $code = '0000';
         }
 
-        $this->setCode($mobile, $code, $type);
+        $this->set($mobile, $code, $type);
 
-        return $code;
+        return new CodeResult($code, $this->expire);
     }
 
     /**
@@ -49,7 +48,7 @@ class CaptchaService extends AbstractService
      */
     public function hasCode(int $mobile, string $code, string $type): bool
     {
-        $codeCache = $this->getCode($mobile, $type);
+        $codeCache = $this->get($mobile, $type);
         $isExists = $codeCache === $code;
 
         if (! $isExists) {
@@ -65,26 +64,6 @@ class CaptchaService extends AbstractService
         // $this->delCode($mobile, $type);
 
         return $isExists;
-    }
-
-    /**
-     * 获取 - 验证码过期时间.
-     *
-     * 例如：2023-10-10 10:10:10
-     */
-    public function getExpiredTime(): string
-    {
-        return Carbon::now()->addSeconds($this->expire)->toDateTimeString();
-    }
-
-    /**
-     * 获取 - 验证码过期秒数.
-     *
-     * 例如：600
-     */
-    public function getExpiredSecond(): int
-    {
-        return $this->expire;
     }
 
     /**
@@ -123,7 +102,7 @@ class CaptchaService extends AbstractService
      * @param string $code   验证码
      * @param string $type   验证类型
      */
-    protected function setCode(int $mobile, string $code, string $type): bool
+    protected function set(int $mobile, string $code, string $type): bool
     {
         return $this->redis->set(self::key($mobile, $type), $code, ['ex' => $this->expire]);
     }
@@ -134,7 +113,7 @@ class CaptchaService extends AbstractService
      * @param int    $mobile 手机号
      * @param string $type   验证类型
      */
-    protected function getCode(int $mobile, string $type): string
+    protected function get(int $mobile, string $type): string
     {
         return (string) $this->redis->get(self::key($mobile, $type));
     }
@@ -145,7 +124,7 @@ class CaptchaService extends AbstractService
      * @param int    $mobile 手机号
      * @param string $type   验证类型
      */
-    protected function delCode(int $mobile, string $type): void
+    protected function del(int $mobile, string $type): void
     {
         $this->redis->del(self::key($mobile, $type));
     }
@@ -160,6 +139,6 @@ class CaptchaService extends AbstractService
      */
     protected static function key(int $mobile, string $type): string
     {
-        return "captcha:{$type}:" . $mobile;
+        return "captcha:{$type}:{$mobile}";
     }
 }

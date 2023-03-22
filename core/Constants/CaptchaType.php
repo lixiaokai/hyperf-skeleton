@@ -25,4 +25,11 @@ class CaptchaType extends AbstractConstants
      * @Text("验证")
      */
     public const VERIFY = 'verify';
+
+    /**
+     * 验证码类型 - 更换手机号.
+     *
+     * @Text("更换手机号")
+     */
+    public const CHANGE_PHONE = 'changePhone';
 }

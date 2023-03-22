@@ -47,7 +47,7 @@ class SmsService extends AbstractService
         } catch (NoGatewayAvailableException $e) {
             /** @var Exception $exception */
             $exception = $e->getLastException();
-            $this->logger->warning($e->getMessage(), ['code' => $exception->getCode()]);
+            $this->logger->warning($exception->getMessage(), ['code' => $exception->getCode()]);
 
             throw new BusinessException('短信发送异常');
         }

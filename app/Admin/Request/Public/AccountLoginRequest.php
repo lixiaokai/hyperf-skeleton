@@ -5,9 +5,9 @@ namespace App\Admin\Request\Public;
 use Core\Request\FormRequest;
 
 /**
- * 用户登录 - 请求类.
+ * 账号登录 - 请求类.
  */
-class LoginRequest extends FormRequest
+class AccountLoginRequest extends FormRequest
 {
     public function rules(): array
     {

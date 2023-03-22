@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace App\Admin\Controller\Common;
 
 use App\Admin\Middleware\AuthMiddleware;
+use App\Admin\Request\Common\ChangePhoneRequest;
+use App\Admin\Request\Common\ChangePhoneSendRequest;
 use App\Admin\Request\Common\ProfileResetPasswordRequest;
 use App\Admin\Resource\Common\ProFileResource;
+use Core\Constants\CaptchaType;
 use Core\Constants\ContextKey;
 use Core\Controller\AbstractController;
+use Core\Service\Sms\SmsFactory;
 use Core\Service\User\UserAdminService;
 use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;
@@ -52,5 +56,35 @@ class ProfileController extends AbstractController
         $this->userAdminService->resetPassword($userAdmin, $password);
 
         return Response::success();
+    }
+
+    /**
+     * 我的 - 更换手机号.
+     */
+    #[PutMapping('change-phone')]
+    public function changePhone(ChangePhoneRequest $request): ResponseInterface
+    {
+        ['phone' => $phone, 'code' => $code] = $request->validated();
+        $userAdmin = Context::get(ContextKey::USER_ADMIN);
+        $this->userAdminService->changePhone($userAdmin, $phone, $code);
+
+        return Response::success();
+    }
+
+    /**
+     * 我的 - 更换手机号 - 发送验证码.
+     */
+    #[PutMapping('change-phone-sms-send')]
+    public function smsSend(ChangePhoneSendRequest $request): ResponseInterface
+    {
+        ['phone' => $phone] = $request->validated();
+        $codeResult = SmsFactory::send($phone, CaptchaType::CHANGE_PHONE);
+
+        return Response::withData([
+            'phone' => $phone,
+            'code' => config('app_env') === 'dev' ? $codeResult->code : '', // 开发环境将输出验证码，方便使用
+            'timeout' => $codeResult->expire,
+            'timeoutString' => $codeResult->getExpiredString(),
+        ]);
     }
 }

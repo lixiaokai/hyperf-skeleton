@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Core\Service\User;
 
+use Core\Constants\CaptchaType;
 use Core\Contract\UserInterface;
 use Core\Exception\BusinessException;
 use Core\Model\User;
 use Core\Model\UserAdmin;
 use Core\Repository\UserAdminRepository;
 use Core\Service\AbstractService;
+use Core\Service\Captcha\CaptchaService;
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\DbConnection\Annotation\Transactional;
 use Hyperf\Di\Annotation\Inject;
@@ -93,6 +95,9 @@ class UserAdminService extends AbstractService
 
     /**
      * 总后台用户 - 修改.
+     *
+     * 说明：修改时会同时修改 user 用户基础表
+     * 注意：$data['roleIds'] 如果为空数组时则会清空和角色的关系；为 null 时才不更新角色关系
      */
     #[Transactional]
     public function update(UserAdmin $userAdmin, array $data): UserAdmin|UserInterface
@@ -102,7 +107,10 @@ class UserAdminService extends AbstractService
         // 1. 创建|更新: 基础用户
         return $this->userService->updateOrCreateByPhone($phone, $data, function (User $user) use ($userAdmin, $data) {
             // 2. 更新: 用户和用户组关系
-            $user->roles()->sync(data_get($data, 'roleIds'));
+            $roleIds = data_get($data, 'roleIds');
+            if ($roleIds !== null) {
+                $user->roles()->sync($roleIds);
+            }
 
             // 3. 更新: 总后台用户
             return $this->repo->update($userAdmin, [
@@ -147,5 +155,24 @@ class UserAdminService extends AbstractService
     public function resetPassword(UserAdmin $userAdmin, string $password): UserAdmin
     {
         return $this->repo->resetPassword($userAdmin, $password);
+    }
+
+    /**
+     * 总后台用户 - 更换手机号.
+     *
+     * 说明：$phone 必须在验证类中提前验证除了自己不存在
+     *
+     * @see ChangePhoneRequest::class 比如这个验证类，验证手机号除了自己之外不存在
+     */
+    public function changePhone(UserAdmin $userAdmin, string $phone, string $code): UserAdmin
+    {
+        if ($userAdmin->phone === $phone) {
+            throw new BusinessException('新手机号和原手机号相同');
+        }
+        if (! make(CaptchaService::class)->hasCode($phone, $code, CaptchaType::CHANGE_PHONE)) {
+            throw new BusinessException('验证码 不正确');
+        }
+
+        return $this->update($userAdmin, ['phone' => $phone]);
     }
 }

@@ -11,7 +11,7 @@ class CaptchaServiceTest extends TestCase
 {
     protected CaptchaService $service;
 
-    protected int $mobile = 13800138000;
+    protected string $mobile = '13800138000';
 
     public function setUp(): void
     {

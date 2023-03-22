@@ -6,23 +6,18 @@ use Core\Constants\CaptchaType;
 use Core\Constants\ContextKey;
 use Core\Exception\BusinessException;
 use Core\Model\UserAdmin;
+use Core\Service\AbstractService;
 use Core\Service\Captcha\CaptchaService;
-use Core\Service\Captcha\CodeResult;
-use Core\Service\Sms\SmsService;
-use Core\Service\Sms\Template\CaptchaMessage;
 use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;
 
 /**
  * 总后台用户 - 认证 - 服务类.
  */
-class UserAdminAuthService extends UserAdminService
+class UserAdminAuthService extends AbstractService
 {
     #[Inject]
-    protected CaptchaService $captchaService;
-
-    #[Inject]
-    protected SmsService $smsService;
+    protected UserAdminService $userAdminService;
 
     /**
      * 用户 - 账号登录.
@@ -31,7 +26,7 @@ class UserAdminAuthService extends UserAdminService
      */
     public function accountLogin(string $phone, string $password): UserAdmin
     {
-        $userAdmin = $this->getByPhone($phone);
+        $userAdmin = $this->userAdminService->getByPhone($phone);
         if ($userAdmin->isDisable()) {
             throw new BusinessException('当前账号已禁用');
         }
@@ -52,29 +47,18 @@ class UserAdminAuthService extends UserAdminService
      */
     public function smsLogin(string $phone, string $code): UserAdmin
     {
-        $userAdmin = $this->getByPhone($phone);
+        $userAdmin = $this->userAdminService->getByPhone($phone);
         if ($userAdmin->isDisable()) {
             throw new BusinessException('当前账号已禁用');
         }
         if ($userAdmin->user->isDisable()) {
             throw new BusinessException('基础账号已禁用');
         }
-        if (! $this->captchaService->hasCode($phone, $code, CaptchaType::LOGIN)) {
+        if (! make(CaptchaService::class)->hasCode($phone, $code, CaptchaType::LOGIN)) {
             throw new BusinessException('验证码 不正确');
         }
 
         return $userAdmin;
-    }
-
-    /**
-     * 用户 - 验证码登录 - 短信发送.
-     */
-    public function smsSend(string $phone): CodeResult
-    {
-        $codeResult = $this->captchaService->genCode($phone, CaptchaType::LOGIN); // 获取验证码
-        $this->smsService->send($phone, new CaptchaMessage($codeResult->code)); // 发送验证码
-
-        return $codeResult;
     }
 
     /**

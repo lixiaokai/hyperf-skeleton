@@ -9,8 +9,10 @@ use App\Admin\Request\Public\SmsLoginRequest;
 use App\Admin\Request\Public\SmsLoginSendRequest;
 use App\Admin\Resource\Public\LoginResource;
 use Core\Annotation\LoginLimit;
+use Core\Constants\CaptchaType;
 use Core\Constants\Platform;
 use Core\Controller\AbstractController;
+use Core\Service\Sms\SmsFactory;
 use Core\Service\User\UserAdminAuthService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -64,7 +66,7 @@ class AuthController extends AbstractController
     public function smsSend(SmsLoginSendRequest $request): ResponseInterface
     {
         ['phone' => $phone] = $request->validated();
-        $codeResult = $this->userAdminAuthService->smsSend($phone);
+        $codeResult = SmsFactory::send($phone, CaptchaType::LOGIN);
 
         return Response::withData([
             'phone' => $phone,

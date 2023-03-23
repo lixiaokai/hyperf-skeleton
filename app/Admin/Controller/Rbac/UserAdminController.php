@@ -37,20 +37,20 @@ class UserAdminController extends AbstractController
     #[GetMapping('')]
     public function index(SearchRequest $request): ResponseInterface
     {
-        $admins = $this->service->search($request->searchParams());
+        $userAdmins = $this->service->search($request->searchParams());
 
-        return UserAdminCollection::make($admins);
+        return UserAdminCollection::make($userAdmins);
     }
 
     /**
      * 用户管理 - 详情.
      */
-    #[GetMapping('{userId}')]
-    public function show(int $userId): ResponseInterface
+    #[GetMapping('{id}')]
+    public function show(int $id): ResponseInterface
     {
-        $admin = $this->service->getByUserId($userId);
+        $userAdmin = $this->service->getById($id);
 
-        return UserAdminResource::make($admin);
+        return UserAdminResource::make($userAdmin);
     }
 
     /**
@@ -67,10 +67,10 @@ class UserAdminController extends AbstractController
     /**
      * 用户管理 - 修改.
      */
-    #[PutMapping('{userId}')]
-    public function update(UserAdminRequest $request, int $userId): ResponseInterface
+    #[PutMapping('{id}')]
+    public function update(UserAdminRequest $request, int $id): ResponseInterface
     {
-        $userAdmin = $this->service->getByUserId($userId);
+        $userAdmin = $this->service->getById($id);
         $userAdmin = $this->service->update($userAdmin, $request->validated(UserAdminRequest::SCENE_UPDATE));
 
         return Response::withData(UserAdminResource::make($userAdmin));
@@ -79,10 +79,10 @@ class UserAdminController extends AbstractController
     /**
      * 用户管理 - 删除.
      */
-    #[DeleteMapping('{userId}')]
-    public function delete(int $userId): ResponseInterface
+    #[DeleteMapping('{id}')]
+    public function delete(int $id): ResponseInterface
     {
-        $userAdmin = $this->service->getByUserId($userId);
+        $userAdmin = $this->service->getById($id);
         $this->service->delete($userAdmin);
 
         return Response::success();
@@ -91,11 +91,11 @@ class UserAdminController extends AbstractController
     /**
      * 用户管理 - 重置密码.
      */
-    #[PutMapping('{userId}/reset-password')]
-    public function resetPassword(UserAdminRequest $request, int $userId): ResponseInterface
+    #[PutMapping('{id}/reset-password')]
+    public function resetPassword(UserAdminRequest $request, int $id): ResponseInterface
     {
         ['password' => $password] = $request->validated(UserAdminRequest::SCENE_RESET_PASSWORD);
-        $userAdmin = $this->service->getByUserId($userId);
+        $userAdmin = $this->service->getById($id);
         $this->service->resetPassword($userAdmin, $password);
 
         return Response::success();
@@ -104,10 +104,10 @@ class UserAdminController extends AbstractController
     /**
      * 用户管理 - 启用.
      */
-    #[PutMapping('{userId}/enable')]
-    public function enable(int $userId): ResponseInterface
+    #[PutMapping('{id}/enable')]
+    public function enable(int $id): ResponseInterface
     {
-        $userAdmin = $this->service->getByUserId($userId);
+        $userAdmin = $this->service->getById($id);
         $this->service->enable($userAdmin);
 
         return Response::success();
@@ -116,10 +116,10 @@ class UserAdminController extends AbstractController
     /**
      * 用户管理 - 禁用.
      */
-    #[PutMapping('{userId}/disable')]
-    public function disable(int $userId): ResponseInterface
+    #[PutMapping('{id}/disable')]
+    public function disable(int $id): ResponseInterface
     {
-        $userAdmin = $this->service->getByUserId($userId);
+        $userAdmin = $this->service->getById($id);
         $this->service->disable($userAdmin);
 
         return Response::success();

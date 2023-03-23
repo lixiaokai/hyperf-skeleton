@@ -40,7 +40,7 @@ class ProfileController extends AbstractController
     public function show(): ResponseInterface
     {
         $uid = Context::get(ContextKey::UID);
-        $userAdmin = $this->userAdminService->getByUserId($uid);
+        $userAdmin = $this->userAdminService->getById($uid);
 
         return ProFileResource::make($userAdmin);
     }

@@ -35,7 +35,7 @@ class UserAdminRequest extends FormRequest
             'name' => ['bail', 'required', 'string', 'max:20'],
             'phone' => [
                 'bail', 'required', 'mobile',
-                Rule::unique(UserAdmin::table(), 'phone')->ignore($this->route('userId'), 'user_id'),
+                Rule::unique(UserAdmin::table(), 'phone')->ignore($this->route('id')),
             ],
             'password' => ['bail', 'required', 'string', 'min:6'],
             'confirmPassword' => ['bail', 'required', 'same:password'],

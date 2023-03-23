@@ -21,7 +21,7 @@ class ChangePhoneRequest extends FormRequest
 
         return [
             'phone' => ['bail', 'required', 'string', 'mobile',
-                Rule::unique(UserAdmin::table(), 'phone')->ignore($uid, 'user_id'),
+                Rule::unique(UserAdmin::table(), 'phone')->ignore($uid),
             ],
             'code' => ['bail', 'required', 'string', 'min:4'],
         ];

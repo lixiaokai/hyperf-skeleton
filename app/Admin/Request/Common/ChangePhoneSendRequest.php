@@ -23,7 +23,7 @@ class ChangePhoneSendRequest extends FormRequest
 
         return [
             'phone' => ['bail', 'required', 'string', 'mobile',
-                Rule::unique(UserAdmin::table(), 'phone')->ignore($uid, 'user_id'),
+                Rule::unique(UserAdmin::table(), 'phone')->ignore($uid),
                 function ($attribute, $value, $fail) {
                     if (make(CaptchaService::class)->canRenewGenCode((string) $value, CaptchaType::CHANGE_PHONE)) {
                         return true;

@@ -52,7 +52,7 @@ class AuthMiddleware implements MiddlewareInterface
     protected function getUser(): UserAdmin
     {
         try {
-            $userAdmin = $this->userAdminService->getByUserId(self::getUid());
+            $userAdmin = $this->userAdminService->getById(self::getUid());
         } catch (NotFoundException $e) {
             throw new BusinessException('[Auth] 当前账号不存在');
         }

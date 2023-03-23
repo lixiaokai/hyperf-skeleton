@@ -21,8 +21,7 @@ use Kernel\Service\Auth\JWToken;
 /**
  * 总后台用户 - 模型.
  *
- * @property int     $id        自增 ID
- * @property int     $userId    用户 ID
+ * @property int     $id        用户 ID
  * @property ?string $name      用户名
  * @property string  $phone     手机号
  * @property ?string $password  密码
@@ -46,7 +45,6 @@ class UserAdmin extends AbstractModel implements UserInterface
 
     protected array $fillable = [
         'id',
-        'user_id',
         'name',
         'phone',
         'password',
@@ -57,7 +55,6 @@ class UserAdmin extends AbstractModel implements UserInterface
 
     protected array $casts = [
         'id' => 'integer',
-        'user_id' => 'integer',
         'password' => PasswordHash::class,
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -111,7 +108,7 @@ class UserAdmin extends AbstractModel implements UserInterface
      */
     public function getJWToken(int $daysExp = 14): JWToken
     {
-        return JWTAuth::token($this->userId, $daysExp);
+        return JWTAuth::token($this->id, $daysExp);
     }
 
     /**
@@ -119,17 +116,19 @@ class UserAdmin extends AbstractModel implements UserInterface
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id');
     }
 
     /**
+     * 角色 - 多对多关联.
+     *
+     * 注意：这里必须使用中间表过滤关系，否则使用多对多关联 sync() 等方法时只会根据 user_id 查出记录
+     *
      * @see AdminTest::testRoles()
      */
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id', 'user_id')
-            ->wherePivot('platform', Platform::ADMIN); // 注意：这里需要加上 [ 所属平台 ] 过滤以区分开来
-        // ->where(Role::column('platform'), Platform::ADMIN);
-        // 注意：这里必须使用中间表过滤关系，否则使用多对多关联 sync() 等方法更新时只会根据 user_id 查出记录
+        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id')
+            ->wherePivot('platform', Platform::ADMIN);
     }
 }

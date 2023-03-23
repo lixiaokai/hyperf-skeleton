@@ -18,7 +18,6 @@ class FileResource extends AbstractResource
     {
         return [
             'id' => $this->resource->id,
-            'userId' => $this->resource->userId,
             'storageMode' => $this->resource->storageMode,
             'storageModeText' => $this->resource->storageModeText,
             'name' => $this->resource->name,

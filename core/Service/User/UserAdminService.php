@@ -55,14 +55,6 @@ class UserAdminService extends AbstractService
     }
 
     /**
-     * 总后台用户 - 详情.
-     */
-    public function getByUserId(int $id): UserAdmin
-    {
-        return $this->repo->getByUserId($id);
-    }
-
-    /**
      * 总后台用户 - 详情 ( 根据手机号 ).
      */
     public function getByPhone(string $phone): UserAdmin
@@ -85,7 +77,7 @@ class UserAdminService extends AbstractService
         return $this->userService->updateOrCreateByPhone($phone, $data, function (User $user) use ($data) {
             // 2. 创建: 总后台用户
             $userAdmin = $this->repo->create([
-                'userId' => $user->id,
+                'id' => $user->id,
                 'name' => $user->name,
                 'phone' => $user->phone,
                 'password' => data_get($data, 'password'),

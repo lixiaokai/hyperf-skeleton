@@ -19,7 +19,7 @@ class RefreshTokenResource extends AbstractResource
         $JWToken = $this->resource->getJWToken();
 
         return [
-            'uid' => $this->resource->userId, // 用户 id
+            'id' => $this->resource->id, // 用户 id
             'accessToken' => $JWToken->token, // 访问令牌
             'accessTokenTimeout' => $JWToken->payload->getExpString(), // 过期时间
         ];

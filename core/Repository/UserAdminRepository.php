@@ -23,15 +23,6 @@ class UserAdminRepository extends AbstractRepository
 {
     protected Model|string $modelClass = UserAdmin::class;
 
-    public function getByUserId(int $userId, array $columns = ['*']): Model|UserAdmin
-    {
-        try {
-            return $this->modelClass::where('user_id', $userId)->firstOrFail($columns);
-        } catch (ModelNotFoundException) {
-            throw new NotFoundException('用户信息不存在');
-        }
-    }
-
     public function getByPhone(string $phone): Model|UserAdmin
     {
         try {

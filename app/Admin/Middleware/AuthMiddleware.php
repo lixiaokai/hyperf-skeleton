@@ -10,6 +10,7 @@ use Core\Model\UserAdmin;
 use Core\Service\User\UserAdminService;
 use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;
+use Kernel\Exception\NotFoundException;
 use Kernel\Service\Auth\JWTAuth;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -50,12 +51,17 @@ class AuthMiddleware implements MiddlewareInterface
      */
     protected function getUser(): UserAdmin
     {
-        $userAdmin = $this->userAdminService->getByUserId(self::getUid());
+        try {
+            $userAdmin = $this->userAdminService->getByUserId(self::getUid());
+        } catch (NotFoundException $e) {
+            throw new BusinessException('[Auth] 当前账号不存在');
+        }
+
         if ($userAdmin->isDisable()) {
-            throw new BusinessException('当前账号已禁用，请联系管理员');
+            throw new BusinessException('[Auth] 当前账号已禁用，请联系管理员');
         }
         if ($userAdmin->user->isDisable()) {
-            throw new BusinessException('基础账号已禁用，请联系管理员');
+            throw new BusinessException('[Auth] 基础账号已禁用，请联系管理员');
         }
 
         return $userAdmin;

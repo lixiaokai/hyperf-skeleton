@@ -24,6 +24,17 @@ class RoleRepository extends AbstractRepository
     protected Model|string $modelClass = Role::class;
 
     /**
+     * @return Collection|Role[]
+     */
+    public function getByIdsPlatform(array $ids, string $platform = Platform::ADMIN): array|Collection
+    {
+        return $this->getQuery()
+            ->whereIn('id', $ids)
+            ->where('platform', $platform)
+            ->get();
+    }
+
+    /**
      * 角色 - 列表.
      *
      * @param  null|string       $platform 终端平台

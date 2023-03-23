@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Repository;
 
+use Core\Constants\Platform;
 use Core\Constants\Status;
 use Core\Model\UserAdmin;
 use Hyperf\Database\Model\Collection;
@@ -15,7 +16,7 @@ use Kernel\Exception\NotFoundException;
  * 总后台用户 - 仓库类.
  *
  * @method UserAdmin              getById(int $id)
- * @method Collection|UserAdmin[] getByIds(array $ids, array $columns = ['*'])
+ * @method Collection|UserAdmin[] getByIds(int[] $ids, string[] $columns = ['*'])
  * @method UserAdmin              create(array $data)
  * @method UserAdmin              update(UserAdmin $model, array $data)
  */
@@ -54,5 +55,16 @@ class UserAdminRepository extends AbstractRepository
         $userAdmin->save();
 
         return $userAdmin;
+    }
+
+    /**
+     * 设置 - 角色关联.
+     */
+    public function setRoles(UserAdmin $userAdmin, array $roleIds): void
+    {
+        // 额外的数据
+        $ids = collect($roleIds)->combine(collect($roleIds)->map(fn () => ['platform' => Platform::ADMIN]))->all();
+
+        $userAdmin->roles()->sync($ids);
     }
 }

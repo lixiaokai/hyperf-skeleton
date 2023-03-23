@@ -7,12 +7,12 @@ namespace Core\Service\User;
 use Core\Constants\CaptchaType;
 use Core\Contract\UserInterface;
 use Core\Exception\BusinessException;
-use Core\Model\Role;
 use Core\Model\User;
 use Core\Model\UserAdmin;
 use Core\Repository\UserAdminRepository;
 use Core\Service\AbstractService;
 use Core\Service\Captcha\CaptchaService;
+use Core\Service\Rbac\RoleService;
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\DbConnection\Annotation\Transactional;
 use Hyperf\Di\Annotation\Inject;
@@ -84,8 +84,8 @@ class UserAdminService extends AbstractService
                 'status' => $user->status,
             ]);
 
-            // 3. 更新: 用户和用户组关系
-            $userAdmin->roles()->sync(data_get($data, 'roleIds'));
+            // 3. 设置: 用户和用户组关系
+            $this->setRoles($userAdmin, data_get($data, 'roleIds'));
 
             return $userAdmin;
         });
@@ -104,8 +104,8 @@ class UserAdminService extends AbstractService
 
         // 1. 创建|更新: 基础用户
         return $this->userService->updateOrCreateByPhone($phone, $data, function (User $user) use ($userAdmin, $data) {
-            // 2. 更新: 用户和用户组关系
-            $userAdmin->roles()->sync(data_get($data, 'roleIds'));
+            // 2. 设置: 用户和用户组关系
+            $this->setRoles($userAdmin, data_get($data, 'roleIds'));
 
             // 3. 更新: 总后台用户
             return $this->repo->update($userAdmin, [
@@ -169,5 +169,14 @@ class UserAdminService extends AbstractService
         }
 
         return $this->update($userAdmin, ['phone' => $phone]);
+    }
+
+    /**
+     * 设置 - 角色关联.
+     */
+    public function setRoles(UserAdmin $userAdmin, array $roleIds): void
+    {
+        $roles = make(RoleService::class)->getByIdsPlatform($roleIds);
+        $this->repo->setRoles($userAdmin, $roles->pluck('id')->all());
     }
 }

@@ -45,6 +45,14 @@ class RoleService extends AbstractService
     }
 
     /**
+     * 角色 - 多条详情.
+     */
+    public function getByIdsPlatform(array $ids, string $platform = Platform::ADMIN): array|Collection
+    {
+        return $this->repo->getByIdsPlatform($ids, $platform);
+    }
+
+    /**
      * 角色 - 创建.
      */
     public function create(array $data, string $platform = Platform::ADMIN): Role

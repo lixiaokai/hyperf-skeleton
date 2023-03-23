@@ -18,7 +18,7 @@ use Hyperf\Database\Model\Relations\HasMany;
  *
  * @property int    $id        权限菜单 ID
  * @property int    $parentId  父 ID
- * @property string $platform  终端平台 ( admin-总后台 seller-卖家 )
+ * @property string $platform  终端平台 ( @see Platform::class )
  * @property string $path      前端路由
  * @property string $route     后端路由
  * @property string $name      名称

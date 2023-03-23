@@ -19,8 +19,8 @@ use Hyperf\Database\Model\Relations\HasMany;
  *
  * @property int     $id        角色 ID
  * @property int     $parentId  父 ID ( 当有租户模式时可能会用到 )
- * @property string  $platform  终端平台 ( @see \Core\Constants\Platform::class )
- * @property ?string $type      类型 ( @see \Core\Constants\RoleType::class )
+ * @property string  $platform  终端平台 ( @see Platform::class )
+ * @property ?string $type      类型 ( @see RoleType::class )
  * @property string  $name      名称
  * @property string  $remark    备注
  * @property int     $sort      排序

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Core\Model;
 
+use Core\Constants\Platform;
 use Carbon\Carbon;
 
 /**
  * 角色用户关系 - 模型.
  *
  * @property int    $id        自增 ID
+ * @property string $platform  终端平台 ( @see Platform::class )
  * @property int    $roleId    角色 ID
  * @property int    $userId    用户 ID
  * @property Carbon $createdAt 创建时间

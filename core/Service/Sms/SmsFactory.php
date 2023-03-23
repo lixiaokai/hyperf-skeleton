@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Core\Service\Sms;
 
-use Core\Service\AbstractService;
 use Core\Service\Captcha\CaptchaService;
 use Core\Service\Captcha\CodeResult;
 use Core\Service\Sms\Template\CaptchaMessage;
@@ -12,7 +11,7 @@ use Core\Service\Sms\Template\CaptchaMessage;
 /**
  * 短信验证码 - 工厂类.
  */
-class SmsFactory extends AbstractService
+class SmsFactory
 {
     /**
      * 发送 - 验证码.
@@ -23,7 +22,12 @@ class SmsFactory extends AbstractService
      */
     public static function send(string $phone, string $type): CodeResult
     {
-        return make(CaptchaService::class)->genCode($phone, $type); // 获取验证码
-        // make(SmsService::class)->send($phone, new CaptchaMessage($codeResult->code)); // 发送验证码 ( 开发测试可临时注释掉，不发送短信 )
+        // 1. 获取验证码
+        $codeResult = make(CaptchaService::class)->genCode($phone, $type);
+
+        // 2. 发送验证码
+        co(fn () => make(SmsService::class)->send($phone, new CaptchaMessage($codeResult->code)));
+
+        return $codeResult;
     }
 }

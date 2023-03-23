@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Core\Service\Sms;
 
 use Core\Exception\BusinessException;
@@ -37,7 +39,7 @@ class SmsService extends AbstractService
     public function send(string|array $phone, MessageInterface|array $message, array $gateways = [])
     {
         if (! $this->isEnable()) {
-            throw new BusinessException('短信配置未开启');
+            return;
         }
 
         try {
@@ -55,6 +57,8 @@ class SmsService extends AbstractService
 
     /**
      * 是否 - 启用.
+     *
+     * 启用后才会真实发送短信.
      */
     protected function isEnable(): bool
     {

@@ -7,6 +7,7 @@ namespace Core\Service\User;
 use Core\Constants\CaptchaType;
 use Core\Contract\UserInterface;
 use Core\Exception\BusinessException;
+use Core\Model\Role;
 use Core\Model\User;
 use Core\Model\UserAdmin;
 use Core\Repository\UserAdminRepository;
@@ -76,20 +77,25 @@ class UserAdminService extends AbstractService
     public function create(array $data): UserAdmin|UserInterface
     {
         $phone = data_get($data, 'phone');
+        if (empty($phone)) {
+            throw new BusinessException('手机号不能为空');
+        }
 
         // 1. 创建|更新: 基础用户
         return $this->userService->updateOrCreateByPhone($phone, $data, function (User $user) use ($data) {
-            // 2. 更新: 用户和用户组关系
-            $user->roles()->sync(data_get($data, 'roleIds'));
-
-            // 3. 创建: 总后台用户
-            return $this->repo->create([
+            // 2. 创建: 总后台用户
+            $userAdmin = $this->repo->create([
                 'userId' => $user->id,
                 'name' => $user->name,
                 'phone' => $user->phone,
                 'password' => data_get($data, 'password'),
                 'status' => $user->status,
             ]);
+
+            // 3. 更新: 用户和用户组关系
+            $userAdmin->roles()->sync(data_get($data, 'roleIds'));
+
+            return $userAdmin;
         });
     }
 
@@ -107,10 +113,7 @@ class UserAdminService extends AbstractService
         // 1. 创建|更新: 基础用户
         return $this->userService->updateOrCreateByPhone($phone, $data, function (User $user) use ($userAdmin, $data) {
             // 2. 更新: 用户和用户组关系
-            $roleIds = data_get($data, 'roleIds');
-            if ($roleIds !== null) {
-                $user->roles()->sync($roleIds);
-            }
+            $userAdmin->roles()->sync(data_get($data, 'roleIds'));
 
             // 3. 更新: 总后台用户
             return $this->repo->update($userAdmin, [

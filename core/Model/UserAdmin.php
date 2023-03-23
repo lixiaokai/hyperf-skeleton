@@ -9,8 +9,8 @@ use Core\Constants\Platform;
 use Core\Constants\Status;
 use Core\Contract\UserInterface;
 use Core\Model\Casts\PasswordHash;
-use Core\Model\Traits\UserAdminActionTrail;
 use Core\Model\Traits\StatusTrait;
+use Core\Model\Traits\UserAdminActionTrail;
 use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Relations\BelongsTo;
 use Hyperf\Database\Model\Relations\BelongsToMany;
@@ -128,6 +128,8 @@ class UserAdmin extends AbstractModel implements UserInterface
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id', 'user_id')
-            ->where(Role::column('platform'), Platform::ADMIN); // 注意：这里需要加上 [ 所属平台 ] 过滤以区分开来
+            ->wherePivot('platform', Platform::ADMIN); // 注意：这里需要加上 [ 所属平台 ] 过滤以区分开来
+        // ->where(Role::column('platform'), Platform::ADMIN);
+        // 注意：这里必须使用中间表过滤关系，否则使用多对多关联 sync() 等方法更新时只会根据 user_id 查出记录
     }
 }

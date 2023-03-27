@@ -26,4 +26,14 @@ class ContextKey extends AbstractConstants
      * 总后台用户模型.
      */
     public const USER_ADMIN = 'userAdmin';
+
+    /**
+     * 租户 ID.
+     */
+    public const TENANT_ID = 'tenantId';
+
+    /**
+     * 应用 ID.
+     */
+    public const APP_ID = 'appId';
 }

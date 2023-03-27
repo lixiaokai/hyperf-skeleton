@@ -24,17 +24,20 @@ class UserAdminAuthService extends AbstractService
      *
      * 方式：手机号 + 密码
      */
-    public function accountLogin(string $phone, string $password): UserAdmin
+    public function accountLogin(string $phone, string $password, string $appId, int $tenantId): UserAdmin
     {
         $userAdmin = $this->userAdminService->getByPhone($phone);
         if ($userAdmin->isDisable()) {
-            throw new BusinessException('当前账号已禁用');
+            throw new BusinessException('登录的总后台账号已禁用');
         }
         if ($userAdmin->user->isDisable()) {
-            throw new BusinessException('基础账号已禁用');
+            throw new BusinessException('登录的基础账号已禁用');
         }
         if (! $userAdmin->checkPassword($password)) {
-            throw new BusinessException('手机号或密码错误');
+            throw new BusinessException('登录的手机号或密码错误');
+        }
+        if (! $userAdmin->hasTenant($tenantId)) {
+            throw new BusinessException("登录的总后台账号不属于该租户 [{$tenantId}]");
         }
 
         return $userAdmin;

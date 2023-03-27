@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Core\Model;
 
 use Carbon\Carbon;
+use Core\Constants\ContextKey;
 use Core\Contract\UserInterface;
 use Core\Model\Traits\StatusTrait;
 use Core\Model\Traits\UserActionTrail;
+use Hyperf\Context\Context;
 use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Relations\BelongsToMany;
 use Hyperf\Database\Model\Relations\HasOne;
@@ -56,6 +58,13 @@ class User extends AbstractModel implements UserInterface
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'role_user');
+        $relation = $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
+
+        // 如果注入了租户 ID，则把租户 ID 作为中间表查询条件
+        if ($tenantId = Context::get(ContextKey::TENANT_ID)) {
+            $relation->wherePivot('tenant_id', $tenantId);
+        }
+
+        return $relation;
     }
 }

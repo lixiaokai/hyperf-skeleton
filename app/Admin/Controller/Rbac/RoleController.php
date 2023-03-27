@@ -9,9 +9,11 @@ use App\Admin\Middleware\AuthMiddleware;
 use App\Admin\Request\Rbac\RolePermissionRequest;
 use App\Admin\Request\Rbac\RoleRequest;
 use App\Admin\Resource\Rbac\RoleResource;
-use Core\Constants\Platform;
+use Core\Constants\ContextKey;
 use Core\Controller\AbstractController;
 use Core\Service\Rbac\RoleService;
+use Core\Service\Rbac\TenantService;
+use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
@@ -32,13 +34,17 @@ class RoleController extends AbstractController
     #[Inject]
     protected RoleService $service;
 
+    #[Inject]
+    protected TenantService $tenantService;
+
     /**
      * 角色管理 - 列表.
      */
     #[GetMapping('')]
     public function index(): ResponseInterface
     {
-        $roles = $this->service->list(Platform::ADMIN);
+        $tenantId = Context::get(ContextKey::TENANT_ID);
+        $roles = $this->service->list($tenantId);
 
         return RoleCollection::make($roles);
     }
@@ -60,7 +66,9 @@ class RoleController extends AbstractController
     #[PostMapping('')]
     public function create(RoleRequest $request): ResponseInterface
     {
-        $role = $this->service->create($request->validated());
+        $tenantId = Context::get(ContextKey::TENANT_ID);
+        $tenant = $this->tenantService->getById($tenantId);
+        $role = $this->service->create($request->validated(), $tenant);
 
         return Response::withData(RoleResource::make($role));
     }

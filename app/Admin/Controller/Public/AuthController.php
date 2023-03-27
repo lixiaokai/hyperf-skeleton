@@ -9,8 +9,8 @@ use App\Admin\Request\Public\SmsLoginRequest;
 use App\Admin\Request\Public\SmsLoginSendRequest;
 use App\Admin\Resource\Public\LoginResource;
 use Core\Annotation\LoginLimit;
+use Core\Constants\AppId;
 use Core\Constants\CaptchaType;
-use Core\Constants\Platform;
 use Core\Controller\AbstractController;
 use Core\Service\Sms\SmsFactory;
 use Core\Service\User\UserAdminAuthService;
@@ -36,11 +36,13 @@ class AuthController extends AbstractController
      *
      * 方式：手机号 + 密码
      */
-    #[PostMapping('account-login'), LoginLimit(id: 'phone', prefix: Platform::ADMIN . ':account')]
+    #[PostMapping('account-login'), LoginLimit(id: 'phone', prefix: AppId::ADMIN . ':account')]
     public function accountLogin(AccountLoginRequest $request): ResponseInterface
     {
         ['phone' => $phone, 'password' => $password] = $request->validated();
-        $userAdmin = $this->userAdminAuthService->accountLogin($phone, $password);
+        $appId = AppId::ADMIN;
+        $tenantId = config('tenant.admin.id');
+        $userAdmin = $this->userAdminAuthService->accountLogin($phone, $password, $appId, $tenantId);
 
         return LoginResource::make($userAdmin);
     }
@@ -50,7 +52,7 @@ class AuthController extends AbstractController
      *
      * 方式：手机号 + 验证码
      */
-    #[PostMapping('sms-login'), LoginLimit(id: 'phone', prefix: Platform::ADMIN . ':sms')]
+    #[PostMapping('sms-login'), LoginLimit(id: 'phone', prefix: AppId::ADMIN . ':sms')]
     public function smsLogin(SmsLoginRequest $request): ResponseInterface
     {
         ['phone' => $phone, 'code' => $code] = $request->validated();

@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Core\Repository;
 
-use Core\Constants\Platform;
 use Core\Constants\Status;
-use Core\Exception\BusinessException;
 use Core\Model\Role;
+use Core\Model\RoleTenant;
 use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Model;
@@ -17,6 +16,7 @@ use Hyperf\Database\Model\Model;
  *
  * @method Role              getById(int $id)
  * @method Collection|Role[] getByIds(array $ids, array $columns = ['*'])
+ * @method Role              create(array $data)
  * @method Role              update(Role $model, array $data)
  */
 class RoleRepository extends AbstractRepository
@@ -26,48 +26,33 @@ class RoleRepository extends AbstractRepository
     /**
      * @return Collection|Role[]
      */
-    public function getByIdsPlatform(array $ids, string $platform = Platform::ADMIN): array|Collection
+    public function getsByIdsAndTenantId(array $ids, int $tenantId): array|Collection
     {
         return $this->getQuery()
-            ->whereIn('id', $ids)
-            ->where('platform', $platform)
+            ->select(Role::column())
+            ->leftJoin(RoleTenant::table(), RoleTenant::column('role_id'), Role::column('id'))
+            ->whereIn(Role::column('id'), $ids)
+            ->where(RoleTenant::column('tenant_id'), $tenantId)
             ->get();
     }
 
     /**
      * 角色 - 列表.
      *
-     * @param  null|string       $platform 终端平台
-     * @param  null|string       $status   状态
      * @return Collection|Role[]
      */
-    public function getList(string $platform = null, string $status = null): array|Collection
+    public function getList(int $tenantId = null, string $status = null): array|Collection
     {
-        if ($platform && ! Platform::has($platform)) {
-            throw new BusinessException('传入的 [ 终端平台 ] 参数不合法');
-        }
-        if ($status && ! Status::has($status)) {
-            throw new BusinessException('传入的 [ 状态 ] 参数不合法');
-        }
-
         return $this->getQuery()
-            ->when($platform, fn (Builder $query) => $query->where('platform', $platform))
-            ->when($status, fn (Builder $query) => $query->where('status', $status))
-            ->orderByDesc('sort')
-            ->orderBy('id')
+            ->select(Role::column())
+            ->when($tenantId, function (Builder $query) use ($tenantId) {
+                $query->leftJoin(RoleTenant::table(), RoleTenant::column('role_id'), Role::column('id'))
+                    ->where(RoleTenant::column('tenant_id'), $tenantId);
+            })
+            ->when($status, fn (Builder $query) => $query->where(Role::column('status'), $status))
+            ->orderByDesc(Role::column('sort'))
+            ->orderBy(Role::column('id'))
             ->get();
-    }
-
-    /**
-     * 角色 - 创建.
-     */
-    public function create(array $data, string $platform = null): Model|Role
-    {
-        if ($platform) {
-            $data = array_merge($data, compact('platform'));
-        }
-
-        return parent::create($data);
     }
 
     /**
@@ -98,5 +83,13 @@ class RoleRepository extends AbstractRepository
     public function bindPermissions(Role $role, array $permissionIds): array
     {
         return $role->permissions()->sync($permissionIds);
+    }
+
+    /**
+     * 角色 - 绑定租户.
+     */
+    public function bindTenants(Role $role, array $tenantIds): array
+    {
+        return $role->tenants()->sync($tenantIds);
     }
 }

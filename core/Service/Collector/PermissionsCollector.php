@@ -106,7 +106,7 @@ class PermissionsCollector
 
                 // 注意：name 字段在这里不更新
                 return [
-                    'platform' => $routeResult->firstPath, // 终端平台
+                    'app_id' => $routeResult->firstPath, // 应用 ID
                     'route' => $routeResult->method . ':' . $routeResult->route, // 路由
                     'attach_routes' => Json::encode($attachRoutes), // 附加路由
                     'desc' => $desc, // 备注

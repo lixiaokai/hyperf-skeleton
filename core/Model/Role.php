@@ -5,21 +5,18 @@ declare(strict_types=1);
 namespace Core\Model;
 
 use Carbon\Carbon;
-use Core\Constants\Platform;
 use Core\Constants\RoleType;
 use Core\Model\Traits\RoleActionTrail;
 use Core\Model\Traits\StatusTrait;
 use Hyperf\Database\Model\Collection;
-use Hyperf\Database\Model\Relations\BelongsTo;
 use Hyperf\Database\Model\Relations\BelongsToMany;
-use Hyperf\Database\Model\Relations\HasMany;
 
 /**
  * 角色 - 模型.
  *
+ * 说明：角色和租户一般是 1 对多的关系，为了实现默认的系统角色可被多个租户使用，这里使用了多对多的关系
+ *
  * @property int     $id        角色 ID
- * @property int     $parentId  父 ID ( 当有租户模式时可能会用到 )
- * @property string  $platform  终端平台 ( @see Platform::class )
  * @property ?string $type      类型 ( @see RoleType::class )
  * @property string  $name      名称
  * @property string  $remark    备注
@@ -28,16 +25,12 @@ use Hyperf\Database\Model\Relations\HasMany;
  * @property Carbon  $createdAt 创建时间
  * @property Carbon  $updatedAt 修改时间
  *
- * @property string $platformText    终端平台 - 文字
- * @property string $typePlatformKey 类型所属终端平台 - key
- * @property string $typeText        类型 - 文字
+ * @property string $typeText 类型 - 文字
  *
- * @property Role                    $parent      父级角色
- * @property Collection|Role[]       $children    子级角色 ( 多条 )
- * @property Collection|Role[]       $siblings    同级角色 ( 多条 )
  * @property Collection|Permission[] $permissions 权限 ( 多条 )
  * @property Collection|User[]       $users       用户 ( 多条 )
  * @property Collection|UserAdmin[]  $admins      总后台用户 ( 多条 )
+ * @property Collection|Tenant[]     $tenants     租户 ( 多条 )
  *
  * @see RoleTest::class
  */
@@ -59,7 +52,6 @@ class Role extends AbstractModel
     protected array $fillable = [
         'id',
         'parent_id',
-        'platform',
         'type',
         'name',
         'remark',
@@ -77,34 +69,13 @@ class Role extends AbstractModel
         'updated_at' => 'datetime',
     ];
 
-    public function getPlatformTextAttribute(): string
-    {
-        return Platform::getText($this->platform);
-    }
+    protected array $attributes = [
+        'type' => RoleType::CUSTOM,
+    ];
 
     public function getTypeTextAttribute(): string
     {
         return RoleType::getText($this->type);
-    }
-
-    public function getTypePlatformKeyAttribute(): string
-    {
-        return RoleType::getPlatformKey($this->type);
-    }
-
-    public function parent(): BelongsTo
-    {
-        return $this->belongsTo(self::class, 'parent_id');
-    }
-
-    public function children(): HasMany
-    {
-        return $this->hasMany(self::class, 'parent_id');
-    }
-
-    public function siblings(): HasMany
-    {
-        return $this->hasMany(self::class, 'parent_id', 'parent_id');
     }
 
     public function permissions(): BelongsToMany
@@ -123,5 +94,10 @@ class Role extends AbstractModel
     public function admins(): BelongsToMany
     {
         return $this->belongsToMany(UserAdmin::class, 'role_user', 'role_id', 'user_id');
+    }
+
+    public function tenants(): BelongsToMany
+    {
+        return $this->belongsToMany(Tenant::class, 'role_tenant', 'role_id', 'tenant_id');
     }
 }

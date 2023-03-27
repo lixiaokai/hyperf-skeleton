@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Core\Service\User;
 
+use Core\Constants\AppId;
 use Core\Constants\CaptchaType;
+use Core\Constants\ContextKey;
 use Core\Contract\UserInterface;
 use Core\Exception\BusinessException;
 use Core\Model\User;
@@ -13,6 +15,7 @@ use Core\Repository\UserAdminRepository;
 use Core\Service\AbstractService;
 use Core\Service\Captcha\CaptchaService;
 use Core\Service\Rbac\RoleService;
+use Hyperf\Context\Context;
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\DbConnection\Annotation\Transactional;
 use Hyperf\Di\Annotation\Inject;
@@ -84,8 +87,9 @@ class UserAdminService extends AbstractService
                 'status' => $user->status,
             ]);
 
-            // 3. 设置: 用户和用户组关系
-            $this->setRoles($userAdmin, data_get($data, 'roleIds'));
+            // 3. 绑定: 角色
+            $tenantId = Context::get(ContextKey::TENANT_ID);
+            $this->bindRoles($userAdmin, data_get($data, 'roleIds'), $tenantId);
 
             return $userAdmin;
         });
@@ -105,7 +109,8 @@ class UserAdminService extends AbstractService
         // 1. 创建|更新: 基础用户
         return $this->userService->updateOrCreateByPhone($phone, $data, function (User $user) use ($userAdmin, $data) {
             // 2. 设置: 用户和用户组关系
-            $this->setRoles($userAdmin, data_get($data, 'roleIds'));
+            $tenantId = Context::get(ContextKey::TENANT_ID);
+            $this->bindRoles($userAdmin, data_get($data, 'roleIds'), $tenantId);
 
             // 3. 更新: 总后台用户
             return $this->repo->update($userAdmin, [
@@ -172,11 +177,11 @@ class UserAdminService extends AbstractService
     }
 
     /**
-     * 设置 - 角色关联.
+     * 绑定 - 角色.
      */
-    public function setRoles(UserAdmin $userAdmin, array $roleIds): void
+    public function bindRoles(UserAdmin $userAdmin, array $roleIds, int $tenantId): void
     {
-        $roles = make(RoleService::class)->getByIdsPlatform($roleIds);
-        $this->repo->setRoles($userAdmin, $roles->pluck('id')->all());
+        $roles = make(RoleService::class)->getsByIdsAndTenantId($roleIds, $tenantId);
+        $this->repo->setRoles($userAdmin, $roles->pluck('id')->all(), $tenantId);
     }
 }

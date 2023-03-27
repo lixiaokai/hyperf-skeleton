@@ -19,7 +19,7 @@ class PermissionResource extends AbstractResource
         return [
             'id' => $this->resource->id,
             'parentId' => $this->resource->parentId,
-            'platform' => $this->resource->platform,
+            'appId' => $this->resource->appId,
             'route' => $this->resource->route,
             'attachRoutes' => $this->resource->attachRoutes,
             'name' => $this->resource->name,

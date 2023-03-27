@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Core\Model;
 
 use Carbon\Carbon;
-use Core\Constants\Platform;
 use Core\Model\Traits\PermissionActionTrail;
 use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Relations\BelongsToMany;
@@ -17,7 +16,7 @@ use Yadakhov\InsertOnDuplicateKey;
  *
  * @property int     $id           权限菜单 ID
  * @property int     $parentId     父 ID
- * @property string  $platform     终端平台 ( @see Platform::class )
+ * @property string  $appId        应用 ID
  * @property string  $route        路由 ( method + route 组成 )
  * @property ?string $attachRoutes 附加路由
  * @property string  $name         名称
@@ -40,7 +39,7 @@ class Permission extends AbstractModel
     protected array $fillable = [
         'id',
         'parent_id',
-        'platform',
+        'app_id',
         'route',
         'attach_routes',
         'name',
@@ -60,11 +59,6 @@ class Permission extends AbstractModel
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
-
-    public function getPlatformTextAttribute(): string
-    {
-        return Platform::getText($this->platform);
-    }
 
     /**
      * @see PermissionTest::testRoles()

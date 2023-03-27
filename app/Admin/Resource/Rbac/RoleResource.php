@@ -18,9 +18,6 @@ class RoleResource extends AbstractResource
     {
         return [
             'id' => $this->resource->id, // 角色 ID
-            'parentId' => $this->resource->parentId, // 父 ID
-            'platform' => $this->resource->platform, // 终端平台
-            'platformText' => $this->resource->platformText, // 终端平台 - 文字
             'name' => $this->resource->name, // 名称
             'remark' => $this->resource->remark ?? '', // 备注
             'type' => $this->resource->type, // 类型

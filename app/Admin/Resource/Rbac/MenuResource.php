@@ -19,7 +19,7 @@ class MenuResource extends AbstractResource
         return [
             'id' => $this->resource->id,
             'parentId' => $this->resource->parentId,
-            'platform' => $this->resource->platform,
+            'appId' => $this->resource->appId,
             'path' => $this->resource->path,
             'route' => $this->resource->route,
             'name' => $this->resource->name,

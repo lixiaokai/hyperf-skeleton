@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin\Middleware;
 
+use Core\Constants\AppId;
 use Core\Constants\ContextKey;
 use Core\Exception\BusinessException;
 use Core\Model\UserAdmin;
@@ -41,9 +42,11 @@ class AuthMiddleware implements MiddlewareInterface
     {
         $userAdmin = $this->getUser();
 
-        Context::set(ContextKey::UID, $userAdmin->id);
-        Context::set(ContextKey::USER_ADMIN, $userAdmin);
-        Context::set(ContextKey::USER, $userAdmin->user);
+        Context::set(ContextKey::APP_ID, AppId::ADMIN); // 注入应用 ID
+        Context::set(ContextKey::TENANT_ID, config('tenant.admin.id')); // 注入租户
+        Context::set(ContextKey::UID, $userAdmin->id); // 注入用户 ID
+        Context::set(ContextKey::USER_ADMIN, $userAdmin); // 注入总后台用户模型
+        Context::set(ContextKey::USER, $userAdmin->user); // 注入基础用户模型
     }
 
     /**

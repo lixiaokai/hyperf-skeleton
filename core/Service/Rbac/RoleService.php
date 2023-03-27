@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Core\Service\Rbac;
 
-use Core\Constants\Platform;
+use Core\Constants\AppId;
 use Core\Model\Role;
+use Core\Model\Tenant;
 use Core\Repository\RoleRepository;
 use Core\Service\AbstractService;
 use Hyperf\Database\Model\Collection;
+use Hyperf\DbConnection\Annotation\Transactional;
 use Hyperf\Di\Annotation\Inject;
 use Kernel\Exception\BusinessException;
 
@@ -25,9 +27,9 @@ class RoleService extends AbstractService
      *
      * @return Collection|Role[]
      */
-    public function list(string $platform = null, string $status = null): array|Collection
+    public function list(int $tenantId = null, string $status = null): array|Collection
     {
-        return $this->repo->getList($platform, $status);
+        return $this->repo->getList($tenantId, $status);
     }
 
     /**
@@ -37,7 +39,7 @@ class RoleService extends AbstractService
     {
         try {
             $role = $this->repo->getById($id);
-        } catch (BusinessException $e) {
+        } catch (BusinessException) {
             throw new BusinessException('该角色不存在');
         }
 
@@ -47,25 +49,32 @@ class RoleService extends AbstractService
     /**
      * 角色 - 多条详情.
      */
-    public function getByIdsPlatform(array $ids, string $platform = Platform::ADMIN): array|Collection
+    public function getsByIdsAndTenantId(array $ids, int $tenantId): array|Collection
     {
-        return $this->repo->getByIdsPlatform($ids, $platform);
+        return $this->repo->getsByIdsAndTenantId($ids, $tenantId);
     }
 
     /**
      * 角色 - 创建.
+     *
+     * 说明：需要同时绑定租户
      */
-    public function create(array $data, string $platform = Platform::ADMIN): Role
+    #[Transactional]
+    public function create(array $data, Tenant $tenant): Role
     {
-        if (! Platform::has($platform)) {
-            throw new \Core\Exception\BusinessException("终端平台类型值 {$platform} 是不允许的");
-        }
+        // 1. 创建角色基础信息
+        $role = $this->repo->create($data);
 
-        return $this->repo->create($data, $platform);
+        // 2. 绑定租户
+        $this->bindTenants($role, [$tenant->id]);
+
+        return $role;
     }
 
     /**
-     * 角色 - 修改 - 基础信息.
+     * 角色 - 修改.
+     *
+     * 说明：只能修改基础信息
      */
     public function update(Role $role, array $data): Role
     {
@@ -105,6 +114,9 @@ class RoleService extends AbstractService
      */
     public function delete(Role $role): bool
     {
+        if ($role->isAdministrator()) {
+            throw new BusinessException('该角色为超级管理员，不允许操作');
+        }
         if (! $role->canDelete()) {
             throw new BusinessException('该角色不允许删除');
         }
@@ -117,6 +129,18 @@ class RoleService extends AbstractService
      */
     public function bindPermissions(Role $role, array $permissionIds): void
     {
+        if ($role->isAdministrator()) {
+            throw new BusinessException('该角色为超级管理员，不允许操作');
+        }
+
         $this->repo->bindPermissions($role, $permissionIds);
+    }
+
+    /**
+     * 角色 - 绑定租户.
+     */
+    public function bindTenants(Role $role, array $tenantIds): void
+    {
+        $this->repo->bindTenants($role, $tenantIds);
     }
 }

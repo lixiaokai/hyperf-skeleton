@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Repository;
 
-use Core\Constants\Platform;
+use Core\Constants\AppId;
 use Core\Constants\Status;
 use Core\Model\UserAdmin;
 use Hyperf\Database\Model\Collection;
@@ -60,10 +60,11 @@ class UserAdminRepository extends AbstractRepository
     /**
      * 设置 - 角色关联.
      */
-    public function setRoles(UserAdmin $userAdmin, array $roleIds): void
+    public function setRoles(UserAdmin $userAdmin, array $roleIds, int $tenantId): void
     {
         // 额外的数据
-        $ids = collect($roleIds)->combine(collect($roleIds)->map(fn () => ['platform' => Platform::ADMIN]))->all();
+        // 例: [ 1 => ['app_id' => 'admin'], 2 => ['app_id' => 'admin']]
+        $ids = collect($roleIds)->combine(collect($roleIds)->map(fn () => ['tenant_id' => $tenantId]))->all();
 
         $userAdmin->roles()->sync($ids);
     }

@@ -2,7 +2,7 @@
 
 namespace HyperfTest\Repository;
 
-use Core\Constants\Platform;
+use Core\Constants\AppId;
 use Core\Repository\MenuRepository;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +14,7 @@ class MenuRepositoryTest extends TestCase
     public function testGetTrees()
     {
         // 获取总后台菜单树
-        $menus = make(MenuRepository::class)->getTrees(Platform::ADMIN);
+        $menus = make(MenuRepository::class)->getTrees(AppId::ADMIN);
         var_dump($menus);
 
         self::assertTrue(true);
@@ -26,7 +26,7 @@ class MenuRepositoryTest extends TestCase
     public function testGetList()
     {
         // 获取总后台菜单
-        $menus = make(MenuRepository::class)->getList(Platform::ADMIN);
+        $menus = make(MenuRepository::class)->getList(AppId::ADMIN);
         var_dump($menus->toArray());
 
         self::assertTrue(true);

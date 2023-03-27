@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Core\Model;
 
 use Carbon\Carbon;
-use Core\Constants\Platform;
+use Core\Constants\ContextKey;
 use Core\Constants\Status;
 use Core\Contract\UserInterface;
 use Core\Model\Casts\PasswordHash;
 use Core\Model\Traits\StatusTrait;
 use Core\Model\Traits\UserAdminActionTrail;
+use Hyperf\Context\Context;
 use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Relations\BelongsTo;
 use Hyperf\Database\Model\Relations\BelongsToMany;
@@ -29,8 +30,9 @@ use Kernel\Service\Auth\JWToken;
  * @property Carbon  $createdAt 创建时间
  * @property Carbon  $updatedAt 修改时间
  *
- * @property User              $user  基础用户
- * @property Collection|Role[] $roles 角色 ( 多条 )
+ * @property User                $user    基础用户
+ * @property Collection|Role[]   $roles   角色 ( 多条 )
+ * @property Collection|Tenant[] $tenants 租户 ( 多条 )
  */
 class UserAdmin extends AbstractModel implements UserInterface
 {
@@ -86,8 +88,9 @@ class UserAdmin extends AbstractModel implements UserInterface
     public function getMenus(): array|UCollection
     {
         // 1. 获取所有启用的菜单
+        $appId = Context::get(ContextKey::APP_ID);
         $menus = Menu::query()
-            ->where(Menu::column('platform'), Platform::ADMIN)
+            ->where(Menu::column('app_id'), $appId)
             ->where(Menu::column('status'), Status::ENABLE)
             ->get();
 
@@ -122,13 +125,19 @@ class UserAdmin extends AbstractModel implements UserInterface
     /**
      * 角色 - 多对多关联.
      *
-     * 注意：这里必须使用中间表过滤关系，否则使用多对多关联 sync() 等方法时只会根据 user_id 查出记录
+     * 注意：这里必须使用中间表过滤关系，否则使用多对多关联 sync() 等方法时只会根据 user_id 查出关联记录
      *
      * @see AdminTest::testRoles()
      */
     public function roles(): BelongsToMany
     {
+        $tenantId = Context::get(ContextKey::TENANT_ID);
         return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id')
-            ->wherePivot('platform', Platform::ADMIN);
+            ->wherePivot('tenant_id', '=', $tenantId);
+    }
+
+    public function tenants(): BelongsToMany
+    {
+        return $this->belongsToMany(Tenant::class, 'role_user', 'user_id', 'tenant_id');
     }
 }

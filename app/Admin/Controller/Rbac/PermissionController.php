@@ -7,7 +7,6 @@ namespace App\Admin\Controller\Rbac;
 use App\Admin\Middleware\AuthMiddleware;
 use App\Admin\Request\Rbac\PermissionRequest;
 use App\Admin\Resource\Rbac\PermissionResource;
-use Core\Constants\Platform;
 use Core\Controller\AbstractController;
 use Core\Service\Rbac\PermissionService;
 use Hyperf\Di\Annotation\Inject;
@@ -36,7 +35,7 @@ class PermissionController extends AbstractController
     #[GetMapping('')]
     public function index(): ResponseInterface
     {
-        $permissionTrees = $this->service->trees(Platform::ADMIN);
+        $permissionTrees = $this->service->trees();
 
         return Response::withData($permissionTrees, ''); // 列表不输出提示
     }

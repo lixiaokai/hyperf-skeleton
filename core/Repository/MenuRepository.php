@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Repository;
 
-use Core\Constants\Platform;
+use Core\Constants\AppId;
 use Core\Constants\Status;
 use Core\Exception\BusinessException;
 use Core\Model\Menu;
@@ -29,13 +29,11 @@ class MenuRepository extends AbstractRepository
      *
      * @see MenuRepositoryTest::testGetList()
      *
-     * @param  null|string       $platform 终端平台
-     * @param  null|string       $status   状态
      * @return Collection|Menu[]
      */
-    public function getList(string $platform = null, string $status = null): array|Collection
+    public function getList(string $appId = null, string $status = null): array|Collection
     {
-        if ($platform && ! Platform::has($platform)) {
+        if ($appId && ! AppId::has($appId)) {
             throw new BusinessException('传入的 [ 终端平台 ] 参数不合法');
         }
         if ($status && ! Status::has($status)) {
@@ -43,7 +41,7 @@ class MenuRepository extends AbstractRepository
         }
 
         return $this->getQuery()
-            ->when($platform, fn (Builder $query) => $query->where(Menu::column('platform'), $platform))
+            ->when($appId, fn (Builder $query) => $query->where(Menu::column('app_id'), $appId))
             ->when($status, fn (Builder $query) => $query->where(Menu::column('status'), $status))
             ->orderByDesc(Menu::column('sort'))
             ->orderBy(Menu::column('id'))
@@ -54,24 +52,21 @@ class MenuRepository extends AbstractRepository
      * 菜单 - 树.
      *
      * @see MenuRepositoryTest::testGetTrees()
-     *
-     * @param null|string $platform 终端平台
-     * @param null|string $status   状态
      */
-    public function getTrees(string $platform = null, string $status = null): array
+    public function getTrees(string $appId = null, string $status = null): array
     {
         return TreeHelper::toTrees(
-            $this->getList($platform, $status)->toArray()
+            $this->getList($appId, $status)->toArray()
         );
     }
 
     /**
      * 菜单 - 创建.
      */
-    public function create(array $data, string $platform = null): Model|Menu
+    public function create(array $data, string $appId = null): Model|Menu
     {
-        if ($platform) {
-            $data = array_merge($data, compact('platform'));
+        if ($appId) {
+            $data = array_merge($data, compact('appId'));
         }
 
         return parent::create($data);

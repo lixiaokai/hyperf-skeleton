@@ -30,6 +30,7 @@ class UserAdminRequest extends FormRequest
             'roleIds' => ['bail', 'required', 'array'],
             'roleIds.*' => [
                 'bail', 'required', 'integer',
+                // Todo: 验证 roleIds 是否属于某租户下已启用的角色
                 Rule::exists(Role::table(), 'id')->where('status', Status::ENABLE),
             ],
             'name' => ['bail', 'required', 'string', 'max:20'],

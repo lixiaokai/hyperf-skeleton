@@ -40,7 +40,6 @@ class MenuRequest extends FormRequest
     {
         return [
             'parentId' => '上级菜单',
-            'platform' => '终端平台',
             'path' => '前端路由',
             'route' => '后端路由',
             'name' => '名称',

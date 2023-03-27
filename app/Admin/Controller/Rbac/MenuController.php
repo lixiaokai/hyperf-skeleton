@@ -7,7 +7,6 @@ namespace App\Admin\Controller\Rbac;
 use App\Admin\Middleware\AuthMiddleware;
 use App\Admin\Request\Rbac\MenuRequest;
 use App\Admin\Resource\Rbac\MenuResource;
-use Core\Constants\Platform;
 use Core\Controller\AbstractController;
 use Core\Service\Rbac\MenuService;
 use Hyperf\Di\Annotation\Inject;
@@ -36,7 +35,7 @@ class MenuController extends AbstractController
     #[GetMapping('')]
     public function index(): ResponseInterface
     {
-        $menuTrees = $this->service->trees(Platform::ADMIN);
+        $menuTrees = $this->service->trees();
 
         return Response::withData($menuTrees);
     }

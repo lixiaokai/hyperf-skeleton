@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Service\Rbac;
 
+use Core\Constants\AppId;
 use Core\Exception\BusinessException;
 use Core\Exception\NotFoundException;
 use Core\Model\Permission;
@@ -29,13 +30,12 @@ class PermissionService extends AbstractService
     /**
      * 权限 - 列表 ( 查询分页 ).
      *
-     * @param array       $searchParams 查询参数
-     * @param null|string $platform     终端平台
+     * @param array $searchParams 查询参数
      */
-    public function search(array $searchParams = [], string $platform = null): PaginatorInterface
+    public function search(array $searchParams = [], string $appId = AppId::ADMIN): PaginatorInterface
     {
         $query = $this->repo->getQuery()
-            ->when($platform, fn (Builder $query) => $query->where(Permission::column('platform'), $platform))
+            ->when($appId, fn (Builder $query) => $query->where(Permission::column('app_id'), $appId))
             ->orderByDesc('id');
 
         return $this->repo->search($searchParams, $query);
@@ -43,12 +43,10 @@ class PermissionService extends AbstractService
 
     /**
      * 权限 - 列表 ( 树 ).
-     *
-     * @param null|string $platform 终端平台
      */
-    public function trees(string $platform = null): array
+    public function trees(string $appId = AppId::ADMIN): array
     {
-        return $this->repo->getTrees($platform);
+        return $this->repo->getTrees($appId);
     }
 
     /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Service\Rbac;
 
-use Core\Constants\Platform;
+use Core\Constants\AppId;
 use Core\Exception\BusinessException;
 use Core\Exception\NotFoundException;
 use Core\Model\Menu;
@@ -25,13 +25,12 @@ class MenuService extends AbstractService
     /**
      * 菜单 - 列表 ( 查询分页 ).
      *
-     * @param array       $searchParams 查询参数
-     * @param null|string $platform     终端平台
+     * @param array $searchParams 查询参数
      */
-    public function search(array $searchParams = [], string $platform = null): PaginatorInterface
+    public function search(array $searchParams = [], string $appId = AppId::ADMIN): PaginatorInterface
     {
         $query = $this->repo->getQuery()
-            ->when($platform, fn (Builder $query) => $query->where(Menu::column('platform'), $platform))
+            ->when($appId, fn (Builder $query) => $query->where(Menu::column('app_id'), $appId))
             ->orderByDesc('id');
 
         return $this->repo->search($searchParams, $query);
@@ -39,13 +38,10 @@ class MenuService extends AbstractService
 
     /**
      * 菜单 - 列表 ( 树 ).
-     *
-     * @param null|string $platform 终端平台
-     * @param null|string $status   状态
      */
-    public function trees(string $platform = null, string $status = null): array
+    public function trees(string $appId = AppId::ADMIN, string $status = null): array
     {
-        return $this->repo->getTrees($platform, $status);
+        return $this->repo->getTrees($appId, $status);
     }
 
     /**
@@ -65,13 +61,13 @@ class MenuService extends AbstractService
     /**
      * 菜单 - 创建.
      */
-    public function create(array $data, string $platform = Platform::ADMIN): Menu
+    public function create(array $data, string $appId = AppId::ADMIN): Menu
     {
-        if (! Platform::has($platform)) {
-            throw new BusinessException("终端平台类型值 {$platform} 是不允许的");
+        if (! AppId::has($appId)) {
+            throw new BusinessException("应用 ID '{$appId}' 是不允许的");
         }
 
-        return $this->repo->create($data, $platform);
+        return $this->repo->create($data, $appId);
     }
 
     /**

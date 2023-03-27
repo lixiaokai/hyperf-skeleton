@@ -6,6 +6,7 @@ namespace Core\Model\Traits;
 
 use Core\Constants\Status;
 use Core\Model\Role;
+use Core\Model\Tenant;
 use Hyperf\Context\Context;
 
 trait UserAdminActionTrail
@@ -48,6 +49,11 @@ trait UserAdminActionTrail
     public function checkPassword(string $password): bool
     {
         return password_verify($password, (string) $this->password);
+    }
+
+    public function hasTenant(int $tenantId): bool
+    {
+        return $this->tenants()->where(Tenant::column('id'), $tenantId)->exists();
     }
 
     /**

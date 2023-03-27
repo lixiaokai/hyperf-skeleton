@@ -38,9 +38,9 @@ abstract class AbstractConstants extends \Hyperf\Constants\AbstractConstants
     /**
      * 是否 - 存在该常量.
      *
-     * @param mixed $code 常量值
+     * @param int|string $code 常量值
      */
-    public static function has(mixed $code): bool
+    public static function has(int|string $code): bool
     {
         return in_array($code, static::codes(), true);
     }

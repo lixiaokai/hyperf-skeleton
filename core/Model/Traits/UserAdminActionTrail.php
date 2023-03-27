@@ -6,7 +6,6 @@ namespace Core\Model\Traits;
 
 use Core\Constants\Status;
 use Core\Model\Role;
-use Core\Model\Tenant;
 use Hyperf\Context\Context;
 
 trait UserAdminActionTrail
@@ -51,9 +50,13 @@ trait UserAdminActionTrail
         return password_verify($password, (string) $this->password);
     }
 
+    /**
+     * 是否拥有 - 某租户.
+     */
     public function hasTenant(int $tenantId): bool
     {
-        return $this->tenants()->where(Tenant::column('id'), $tenantId)->exists();
+        // return $this->tenants()->where(Tenant::column('id'), $tenantId)->exists();
+        return $this->tenants->contains('id', $tenantId);
     }
 
     /**

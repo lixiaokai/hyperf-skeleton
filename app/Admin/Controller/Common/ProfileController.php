@@ -8,7 +8,7 @@ use App\Admin\Middleware\AuthMiddleware;
 use App\Admin\Request\Common\ChangePhoneRequest;
 use App\Admin\Request\Common\ChangePhoneSendRequest;
 use App\Admin\Request\Common\ProfileResetPasswordRequest;
-use App\Admin\Resource\Common\ProFileResource;
+use App\Admin\Resource\Common\ProfileResource;
 use Core\Constants\CaptchaType;
 use Core\Constants\ContextKey;
 use Core\Controller\AbstractController;
@@ -42,7 +42,7 @@ class ProfileController extends AbstractController
         $uid = Context::get(ContextKey::UID);
         $userAdmin = $this->userAdminService->getById($uid);
 
-        return ProFileResource::make($userAdmin);
+        return ProfileResource::make($userAdmin);
     }
 
     /**

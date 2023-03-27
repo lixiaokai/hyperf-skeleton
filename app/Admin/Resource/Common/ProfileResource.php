@@ -13,7 +13,7 @@ use Core\Resource\AbstractResource;
  *
  * @property UserAdmin $resource
  */
-class ProFileResource extends AbstractResource
+class ProfileResource extends AbstractResource
 {
     public function toArray(): array
     {

@@ -9,6 +9,8 @@ use Carbon\Carbon;
 /**
  * 角色用户关系 - 模型.
  *
+ * 角色、用户、租户、应用关系
+ *
  * @property int    $id        自增 ID
  * @property int    $roleId    角色 ID
  * @property int    $userId    用户 ID

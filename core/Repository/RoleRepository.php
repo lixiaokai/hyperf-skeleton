@@ -6,7 +6,7 @@ namespace Core\Repository;
 
 use Core\Constants\Status;
 use Core\Model\Role;
-use Core\Model\RoleTenant;
+use Core\Model\TenantRole;
 use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Model;
@@ -30,9 +30,9 @@ class RoleRepository extends AbstractRepository
     {
         return $this->getQuery()
             ->select(Role::column())
-            ->leftJoin(RoleTenant::table(), RoleTenant::column('role_id'), Role::column('id'))
+            ->leftJoin(TenantRole::table(), TenantRole::column('role_id'), Role::column('id'))
             ->whereIn(Role::column('id'), $ids)
-            ->where(RoleTenant::column('tenant_id'), $tenantId)
+            ->where(TenantRole::column('tenant_id'), $tenantId)
             ->get();
     }
 
@@ -46,8 +46,8 @@ class RoleRepository extends AbstractRepository
         return $this->getQuery()
             ->select(Role::column())
             ->when($tenantId, function (Builder $query) use ($tenantId) {
-                $query->leftJoin(RoleTenant::table(), RoleTenant::column('role_id'), Role::column('id'))
-                    ->where(RoleTenant::column('tenant_id'), $tenantId);
+                $query->leftJoin(TenantRole::table(), TenantRole::column('role_id'), Role::column('id'))
+                    ->where(TenantRole::column('tenant_id'), $tenantId);
             })
             ->when($status, fn (Builder $query) => $query->where(Role::column('status'), $status))
             ->orderByDesc(Role::column('sort'))

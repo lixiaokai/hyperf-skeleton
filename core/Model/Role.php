@@ -93,11 +93,11 @@ class Role extends AbstractModel
      */
     public function admins(): BelongsToMany
     {
-        return $this->belongsToMany(UserAdmin::class, 'role_user', 'role_id', 'user_id');
+        return $this->belongsToMany(UserAdmin::class, RoleUser::table(), 'role_id', 'user_id');
     }
 
     public function tenants(): BelongsToMany
     {
-        return $this->belongsToMany(Tenant::class, 'role_tenant', 'role_id', 'tenant_id');
+        return $this->belongsToMany(Tenant::class, TenantRole::table(), 'role_id', 'tenant_id');
     }
 }

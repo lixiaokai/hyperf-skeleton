@@ -7,18 +7,18 @@ namespace Core\Model;
 use Carbon\Carbon;
 
 /**
- * 租户应用关系 - 模型.
+ * 应用和租户关系 - 模型.
  *
  * @property int    $id        自增 ID
- * @property int    $tenantId  租户 ID
  * @property string $appId     应用 ID
+ * @property int    $tenantId  租户 ID
  * @property Carbon $createdAt 创建时间
  */
-class TenantApp extends AbstractModel
+class AppTenant extends AbstractModel
 {
     public const UPDATED_AT = null;
 
-    protected ?string $table = 'tenant_app';
+    protected ?string $table = 'app_tenant';
 
     protected array $fillable = ['id', 'tenant_id', 'app_id', 'created_at'];
 

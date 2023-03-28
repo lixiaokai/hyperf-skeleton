@@ -13,6 +13,7 @@ use Carbon\Carbon;
  * @property int    $roleId    角色 ID
  * @property int    $userId    用户 ID
  * @property int    $tenantId  租户 ID
+ * @property string $appId     应用 ID
  * @property Carbon $createdAt 创建时间
  */
 class RoleUser extends AbstractModel
@@ -26,6 +27,7 @@ class RoleUser extends AbstractModel
         'role_id',
         'user_id',
         'tenant_id',
+        'app_id',
         'created_at',
     ];
 

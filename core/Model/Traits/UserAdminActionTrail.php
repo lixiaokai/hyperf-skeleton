@@ -60,6 +60,14 @@ trait UserAdminActionTrail
     }
 
     /**
+     * 是否拥有 - 某应用.
+     */
+    public function hasApp(string $appId): bool
+    {
+        return $this->apps->contains('id', $appId);
+    }
+
+    /**
      * 是否 - 超级管理员.
      *
      * 检查拥有的角色中是否包含超管角色

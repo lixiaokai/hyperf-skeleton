@@ -33,6 +33,7 @@ use Kernel\Service\Auth\JWToken;
  * @property User                $user    基础用户
  * @property Collection|Role[]   $roles   角色 ( 多条 )
  * @property Collection|Tenant[] $tenants 租户 ( 多条 )
+ * @property App[]|Collection    $apps    应用 ( 多条 )
  */
 class UserAdmin extends AbstractModel implements UserInterface
 {
@@ -139,5 +140,10 @@ class UserAdmin extends AbstractModel implements UserInterface
     public function tenants(): BelongsToMany
     {
         return $this->belongsToMany(Tenant::class, 'role_user', 'user_id', 'tenant_id');
+    }
+
+    public function apps(): BelongsToMany
+    {
+        return $this->belongsToMany(App::class, 'role_user', 'user_id', 'app_id');
     }
 }

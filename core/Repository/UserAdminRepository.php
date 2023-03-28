@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Core\Repository;
 
-use Core\Constants\AppId;
 use Core\Constants\Status;
 use Core\Model\UserAdmin;
 use Hyperf\Database\Model\Collection;
@@ -51,29 +50,9 @@ class UserAdminRepository extends AbstractRepository
 
     public function resetPassword(UserAdmin $userAdmin, string $password): UserAdmin
     {
-        $userAdmin->password = $password; // 赋值即会自动处理密码哈希
+        $userAdmin->password = $password; // 赋值会自动处理密码哈希
         $userAdmin->save();
 
         return $userAdmin;
-    }
-
-    /**
-     * 绑定角色.
-     */
-    public function bindRoles(UserAdmin $userAdmin, array $roleIds, int $tenantId, string $appId): void
-    {
-        // 中间表额外的数据
-        // [
-        //   1 => ['tenant_id' => 1, 'app_id' => 'admin'],
-        //   2 => ['tenant_id' => 1, 'app_id' => 'admin'],
-        // ]
-        $ids = collect($roleIds)->combine(
-            collect($roleIds)->map(fn () => [
-                'tenant_id' => $tenantId,
-                'app_id' => $appId,
-            ])
-        );
-
-        $userAdmin->roles()->sync($ids->all());
     }
 }

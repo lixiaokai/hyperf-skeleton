@@ -12,6 +12,7 @@ use Core\Constants\AppId;
 use Core\Constants\ContextKey;
 use Core\Controller\AbstractController;
 use Core\Request\SearchRequest;
+use Core\Service\Rbac\TenantService;
 use Core\Service\User\UserAdminService;
 use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;
@@ -33,6 +34,9 @@ class UserAdminController extends AbstractController
 {
     #[Inject]
     protected UserAdminService $service;
+
+    #[Inject]
+    protected TenantService $tenantService;
 
     /**
      * 用户管理 - 列表.
@@ -64,7 +68,8 @@ class UserAdminController extends AbstractController
     {
         $tenantId = Context::get(ContextKey::TENANT_ID);
         $appId = AppId::ADMIN;
-        $userAdmin = $this->service->create($request->validated(), $tenantId, $appId);
+        $tenant = $this->tenantService->getById($tenantId);
+        $userAdmin = $this->service->create($tenant, $request->validated(), $appId);
 
         return Response::withData(UserAdminResource::make($userAdmin));
     }
@@ -77,8 +82,9 @@ class UserAdminController extends AbstractController
     {
         $tenantId = Context::get(ContextKey::TENANT_ID);
         $appId = AppId::ADMIN;
+        $tenant = $this->tenantService->getById($tenantId);
         $userAdmin = $this->service->getById($id);
-        $userAdmin = $this->service->update($userAdmin, $request->validated(UserAdminRequest::SCENE_UPDATE), $tenantId, $appId);
+        $userAdmin = $this->service->update($tenant, $userAdmin, $request->validated(UserAdminRequest::SCENE_UPDATE), $appId);
 
         return Response::withData(UserAdminResource::make($userAdmin));
     }

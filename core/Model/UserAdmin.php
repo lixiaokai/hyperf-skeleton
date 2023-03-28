@@ -115,6 +115,15 @@ class UserAdmin extends AbstractModel implements UserInterface
         return JWTAuth::token($this->id, $daysExp);
     }
 
+    public function getTenant(int $tenantId = null): ?Tenant
+    {
+        if ($tenantId === null) {
+            $tenantId = Context::get(ContextKey::TENANT_ID);
+        }
+
+        return Tenant::find($tenantId);
+    }
+
     /**
      * @see AdminTest::testUser()
      */
@@ -124,7 +133,7 @@ class UserAdmin extends AbstractModel implements UserInterface
     }
 
     /**
-     * 角色 - 多对多关联.
+     * 获取 - 某租户的角色 ( 多条 ).
      *
      * 注意：这里必须使用中间表过滤关系，否则使用多对多关联 sync() 等方法时只会根据 user_id 查出关联记录
      *
@@ -132,18 +141,25 @@ class UserAdmin extends AbstractModel implements UserInterface
      */
     public function roles(): BelongsToMany
     {
-        $tenantId = Context::get(ContextKey::TENANT_ID);
-        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id')
-            ->wherePivot('tenant_id', '=', $tenantId);
+        $relation = $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
+
+        // 如果注入了租户 ID，则把租户 ID 作为中间表查询条件
+        if ($tenantId = Context::get(ContextKey::TENANT_ID)) {
+            $relation->wherePivot('tenant_id', '=', $tenantId);
+        }
+
+        return $relation;
     }
 
     public function tenants(): BelongsToMany
     {
+        // 注意：结果会有重复的租户数据，在一些业务中需要去重
         return $this->belongsToMany(Tenant::class, 'role_user', 'user_id', 'tenant_id');
     }
 
     public function apps(): BelongsToMany
     {
+        // 注意：结果会有重复的租户数据，在一些业务中需要去重
         return $this->belongsToMany(App::class, 'role_user', 'user_id', 'app_id');
     }
 }

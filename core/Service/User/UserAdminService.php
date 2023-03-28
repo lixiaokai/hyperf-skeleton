@@ -7,12 +7,12 @@ namespace Core\Service\User;
 use Core\Constants\CaptchaType;
 use Core\Contract\UserInterface;
 use Core\Exception\BusinessException;
+use Core\Model\Tenant;
 use Core\Model\User;
 use Core\Model\UserAdmin;
 use Core\Repository\UserAdminRepository;
 use Core\Service\AbstractService;
 use Core\Service\Captcha\CaptchaService;
-use Core\Service\Rbac\RoleService;
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\DbConnection\Annotation\Transactional;
 use Hyperf\Di\Annotation\Inject;
@@ -66,7 +66,7 @@ class UserAdminService extends AbstractService
      * 总后台用户 - 创建.
      */
     #[Transactional]
-    public function create(array $data, int $tenantId, string $appId): UserAdmin|UserInterface
+    public function create(Tenant $tenant, array $data, string $appId): UserAdmin|UserInterface
     {
         if (empty($phone = data_get($data, 'phone'))) {
             throw new BusinessException('手机号不能为空');
@@ -89,7 +89,7 @@ class UserAdminService extends AbstractService
         ]);
 
         // 3. 绑定: 角色
-        $this->bindRoles($userAdmin, $roleIds, $tenantId, $appId);
+        $this->userService->bindRoles($tenant, $userAdmin, $roleIds, $appId);
 
         return $userAdmin;
     }
@@ -101,20 +101,20 @@ class UserAdminService extends AbstractService
      * 注意：$data['roleIds'] 如果为空数组时则会清空和角色的关系；为 null 时才不更新角色关系
      */
     #[Transactional]
-    public function update(UserAdmin $userAdmin, array $data, int $tenantId = null, string $appId = null): UserAdmin|UserInterface
+    public function update(Tenant $tenant, UserAdmin $userAdmin, array $data, string $appId = null): UserAdmin|UserInterface
     {
         // 如果角色 $data['roleIds'] 存在的话，租户或应用不能为空
         $roleIds = data_get($data, 'roleIds');
-        if ($roleIds && (empty($tenantId) || empty($appId))) {
-            throw new BusinessException('租户 ID 或应用 ID 不能为空');
+        if ($roleIds && empty($appId)) {
+            throw new BusinessException('应用 ID 不能为空');
         }
 
-        // 1. 创建|更新: 基础用户
+        // 1. 创建|更新: 基础用户 ( 参数 1 原来的 [ 手机号 ] )
         /* @var User $user */
-        $user = $this->userService->updateOrCreateByPhone($userAdmin->phone, $data); // 原来的 [ 手机号 ]
+        $user = $this->userService->updateOrCreateByPhone($userAdmin->phone, $data);
 
         // 2. 绑定: 角色
-        $roleIds && $this->bindRoles($userAdmin, $roleIds, $tenantId, $appId);
+        $roleIds && $this->userService->bindRoles($tenant, $userAdmin, $roleIds, $appId);
 
         // 3. 更新: 总后台用户
         return $this->repo->update($userAdmin, [
@@ -163,28 +163,25 @@ class UserAdminService extends AbstractService
     /**
      * 总后台用户 - 更换手机号.
      *
-     * 说明：$phone 必须在验证类中提前验证除了自己不存在
-     *
-     * @see ChangePhoneRequest::class 比如这个验证类，验证手机号除了自己之外不存在
+     * @param string $newPhone 新的手机号 ( 建议在验证类中提前验证除了自己不存在 )
+     * @see ChangePhoneRequest::class 参考这个验证类
      */
-    public function changePhone(UserAdmin $userAdmin, string $phone, string $code): UserAdmin
+    public function changePhone(UserAdmin $userAdmin, string $newPhone, string $code): UserAdmin
     {
-        if ($userAdmin->phone === $phone) {
+        if ($userAdmin->phone === $newPhone) {
             throw new BusinessException('新手机号不能和原手机号相同');
         }
-        if (! make(CaptchaService::class)->hasCode($phone, $code, CaptchaType::CHANGE_PHONE)) {
+        if (! make(CaptchaService::class)->hasCode($newPhone, $code, CaptchaType::CHANGE_PHONE)) {
             throw new BusinessException('验证码 不正确');
         }
 
-        return $this->update($userAdmin, ['phone' => $phone]);
-    }
+        // 数据
+        $data = ['phone' => $newPhone];
 
-    /**
-     * 绑定 - 角色.
-     */
-    public function bindRoles(UserAdmin $userAdmin, array $roleIds, int $tenantId, string $appId): void
-    {
-        $roles = make(RoleService::class)->getsByIdsAndTenantId($roleIds, $tenantId);
-        $this->repo->bindRoles($userAdmin, $roles->pluck('id')->all(), $tenantId, $appId);
+        // 1. 创建|更新: 基础用户 ( 参数 1 原来的 [ 手机号 ] )
+        $this->userService->updateOrCreateByPhone($userAdmin->phone, $data);
+
+        // 2. 更新: 总后台用户
+        return $this->repo->update($userAdmin, $data);
     }
 }

@@ -7,9 +7,12 @@ namespace Core\Service\User;
 use Core\Contract\UserInterface;
 use Core\Exception\BusinessException;
 use Core\Exception\NotFoundException;
+use Core\Model\Tenant;
 use Core\Model\User;
+use Core\Model\UserAdmin;
 use Core\Repository\UserRepository;
 use Core\Service\AbstractService;
+use Core\Service\Rbac\RoleService;
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\Di\Annotation\Inject;
 
@@ -98,5 +101,14 @@ class UserService extends AbstractService
         }
 
         return $this->repo->delete($user);
+    }
+
+    /**
+     * 绑定 - 角色.
+     */
+    public function bindRoles(Tenant $tenant, UserAdmin $userAdmin, array $roleIds, string $appId): void
+    {
+        $roles = make(RoleService::class)->getsByIdsAndTenantId($roleIds, $tenant->id);
+        $this->repo->bindRoles($tenant, $userAdmin, $roles, $appId);
     }
 }

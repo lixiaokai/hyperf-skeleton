@@ -56,13 +56,16 @@ class User extends AbstractModel implements UserInterface
         return $this->hasOne(UserAdmin::class);
     }
 
+    /**
+     * 获取 - 某租户的角色 ( 多条 ).
+     */
     public function roles(): BelongsToMany
     {
         $relation = $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
 
         // 如果注入了租户 ID，则把租户 ID 作为中间表查询条件
         if ($tenantId = Context::get(ContextKey::TENANT_ID)) {
-            $relation->wherePivot('tenant_id', $tenantId);
+            $relation->wherePivot('tenant_id', '=', $tenantId);
         }
 
         return $relation;

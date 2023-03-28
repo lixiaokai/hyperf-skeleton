@@ -20,7 +20,7 @@ class AppTenant extends AbstractModel
 
     protected ?string $table = 'app_tenant';
 
-    protected array $fillable = ['id', 'tenant_id', 'app_id', 'created_at'];
+    protected array $fillable = ['id', 'app_id', 'tenant_id', 'created_at'];
 
     protected array $casts = ['id' => 'integer', 'tenant_id' => 'integer', 'created_at' => 'datetime'];
 }

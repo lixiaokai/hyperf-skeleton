@@ -24,7 +24,7 @@ class UserAdminAuthService extends AbstractService
      *
      * 方式：手机号 + 密码
      */
-    public function accountLogin(string $phone, string $password, string $appId, int $tenantId): UserAdmin
+    public function accountLogin(string $phone, string $password, int $tenantId, string $appId): UserAdmin
     {
         $userAdmin = $this->userAdminService->getByPhone($phone);
         if ($userAdmin->isDisable()) {
@@ -39,6 +39,9 @@ class UserAdminAuthService extends AbstractService
         if (! $userAdmin->hasTenant($tenantId)) {
             throw new BusinessException("登录的总后台账号不属于该租户 [{$tenantId}]");
         }
+        if (! $userAdmin->hasApp($appId)) {
+            throw new BusinessException("登录的总后台账号不属于该应用 [{$appId}]");
+        }
 
         return $userAdmin;
     }
@@ -48,8 +51,11 @@ class UserAdminAuthService extends AbstractService
      *
      * 方式：手机号 + 验证码
      */
-    public function smsLogin(string $phone, string $code): UserAdmin
+    public function smsLogin(string $phone, string $code, int $tenantId, string $appId): UserAdmin
     {
+        if (! make(CaptchaService::class)->hasCode($phone, $code, CaptchaType::LOGIN)) {
+            throw new BusinessException('验证码 不正确');
+        }
         $userAdmin = $this->userAdminService->getByPhone($phone);
         if ($userAdmin->isDisable()) {
             throw new BusinessException('当前账号已禁用');
@@ -57,8 +63,11 @@ class UserAdminAuthService extends AbstractService
         if ($userAdmin->user->isDisable()) {
             throw new BusinessException('基础账号已禁用');
         }
-        if (! make(CaptchaService::class)->hasCode($phone, $code, CaptchaType::LOGIN)) {
-            throw new BusinessException('验证码 不正确');
+        if (! $userAdmin->hasTenant($tenantId)) {
+            throw new BusinessException("登录的总后台账号不属于该租户 [{$tenantId}]");
+        }
+        if (! $userAdmin->hasApp($appId)) {
+            throw new BusinessException("登录的总后台账号不属于该应用 [{$appId}]");
         }
 
         return $userAdmin;

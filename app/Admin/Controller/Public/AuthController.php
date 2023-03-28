@@ -42,7 +42,7 @@ class AuthController extends AbstractController
         ['phone' => $phone, 'password' => $password] = $request->validated();
         $appId = AppId::ADMIN;
         $tenantId = config('tenant.admin.id');
-        $userAdmin = $this->userAdminAuthService->accountLogin($phone, $password, $appId, $tenantId);
+        $userAdmin = $this->userAdminAuthService->accountLogin($phone, $password, $tenantId, $appId);
 
         return LoginResource::make($userAdmin);
     }
@@ -56,7 +56,9 @@ class AuthController extends AbstractController
     public function smsLogin(SmsLoginRequest $request): ResponseInterface
     {
         ['phone' => $phone, 'code' => $code] = $request->validated();
-        $userAdmin = $this->userAdminAuthService->smsLogin($phone, $code);
+        $appId = AppId::ADMIN;
+        $tenantId = config('tenant.admin.id');
+        $userAdmin = $this->userAdminAuthService->smsLogin($phone, $code, $tenantId, $appId);
 
         return LoginResource::make($userAdmin);
     }

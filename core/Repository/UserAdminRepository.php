@@ -58,14 +58,22 @@ class UserAdminRepository extends AbstractRepository
     }
 
     /**
-     * 设置 - 角色关联.
+     * 绑定角色.
      */
-    public function setRoles(UserAdmin $userAdmin, array $roleIds, int $tenantId): void
+    public function bindRoles(UserAdmin $userAdmin, array $roleIds, int $tenantId, string $appId): void
     {
-        // 额外的数据
-        // 例: [ 1 => ['app_id' => 'admin'], 2 => ['app_id' => 'admin']]
-        $ids = collect($roleIds)->combine(collect($roleIds)->map(fn () => ['tenant_id' => $tenantId]))->all();
+        // 中间表额外的数据
+        // [
+        //   1 => ['tenant_id' => 1, 'app_id' => 'admin'],
+        //   2 => ['tenant_id' => 1, 'app_id' => 'admin'],
+        // ]
+        $ids = collect($roleIds)->combine(
+            collect($roleIds)->map(fn () => [
+                'tenant_id' => $tenantId,
+                'app_id' => $appId,
+            ])
+        );
 
-        $userAdmin->roles()->sync($ids);
+        $userAdmin->roles()->sync($ids->all());
     }
 }

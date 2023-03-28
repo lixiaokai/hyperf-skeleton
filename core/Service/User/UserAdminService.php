@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Service\User;
 
-use Core\Constants\AppId;
 use Core\Constants\CaptchaType;
-use Core\Constants\ContextKey;
 use Core\Contract\UserInterface;
 use Core\Exception\BusinessException;
 use Core\Model\User;
@@ -15,7 +13,6 @@ use Core\Repository\UserAdminRepository;
 use Core\Service\AbstractService;
 use Core\Service\Captcha\CaptchaService;
 use Core\Service\Rbac\RoleService;
-use Hyperf\Context\Context;
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\DbConnection\Annotation\Transactional;
 use Hyperf\Di\Annotation\Inject;
@@ -69,30 +66,32 @@ class UserAdminService extends AbstractService
      * 总后台用户 - 创建.
      */
     #[Transactional]
-    public function create(array $data): UserAdmin|UserInterface
+    public function create(array $data, int $tenantId, string $appId): UserAdmin|UserInterface
     {
-        $phone = data_get($data, 'phone');
-        if (empty($phone)) {
+        if (empty($phone = data_get($data, 'phone'))) {
             throw new BusinessException('手机号不能为空');
+        }
+        if (empty($roleIds = data_get($data, 'roleIds'))) {
+            throw new BusinessException('角色不能为空');
         }
 
         // 1. 创建|更新: 基础用户
-        return $this->userService->updateOrCreateByPhone($phone, $data, function (User $user) use ($data) {
-            // 2. 创建: 总后台用户
-            $userAdmin = $this->repo->create([
-                'id' => $user->id,
-                'name' => $user->name,
-                'phone' => $user->phone,
-                'password' => data_get($data, 'password'),
-                'status' => $user->status,
-            ]);
+        /* @var User $user */
+        $user = $this->userService->updateOrCreateByPhone($phone, $data);
 
-            // 3. 绑定: 角色
-            $tenantId = Context::get(ContextKey::TENANT_ID);
-            $this->bindRoles($userAdmin, data_get($data, 'roleIds'), $tenantId);
+        // 2. 创建: 总后台用户
+        $userAdmin = $this->repo->create([
+            'id' => $user->id,
+            'name' => $user->name,
+            'phone' => $user->phone,
+            'password' => data_get($data, 'password'),
+            'status' => $user->status,
+        ]);
 
-            return $userAdmin;
-        });
+        // 3. 绑定: 角色
+        $this->bindRoles($userAdmin, $roleIds, $tenantId, $appId);
+
+        return $userAdmin;
     }
 
     /**
@@ -102,23 +101,27 @@ class UserAdminService extends AbstractService
      * 注意：$data['roleIds'] 如果为空数组时则会清空和角色的关系；为 null 时才不更新角色关系
      */
     #[Transactional]
-    public function update(UserAdmin $userAdmin, array $data): UserAdmin|UserInterface
+    public function update(UserAdmin $userAdmin, array $data, int $tenantId = null, string $appId = null): UserAdmin|UserInterface
     {
-        $phone = $userAdmin->phone; // 原来的 [ 手机号 ]
+        // 如果角色 $data['roleIds'] 存在的话，租户或应用不能为空
+        $roleIds = data_get($data, 'roleIds');
+        if ($roleIds && (empty($tenantId) || empty($appId))) {
+            throw new BusinessException('租户 ID 或应用 ID 不能为空');
+        }
 
         // 1. 创建|更新: 基础用户
-        return $this->userService->updateOrCreateByPhone($phone, $data, function (User $user) use ($userAdmin, $data) {
-            // 2. 设置: 用户和用户组关系
-            $tenantId = Context::get(ContextKey::TENANT_ID);
-            $this->bindRoles($userAdmin, data_get($data, 'roleIds'), $tenantId);
+        /* @var User $user */
+        $user = $this->userService->updateOrCreateByPhone($userAdmin->phone, $data); // 原来的 [ 手机号 ]
 
-            // 3. 更新: 总后台用户
-            return $this->repo->update($userAdmin, [
-                'name' => $user->name,
-                'phone' => $user->phone,
-                'status' => $user->status,
-            ]);
-        });
+        // 2. 绑定: 角色
+        $roleIds && $this->bindRoles($userAdmin, $roleIds, $tenantId, $appId);
+
+        // 3. 更新: 总后台用户
+        return $this->repo->update($userAdmin, [
+            'name' => $user->name,
+            'phone' => $user->phone,
+            'status' => $user->status,
+        ]);
     }
 
     /**
@@ -167,7 +170,7 @@ class UserAdminService extends AbstractService
     public function changePhone(UserAdmin $userAdmin, string $phone, string $code): UserAdmin
     {
         if ($userAdmin->phone === $phone) {
-            throw new BusinessException('新手机号和原手机号相同');
+            throw new BusinessException('新手机号不能和原手机号相同');
         }
         if (! make(CaptchaService::class)->hasCode($phone, $code, CaptchaType::CHANGE_PHONE)) {
             throw new BusinessException('验证码 不正确');
@@ -179,9 +182,9 @@ class UserAdminService extends AbstractService
     /**
      * 绑定 - 角色.
      */
-    public function bindRoles(UserAdmin $userAdmin, array $roleIds, int $tenantId): void
+    public function bindRoles(UserAdmin $userAdmin, array $roleIds, int $tenantId, string $appId): void
     {
         $roles = make(RoleService::class)->getsByIdsAndTenantId($roleIds, $tenantId);
-        $this->repo->setRoles($userAdmin, $roles->pluck('id')->all(), $tenantId);
+        $this->repo->bindRoles($userAdmin, $roles->pluck('id')->all(), $tenantId, $appId);
     }
 }

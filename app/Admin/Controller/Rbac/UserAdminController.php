@@ -8,9 +8,12 @@ use App\Admin\Collection\Rbac\UserAdminCollection;
 use App\Admin\Middleware\AuthMiddleware;
 use App\Admin\Request\Rbac\UserAdminRequest;
 use App\Admin\Resource\Rbac\UserAdminResource;
+use Core\Constants\AppId;
+use Core\Constants\ContextKey;
 use Core\Controller\AbstractController;
 use Core\Request\SearchRequest;
 use Core\Service\User\UserAdminService;
+use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
@@ -59,7 +62,9 @@ class UserAdminController extends AbstractController
     #[PostMapping('')]
     public function create(UserAdminRequest $request): ResponseInterface
     {
-        $userAdmin = $this->service->create($request->validated());
+        $tenantId = Context::get(ContextKey::TENANT_ID);
+        $appId = AppId::ADMIN;
+        $userAdmin = $this->service->create($request->validated(), $tenantId, $appId);
 
         return Response::withData(UserAdminResource::make($userAdmin));
     }
@@ -70,8 +75,10 @@ class UserAdminController extends AbstractController
     #[PutMapping('{id}')]
     public function update(UserAdminRequest $request, int $id): ResponseInterface
     {
+        $tenantId = Context::get(ContextKey::TENANT_ID);
+        $appId = AppId::ADMIN;
         $userAdmin = $this->service->getById($id);
-        $userAdmin = $this->service->update($userAdmin, $request->validated(UserAdminRequest::SCENE_UPDATE));
+        $userAdmin = $this->service->update($userAdmin, $request->validated(UserAdminRequest::SCENE_UPDATE), $tenantId, $appId);
 
         return Response::withData(UserAdminResource::make($userAdmin));
     }

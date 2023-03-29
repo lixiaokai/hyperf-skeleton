@@ -69,6 +69,9 @@ class UserAdminService extends AbstractService
     #[Transactional]
     public function create(Tenant $tenant, array $data, string $appId): UserAdmin|UserInterface
     {
+        if (empty(data_get($data, 'username'))) {
+            throw new BusinessException('用户账号不能为空');
+        }
         if (empty($phone = data_get($data, 'phone'))) {
             throw new BusinessException('手机号不能为空');
         }
@@ -83,7 +86,8 @@ class UserAdminService extends AbstractService
         // 2. 创建: 总后台用户
         $userAdmin = $this->repo->create([
             'id' => $user->id,
-            'name' => $user->name,
+            'username' => $user->username,
+            'nickname' => $user->nickname,
             'phone' => $user->phone,
             'status' => $user->status,
         ]);
@@ -122,7 +126,8 @@ class UserAdminService extends AbstractService
 
         // 3. 更新: 总后台用户
         return $this->repo->update($userAdmin, [
-            'name' => $user->name,
+            'username' => $user->username,
+            'nickname' => $user->nickname,
             'phone' => $user->phone,
             'status' => $user->status,
         ]);

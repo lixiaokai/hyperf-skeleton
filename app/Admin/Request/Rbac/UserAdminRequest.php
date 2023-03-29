@@ -6,7 +6,7 @@ namespace App\Admin\Request\Rbac;
 
 use Core\Constants\Status;
 use Core\Model\Role;
-use Core\Model\UserAdmin;
+use Core\Model\User;
 use Core\Request\FormRequest;
 use Hyperf\Validation\Rule;
 
@@ -20,7 +20,7 @@ class UserAdminRequest extends FormRequest
     public const SCENE_RESET_PASSWORD = 'resetPassword';
 
     protected array $scenes = [
-        self::SCENE_UPDATE => ['roleIds', 'name', 'phone', 'status'],
+        self::SCENE_UPDATE => ['roleIds', 'username', 'nickname', 'phone', 'status'],
         self::SCENE_RESET_PASSWORD => ['password', 'confirmPassword'],
     ];
 
@@ -33,10 +33,14 @@ class UserAdminRequest extends FormRequest
                 // Todo: 验证 roleIds 是否属于某租户下已启用的角色
                 Rule::exists(Role::table(), 'id')->where('status', Status::ENABLE),
             ],
-            'name' => ['bail', 'required', 'string', 'max:20'],
+            'username' => [
+                'bail', 'required', 'string', 'max:20',
+                Rule::unique(User::table(), 'username')->ignore($this->route('id')),
+            ],
+            'nickname' => ['bail', 'string', 'max:20'],
             'phone' => [
                 'bail', 'required', 'mobile',
-                Rule::unique(UserAdmin::table(), 'phone')->ignore($this->route('id')),
+                Rule::unique(User::table(), 'phone')->ignore($this->route('id')),
             ],
             'password' => ['bail', 'required', 'string', 'min:6'],
             'confirmPassword' => ['bail', 'required', 'same:password'],
@@ -49,7 +53,8 @@ class UserAdminRequest extends FormRequest
         return [
             'roleIds' => '角色',
             'roleIds.*' => '角色 ID',
-            'name' => '用户名称',
+            'username' => '用户账号',
+            'nickname' => '用户昵称',
             'phone' => '手机号',
             'password' => '密码',
             'confirmPassword' => '确认密码',

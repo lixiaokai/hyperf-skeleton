@@ -22,9 +22,10 @@ use Kernel\Service\Auth\JWToken;
  * 总后台用户 - 模型.
  *
  * @property int     $id        用户 ID
- * @property ?string $name      用户名
- * @property string  $phone     手机号
- * @property string  $status    状态 ( enable-启用 disable-禁用 )
+ * @property string  $username  用户账号
+ * @property ?string $nickname  用户昵称
+ * @property ?string $phone     手机号码
+ * @property string  $status    用户状态 ( enable-启用 disable-禁用 )
  * @property Carbon  $createdAt 创建时间
  * @property Carbon  $updatedAt 修改时间
  *
@@ -42,7 +43,8 @@ class UserAdmin extends AbstractModel implements UserInterface
 
     protected array $fillable = [
         'id',
-        'name',
+        'username',
+        'nickname',
         'phone',
         'status',
         'created_at',

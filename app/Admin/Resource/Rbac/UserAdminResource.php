@@ -18,7 +18,8 @@ class UserAdminResource extends AbstractResource
     {
         return [
             'id' => $this->resource->id,
-            'name' => $this->resource->name,
+            'username' => $this->resource->username,
+            'nickname' => $this->resource->nickname,
             'phone' => $this->resource->phone,
             'status' => $this->resource->status,
             'statusText' => $this->resource->statusText,

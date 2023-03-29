@@ -6,7 +6,6 @@ namespace Core\Repository;
 
 use Core\Model\Tenant;
 use Core\Model\User;
-use Core\Model\UserAdmin;
 use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\ModelNotFoundException;
@@ -41,7 +40,7 @@ class UserRepository extends AbstractRepository
     /**
      * 绑定角色.
      */
-    public function bindRoles(Tenant $tenant, UserAdmin $userAdmin, Collection $roles, string $appId): void
+    public function bindRoles(Tenant $tenant, User $user, Collection $roles, string $appId): void
     {
         // 中间表额外的数据
         // [
@@ -56,6 +55,22 @@ class UserRepository extends AbstractRepository
             ])
         );
 
-        $userAdmin->roles()->sync($ids->all());
+        $user->roles()->sync($ids->all());
+    }
+
+    /**
+     * 绑定应用.
+     */
+    public function bindApp(User $user, string $appId): void
+    {
+        $user->apps()->attach($appId);
+    }
+
+    /**
+     * 绑定租户.
+     */
+    public function bindTenant(User $user, Tenant $tenant): void
+    {
+        $user->tenants()->attach($tenant->id);
     }
 }

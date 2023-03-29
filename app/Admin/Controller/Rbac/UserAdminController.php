@@ -67,7 +67,7 @@ class UserAdminController extends AbstractController
     public function create(UserAdminRequest $request): ResponseInterface
     {
         $tenantId = Context::get(ContextKey::TENANT_ID);
-        $appId = AppId::ADMIN;
+        $appId = Context::get(ContextKey::APP_ID);
         $tenant = $this->tenantService->getById($tenantId);
         $userAdmin = $this->service->create($tenant, $request->validated(), $appId);
 
@@ -81,7 +81,7 @@ class UserAdminController extends AbstractController
     public function update(UserAdminRequest $request, int $id): ResponseInterface
     {
         $tenantId = Context::get(ContextKey::TENANT_ID);
-        $appId = AppId::ADMIN;
+        $appId = Context::get(ContextKey::APP_ID);
         $tenant = $this->tenantService->getById($tenantId);
         $userAdmin = $this->service->getById($id);
         $userAdmin = $this->service->update($tenant, $userAdmin, $request->validated(UserAdminRequest::SCENE_UPDATE), $appId);

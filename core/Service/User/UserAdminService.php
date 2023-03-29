@@ -77,7 +77,7 @@ class UserAdminService extends AbstractService
 
         // 1. 创建|更新: 基础用户
         /* @var User $user */
-        $user = $this->userService->updateOrCreateByPhone($phone, $data);
+        $user = $this->userService->updateOrCreateByPhone($phone, $data, $tenant);
 
         // 2. 创建: 总后台用户
         $userAdmin = $this->repo->create([
@@ -88,8 +88,12 @@ class UserAdminService extends AbstractService
             'status' => $user->status,
         ]);
 
-        // 3. 绑定: 角色
-        $this->userService->bindRoles($tenant, $userAdmin, $roleIds, $appId);
+        // 3. 绑定角色
+        $this->userService->bindRoles($user, $roleIds, $appId, $tenant);
+        // 4. 绑定应用
+        $this->userService->bindApp($user, $appId);
+        // 5. 绑定租户
+        $this->userService->bindTenant($user, $tenant);
 
         return $userAdmin;
     }
@@ -114,7 +118,7 @@ class UserAdminService extends AbstractService
         $user = $this->userService->updateOrCreateByPhone($userAdmin->phone, $data);
 
         // 2. 绑定: 角色
-        $roleIds && $this->userService->bindRoles($tenant, $userAdmin, $roleIds, $appId);
+        $roleIds && $this->userService->bindRoles($user, $roleIds, $appId, $tenant);
 
         // 3. 更新: 总后台用户
         return $this->repo->update($userAdmin, [

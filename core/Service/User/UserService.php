@@ -9,7 +9,6 @@ use Core\Exception\BusinessException;
 use Core\Exception\NotFoundException;
 use Core\Model\Tenant;
 use Core\Model\User;
-use Core\Model\UserAdmin;
 use Core\Repository\UserRepository;
 use Core\Service\AbstractService;
 use Core\Service\Rbac\RoleService;
@@ -84,7 +83,7 @@ class UserService extends AbstractService
      * @param  ?callable     $callable 回调函数
      * @return UserInterface 返回回调函数执行后的结果
      */
-    public function updateOrCreateByPhone(string $phone, array $data, callable $callable = null): UserInterface
+    public function updateOrCreateByPhone(string $phone, array $data, Tenant $tenant = null, callable $callable = null): UserInterface
     {
         $user = $this->repo->updateOrCreate(['phone' => $phone], $data);
 
@@ -106,9 +105,25 @@ class UserService extends AbstractService
     /**
      * 绑定 - 角色.
      */
-    public function bindRoles(Tenant $tenant, UserAdmin $userAdmin, array $roleIds, string $appId): void
+    public function bindRoles(User $user, array $roleIds, string $appId, Tenant $tenant): void
     {
         $roles = make(RoleService::class)->getsByIdsAndTenantId($roleIds, $tenant->id);
-        $this->repo->bindRoles($tenant, $userAdmin, $roles, $appId);
+        $this->repo->bindRoles($tenant, $user, $roles, $appId);
+    }
+
+    /**
+     * 绑定 - 应用.
+     */
+    public function bindApp(User $user, string $appId): void
+    {
+        $this->repo->bindApp($user, $appId);
+    }
+
+    /**
+     * 绑定 - 应用.
+     */
+    public function bindTenant(User $user, Tenant $tenant): void
+    {
+        $this->repo->bindTenant($user, $tenant);
     }
 }

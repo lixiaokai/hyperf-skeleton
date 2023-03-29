@@ -93,6 +93,7 @@ class UserAdmin extends AbstractModel implements UserInterface
         $menus = Menu::query()
             ->where(Menu::column('app_id'), $appId)
             ->where(Menu::column('status'), Status::ENABLE)
+            ->orderBy(Menu::column('sort'))
             ->get();
 
         // 2. 非超管仅获取有权限的菜单
@@ -115,6 +116,25 @@ class UserAdmin extends AbstractModel implements UserInterface
         return JWTAuth::token($this->id, $daysExp);
     }
 
+    /**
+     * 获取 - 应用.
+     *
+     * 注意：总后台应用是写死的
+     */
+    public function getApp(int $appId = null): ?App
+    {
+        if ($appId === null) {
+            $appId = Context::get(ContextKey::APP_ID);
+        }
+
+        return App::find($appId);
+    }
+
+    /**
+     * 获取 - 租户.
+     *
+     * 注意：总后台租户是写死的
+     */
     public function getTenant(int $tenantId = null): ?Tenant
     {
         if ($tenantId === null) {
@@ -137,7 +157,6 @@ class UserAdmin extends AbstractModel implements UserInterface
      */
     public function apps(): BelongsToMany
     {
-        // 注意：结果会有重复的租户数据，在一些业务中需要去重
         return $this->belongsToMany(App::class, AppUser::table(), 'user_id', 'app_id');
     }
 

@@ -36,11 +36,11 @@ class UserAdminAuthService extends AbstractService
         if (! $userAdmin->checkPassword($password)) {
             throw new BusinessException('登录的手机号或密码错误');
         }
-        if (! $userAdmin->hasTenant($tenantId)) {
-            throw new BusinessException("登录的总后台账号不属于该租户 [{$tenantId}]");
-        }
         if (! $userAdmin->hasApp($appId)) {
-            throw new BusinessException("登录的总后台账号不属于该应用 [{$appId}]");
+            throw new BusinessException('登录的总后台账号不属于该应用');
+        }
+        if (! $userAdmin->hasTenant($tenantId)) {
+            throw new BusinessException('登录的总后台账号不属于该租户');
         }
 
         return $userAdmin;
@@ -63,11 +63,11 @@ class UserAdminAuthService extends AbstractService
         if ($userAdmin->user->isDisable()) {
             throw new BusinessException('基础账号已禁用');
         }
-        if (! $userAdmin->hasTenant($tenantId)) {
-            throw new BusinessException("登录的总后台账号不属于该租户 [{$tenantId}]");
-        }
         if (! $userAdmin->hasApp($appId)) {
             throw new BusinessException("登录的总后台账号不属于该应用 [{$appId}]");
+        }
+        if (! $userAdmin->hasTenant($tenantId)) {
+            throw new BusinessException("登录的总后台账号不属于该租户 [{$tenantId}]");
         }
 
         return $userAdmin;

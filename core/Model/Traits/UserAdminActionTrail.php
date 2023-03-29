@@ -50,20 +50,20 @@ trait UserAdminActionTrail
     }
 
     /**
+     * 是否拥有 - 某应用.
+     */
+    public function hasApp(string $appId): bool
+    {
+        return $this->apps->contains('id', $appId);
+    }
+
+    /**
      * 是否拥有 - 某租户.
      */
     public function hasTenant(int $tenantId): bool
     {
         // return $this->tenants()->where(Tenant::column('id'), $tenantId)->exists();
         return $this->tenants->contains('id', $tenantId);
-    }
-
-    /**
-     * 是否拥有 - 某应用.
-     */
-    public function hasApp(string $appId): bool
-    {
-        return $this->apps->contains('id', $appId);
     }
 
     /**

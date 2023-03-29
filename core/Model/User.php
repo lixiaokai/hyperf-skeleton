@@ -57,6 +57,11 @@ class User extends AbstractModel implements UserInterface
         return $this->hasOne(UserAdmin::class);
     }
 
+    public function apps(): BelongsToMany
+    {
+        return $this->belongsToMany(App::class);
+    }
+
     public function tenants(): BelongsToMany
     {
         return $this->belongsToMany(Tenant::class);

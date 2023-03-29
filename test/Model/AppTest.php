@@ -17,4 +17,15 @@ class AppTest extends TestCase
 
         self::assertTrue(true);
     }
+
+    /**
+     * @see App::tenants()
+     */
+    public function testUsers()
+    {
+        $app = App::find('admin');
+        var_dump($app->users->toArray());
+
+        self::assertTrue(true);
+    }
 }

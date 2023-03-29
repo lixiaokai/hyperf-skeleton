@@ -307,14 +307,14 @@ php bin/hyperf.php
 > `-N "命名空间"`：命名空间需要用单引号或双引号包裹，反斜线可以用单或双反斜线
 > 
 ```bash
-# 创建：模型
+# 生成：模型
 php bin/hyperf.php gen:model user # user 表示 [ mysql 表名 ] 这里用小写
 
-# 创建：控制器
+# 生成：控制器
 php bin/hyperf.php gen:controller DemoController # 首字母大写
 php bin/hyperf.php gen:controller DemoController -N "App\Demo\Controller" # 指定命名空间
 
-# 创建：API 资源
+# 生成：API 资源
 # 文档：https://hyperf.wiki/3.0/#/zh-cn/db/resource
 # 注意：config/autoload/devtool.php 配置中默认没有 API 资源的配置，需要自己手动加上 ( 该项目已加上 )
 php bin/hyperf.php gen:resource UserResource # 首字母大写
@@ -322,25 +322,31 @@ php bin/hyperf.php gen:resource UserResource -N "App\Demo\Resource" # 指定命�
 php bin/hyperf.php gen:resource UserCollection --collection # 生成集合
 php bin/hyperf.php gen:resource UserCollection # 资源的名称中包含 Collection 名则不需要 --collection 参数
 
-# 创建：监听
+# 生成：监听
 php bin/hyperf.php gen:listener DemoCteateListener # 首字母大写
 
-# 创建：中间件
+# 生成：中间件
 php bin/hyperf.php gen:middleware DemoMiddleware # 首字母大写
 
-# 创建：APO 切面
+# 生成：APO 切面
 php bin/hyperf.php gen:aspect DemoAspect # 首字母大写
 
-# 创建：命令行
+# 生成：命令行
 php bin/hyperf.php gen:command DemoPermissions # 首字母大写
 
-# 创建：进程
+# 生成：迁移
+# --create 创建表
+# --table 修改表
+php bin/hyperf.php gen:migration create_users_table --create=user
+php bin/hyperf.php gen:migration update_users_table --table=user
+
+# 生成：进程
 php bin/hyperf.php gen:process DemoProcess # 首字母大写
 
-# 创建：异步队列 - 消费任务
+# 生成：异步队列 - 消费任务
 php bin/hyperf.php gen:job DemoJob # 首字母大写
 
-# 创建：异步队列 - 生产者 + 消费者
+# 生成：异步队列 - 生产者 + 消费者
 php bin/hyperf.php gen:amqp-producer DemoProducer # 首字母大写 ( 生产者 )
 php bin/hyperf.php gen:amqp-consumer DemoConsumer # 首字母大写 ( 消费者 )
 ```

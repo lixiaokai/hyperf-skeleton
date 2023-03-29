@@ -6,6 +6,7 @@ namespace Core\Model;
 
 use Carbon\Carbon;
 use Core\Constants\RoleType;
+use Core\Constants\Status;
 use Core\Model\Traits\RoleActionTrail;
 use Core\Model\Traits\StatusTrait;
 use Hyperf\Database\Model\Collection;
@@ -49,6 +50,11 @@ class Role extends AbstractModel
 
     protected ?string $table = 'role';
 
+    protected array $attributes = [
+        'type' => RoleType::CUSTOM,
+        'status' => Status::ENABLE,
+    ];
+
     protected array $fillable = [
         'id',
         'parent_id',
@@ -67,10 +73,6 @@ class Role extends AbstractModel
         'sort' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-    ];
-
-    protected array $attributes = [
-        'type' => RoleType::CUSTOM,
     ];
 
     public function getTypeTextAttribute(): string

@@ -35,6 +35,10 @@ class Tenant extends AbstractModel
 
     protected ?string $table = 'tenant';
 
+    protected array $attributes = [
+        'status' => TenantStatus::WAIT_INIT,
+    ];
+
     protected array $fillable = ['id', 'name', 'data', 'status', 'created_at', 'updated_at'];
 
     protected array $casts = ['id' => 'integer', 'data' => 'json', 'created_at' => 'datetime', 'updated_at' => 'datetime'];

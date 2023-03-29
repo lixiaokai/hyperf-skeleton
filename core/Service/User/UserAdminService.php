@@ -77,14 +77,13 @@ class UserAdminService extends AbstractService
 
         // 1. 创建|更新: 基础用户
         /* @var User $user */
-        $user = $this->userService->updateOrCreateByPhone($phone, $data, $tenant);
+        $user = $this->userService->updateOrCreateByPhone($phone, $data);
 
         // 2. 创建: 总后台用户
         $userAdmin = $this->repo->create([
             'id' => $user->id,
             'name' => $user->name,
             'phone' => $user->phone,
-            'password' => data_get($data, 'password'),
             'status' => $user->status,
         ]);
 

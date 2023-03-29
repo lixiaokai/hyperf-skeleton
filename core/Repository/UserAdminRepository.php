@@ -50,8 +50,7 @@ class UserAdminRepository extends AbstractRepository
 
     public function resetPassword(UserAdmin $userAdmin, string $password): UserAdmin
     {
-        $userAdmin->password = $password; // 赋值会自动处理密码哈希
-        $userAdmin->save();
+        $userAdmin->user->password = $password; // 赋值会自动处理密码哈希
 
         return $userAdmin;
     }

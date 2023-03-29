@@ -7,7 +7,7 @@ namespace App\Admin\Controller\Common;
 use App\Admin\Middleware\AuthMiddleware;
 use App\Admin\Resource\Common\RefreshTokenResource;
 use Core\Controller\AbstractController;
-use Core\Service\User\UserAdminAuthService;
+use Core\Service\User\UserAuthService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\Middlewares;
@@ -22,7 +22,7 @@ use Psr\Http\Message\ResponseInterface;
 class UserAdminController extends AbstractController
 {
     #[Inject]
-    protected UserAdminAuthService $userAdminAuthService;
+    protected UserAuthService $userAuthService;
 
     /**
      * 刷新令牌.
@@ -30,8 +30,8 @@ class UserAdminController extends AbstractController
     #[PostMapping('refresh-token')]
     public function refreshToken(): ResponseInterface
     {
-        $userAdmin = $this->userAdminAuthService->refreshToken();
+        $user = $this->userAuthService->refreshToken();
 
-        return RefreshTokenResource::make($userAdmin);
+        return RefreshTokenResource::make($user);
     }
 }

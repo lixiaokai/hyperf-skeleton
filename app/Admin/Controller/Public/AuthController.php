@@ -42,9 +42,9 @@ class AuthController extends AbstractController
         ['phone' => $phone, 'password' => $password] = $request->validated();
         $appId = AppId::ADMIN;
         $tenantId = config('tenant.admin.id');
-        $userAdmin = $this->userAdminAuthService->accountLogin($phone, $password, $tenantId, $appId);
+        $user = $this->userAdminAuthService->passwordLogin($phone, $password, $tenantId, $appId);
 
-        return LoginResource::make($userAdmin);
+        return LoginResource::make($user);
     }
 
     /**

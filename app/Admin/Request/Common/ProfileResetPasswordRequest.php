@@ -17,8 +17,8 @@ class ProfileResetPasswordRequest extends FormRequest
     {
         return [
             'oldPassword' => ['bail', 'required', 'string', 'min:6', function ($attribute, $value, $fail) {
-                $userAdmin = Context::get(ContextKey::USER_ADMIN);
-                if (! $userAdmin->checkPassword($value)) {
+                $user = Context::get(ContextKey::USER);
+                if (! $user->checkPassword($value)) {
                     $fail('旧密码不正确，请重新输入');
                 }
             }],

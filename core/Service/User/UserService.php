@@ -83,10 +83,16 @@ class UserService extends AbstractService
      * @param  ?callable     $callable 回调函数
      * @return UserInterface 返回回调函数执行后的结果
      */
-    public function updateOrCreateByPhone(string $phone, array $data, Tenant $tenant = null, callable $callable = null): UserInterface
+    public function updateOrCreateByPhone(string $phone, array $data, callable $callable = null): UserInterface
     {
         $user = $this->repo->updateOrCreate(['phone' => $phone], $data);
 
+        // 如果有密码则更新密码
+        if ($password = data_get($data, 'password')) {
+            $user->password = $password;
+        }
+
+        // 如果有回调函数则执行
         return $callable !== null ? $callable($user) : $user;
     }
 

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Admin\Resource\Public;
 
-use Core\Model\UserAdmin;
+use Core\Model\User;
 use Core\Resource\AbstractResource;
 
 /**
  * 用户登录 - 资源.
  *
- * @property UserAdmin $resource
+ * @property User $resource
  */
 class LoginResource extends AbstractResource
 {

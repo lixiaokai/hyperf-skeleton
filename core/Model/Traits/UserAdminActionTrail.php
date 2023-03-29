@@ -42,14 +42,6 @@ trait UserAdminActionTrail
     }
 
     /**
-     * 检查 - 密码是否相同.
-     */
-    public function checkPassword(string $password): bool
-    {
-        return password_verify($password, (string) $this->password);
-    }
-
-    /**
      * 是否拥有 - 某应用.
      */
     public function hasApp(string $appId): bool

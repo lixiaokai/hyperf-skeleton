@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Admin\Resource\Common;
 
-use Core\Model\UserAdmin;
+use Core\Model\User;
 use Core\Resource\AbstractResource;
 
 /**
  * 用户 - 刷新令牌 - 资源.
  *
- * @property UserAdmin $resource
+ * @property User $resource
  */
 class RefreshTokenResource extends AbstractResource
 {

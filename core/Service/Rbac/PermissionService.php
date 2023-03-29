@@ -6,7 +6,6 @@ namespace Core\Service\Rbac;
 
 use Core\Constants\AppId;
 use Core\Exception\BusinessException;
-use Core\Exception\NotFoundException;
 use Core\Model\Permission;
 use Core\Repository\PermissionRepository;
 use Core\Service\AbstractService;
@@ -14,6 +13,7 @@ use Hyperf\Contract\ApplicationInterface;
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\Database\Model\Builder;
 use Hyperf\Di\Annotation\Inject;
+use Kernel\Exception\NotFoundException;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;

@@ -6,7 +6,6 @@ namespace Core\Service\User;
 
 use Core\Contract\UserInterface;
 use Core\Exception\BusinessException;
-use Core\Exception\NotFoundException;
 use Core\Model\Tenant;
 use Core\Model\User;
 use Core\Repository\UserRepository;
@@ -14,6 +13,7 @@ use Core\Service\AbstractService;
 use Core\Service\Rbac\RoleService;
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\Di\Annotation\Inject;
+use Kernel\Exception\NotFoundException;
 
 /**
  * 用户 - 服务类.

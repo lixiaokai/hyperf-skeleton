@@ -9,6 +9,7 @@ use Core\Repository\TenantRepository;
 use Core\Service\AbstractService;
 use Hyperf\Di\Annotation\Inject;
 use Kernel\Exception\BusinessException;
+use Kernel\Exception\NotFoundException;
 
 /**
  * 租户 - 服务类.
@@ -25,7 +26,7 @@ class TenantService extends AbstractService
     {
         try {
             $tenant = $this->repo->getById($id);
-        } catch (BusinessException) {
+        } catch (NotFoundException) {
             throw new BusinessException('该租户信息不存在');
         }
 

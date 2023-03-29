@@ -3,12 +3,12 @@
 namespace Core\Service\Demo;
 
 use Core\Exception\BusinessException;
-use Core\Exception\NotFoundException;
 use Core\Model\Test;
 use Core\Repository\TestRepository;
 use Core\Service\AbstractService;
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\Di\Annotation\Inject;
+use Kernel\Exception\NotFoundException;
 
 /**
  * 测试 - 服务类.

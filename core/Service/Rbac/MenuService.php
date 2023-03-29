@@ -6,13 +6,13 @@ namespace Core\Service\Rbac;
 
 use Core\Constants\AppId;
 use Core\Exception\BusinessException;
-use Core\Exception\NotFoundException;
 use Core\Model\Menu;
 use Core\Repository\MenuRepository;
 use Core\Service\AbstractService;
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\Database\Model\Builder;
 use Hyperf\Di\Annotation\Inject;
+use Kernel\Exception\NotFoundException;
 
 /**
  * 菜单 - 服务类.

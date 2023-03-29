@@ -16,6 +16,7 @@ use Core\Service\Captcha\CaptchaService;
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\DbConnection\Annotation\Transactional;
 use Hyperf\Di\Annotation\Inject;
+use Kernel\Exception\NotFoundException;
 
 /**
  * 总后台用户 - 服务类.
@@ -47,7 +48,7 @@ class UserAdminService extends AbstractService
     {
         try {
             $userAdmin = $this->repo->getById($id);
-        } catch (BusinessException) {
+        } catch (NotFoundException) {
             throw new BusinessException('用户信息不存在');
         }
 

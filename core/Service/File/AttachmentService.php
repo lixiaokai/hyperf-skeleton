@@ -8,6 +8,7 @@ use Core\Service\AbstractService;
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\Di\Annotation\Inject;
 use Kernel\Exception\BusinessException;
+use Kernel\Exception\NotFoundException;
 
 /**
  * 附件 - 服务类.
@@ -34,7 +35,7 @@ class AttachmentService extends AbstractService
     {
         try {
             $attachment = $this->repo->getById($id);
-        } catch (BusinessException $e) {
+        } catch (NotFoundException) {
             throw new BusinessException('该附件不存在');
         }
 

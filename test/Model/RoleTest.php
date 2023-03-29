@@ -14,12 +14,23 @@ class RoleTest extends TestCase
     }
 
     /**
-     * @see Role::admins()
+     * @see Role::userAdmins()
      */
-    public function testAdmins()
+    public function testUserAdmins()
     {
         $role = Role::find(1);
-        var_dump($role->admins->toArray());
+        var_dump($role->userAdmins->toArray());
+
+        self::assertTrue(true);
+    }
+
+    /**
+     * @see Role::tenants()
+     */
+    public function testTenants()
+    {
+        $role = Role::find(1);
+        var_dump($role->tenants->toArray());
 
         self::assertTrue(true);
     }

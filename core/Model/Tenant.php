@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use Core\Constants\TenantStatus;
 use Core\Model\Traits\StatusTrait;
 use Core\Model\Traits\TenantActionTrail;
+use Hyperf\Database\Model\Collection;
+use Hyperf\Database\Model\Relations\BelongsToMany;
 
 /**
  * 租户 - 模型.
@@ -20,6 +22,11 @@ use Core\Model\Traits\TenantActionTrail;
  * @property Carbon $updatedAt 修改时间
  *
  * @property string $statusText 状态 - 文字
+ *
+ * @property App[]|Collection       $apps       应用 ( 多条 )
+ * @property Collection|Role[]      $roles      角色 ( 多条 )
+ * @property Collection|User[]      $users      基础用户 ( 多条 )
+ * @property Collection|UserAdmin[] $userAdmins 总后台用户 ( 多条 )
  */
 class Tenant extends AbstractModel
 {
@@ -35,5 +42,37 @@ class Tenant extends AbstractModel
     public function getStatusTextAttribute(): string
     {
         return TenantStatus::getText($this->status);
+    }
+
+    /**
+     * @see TenantTest::testApps()
+     */
+    public function apps(): BelongsToMany
+    {
+        return $this->belongsToMany(App::class);
+    }
+
+    /**
+     * @see TenantTest::testRoles()
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, TenantRole::table(), 'tenant_id', 'role_id');
+    }
+
+    /**
+     * @see TenantTest::testUsers()
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    /**
+     * @see TenantTest::testUserAdmins()
+     */
+    public function userAdmins(): BelongsToMany
+    {
+        return $this->belongsToMany(UserAdmin::class, TenantUser::table(), 'tenant_id', 'user_id');
     }
 }

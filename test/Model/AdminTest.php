@@ -19,6 +19,28 @@ class AdminTest extends TestCase
     }
 
     /**
+     * @see UserAdmin::apps()
+     */
+    public function testApps()
+    {
+        $admin = UserAdmin::find(1);
+        var_dump($admin->apps->toArray());
+
+        self::assertTrue(true);
+    }
+
+    /**
+     * @see UserAdmin::tenants()
+     */
+    public function testTenants()
+    {
+        $admin = UserAdmin::find(1);
+        var_dump($admin->tenants->toArray());
+
+        self::assertTrue(true);
+    }
+
+    /**
      * @see UserAdmin::roles()
      */
     public function testRoles()

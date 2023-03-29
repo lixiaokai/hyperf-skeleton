@@ -26,8 +26,9 @@ use Hyperf\Database\Model\Relations\HasOne;
  * @property Carbon  $createdAt 创建时间
  * @property Carbon  $updatedAt 修改时间
  *
- * @property UserAdmin         $userAdmin 总后台用户
- * @property Collection|Role[] $roles     角色 ( 多条 )
+ * @property UserAdmin           $userAdmin 总后台用户
+ * @property Collection|Tenant[] $tenants   租户 ( 多条 )
+ * @property Collection|Role[]   $roles     角色 ( 多条 )
  */
 class User extends AbstractModel implements UserInterface
 {
@@ -54,6 +55,11 @@ class User extends AbstractModel implements UserInterface
     public function userAdmin(): HasOne
     {
         return $this->hasOne(UserAdmin::class);
+    }
+
+    public function tenants(): BelongsToMany
+    {
+        return $this->belongsToMany(Tenant::class);
     }
 
     /**

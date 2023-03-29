@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Core\Model;
 
 use Carbon\Carbon;
+use Hyperf\Database\Model\Collection;
+use Hyperf\Database\Model\Relations\BelongsToMany;
 
 /**
  * 应用 - 模型.
@@ -15,6 +17,8 @@ use Carbon\Carbon;
  * @property int    $sort      排序
  * @property Carbon $createdAt 创建时间
  * @property Carbon $updatedAt 修改时间
+ *
+ * @property Collection|Tenant[] $tenants 租户 ( 多条 )
  */
 class App extends AbstractModel
 {
@@ -27,4 +31,12 @@ class App extends AbstractModel
     protected array $fillable = ['id', 'name', 'data', 'sort', 'created_at', 'updated_at'];
 
     protected array $casts = ['sort' => 'integer', 'data' => 'json', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+
+    /**
+     * @see AppTest::testTenants()
+     */
+    public function tenants(): BelongsToMany
+    {
+        return $this->belongsToMany(Tenant::class);
+    }
 }

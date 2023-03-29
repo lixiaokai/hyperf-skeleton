@@ -31,9 +31,9 @@ use Kernel\Service\Auth\JWToken;
  * @property Carbon  $updatedAt 修改时间
  *
  * @property User                $user    基础用户
- * @property Collection|Role[]   $roles   角色 ( 多条 )
- * @property Collection|Tenant[] $tenants 租户 ( 多条 )
  * @property App[]|Collection    $apps    应用 ( 多条 )
+ * @property Collection|Tenant[] $tenants 租户 ( 多条 )
+ * @property Collection|Role[]   $roles   角色 ( 多条 )
  */
 class UserAdmin extends AbstractModel implements UserInterface
 {
@@ -95,12 +95,12 @@ class UserAdmin extends AbstractModel implements UserInterface
             ->where(Menu::column('status'), Status::ENABLE)
             ->get();
 
-        // 2. 如果不是超管
+        // 2. 非超管仅获取有权限的菜单
         if (! $this->isAdministrator()) {
-            // 2.1. 获取我的权限路由
+            // 2.1. 获取我拥有的权限路由
             $routes = $this->getPermissions()->pluck('route');
 
-            // 2.2. 获取有权限路由的菜单 ( 集合 where 时会保留索引，这里去掉索引 )
+            // 2.2. 获取有权限路由的菜单 ( 集合中使用 where() 会保留索引，这里要去掉索引 )
             $menus = $menus->whereIn('route', $routes)->values();
         }
 
@@ -133,6 +133,23 @@ class UserAdmin extends AbstractModel implements UserInterface
     }
 
     /**
+     * @see AdminTest::testApps()
+     */
+    public function apps(): BelongsToMany
+    {
+        // 注意：结果会有重复的租户数据，在一些业务中需要去重
+        return $this->belongsToMany(App::class, AppUser::table(), 'user_id', 'app_id');
+    }
+
+    /**
+     * @see AdminTest::testTenants()
+     */
+    public function tenants(): BelongsToMany
+    {
+        return $this->belongsToMany(Tenant::class, TenantUser::table(), 'user_id', 'tenant_id');
+    }
+
+    /**
      * 获取 - 某租户的角色 ( 多条 ).
      *
      * 注意：这里必须使用中间表过滤关系，否则使用多对多关联 sync() 等方法时只会根据 user_id 查出关联记录
@@ -141,25 +158,14 @@ class UserAdmin extends AbstractModel implements UserInterface
      */
     public function roles(): BelongsToMany
     {
-        $relation = $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
+        $relation = $this->belongsToMany(Role::class, RoleUser::table(), 'user_id', 'role_id');
 
         // 如果注入了租户 ID，则把租户 ID 作为中间表查询条件
         if ($tenantId = Context::get(ContextKey::TENANT_ID)) {
+            // $relation->wherePivot('tenant_id', $tenantId); // 错误示范：中间表 where 查询第 2 参数不能直接写条件值
             $relation->wherePivot('tenant_id', '=', $tenantId);
         }
 
         return $relation;
-    }
-
-    public function tenants(): BelongsToMany
-    {
-        // 注意：结果会有重复的租户数据，在一些业务中需要去重
-        return $this->belongsToMany(Tenant::class, 'role_user', 'user_id', 'tenant_id');
-    }
-
-    public function apps(): BelongsToMany
-    {
-        // 注意：结果会有重复的租户数据，在一些业务中需要去重
-        return $this->belongsToMany(App::class, 'role_user', 'user_id', 'app_id');
     }
 }

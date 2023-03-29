@@ -29,7 +29,7 @@ use Hyperf\Database\Model\Relations\BelongsToMany;
  *
  * @property Collection|Permission[] $permissions 权限 ( 多条 )
  * @property Collection|User[]       $users       用户 ( 多条 )
- * @property Collection|UserAdmin[]  $admins      总后台用户 ( 多条 )
+ * @property Collection|UserAdmin[]  $userAdmins  总后台用户 ( 多条 )
  * @property Collection|Tenant[]     $tenants     租户 ( 多条 )
  *
  * @see RoleTest::class
@@ -89,13 +89,16 @@ class Role extends AbstractModel
     }
 
     /**
-     * @see RoleTest::testAdmins()
+     * @see RoleTest::testUserAdmins()
      */
-    public function admins(): BelongsToMany
+    public function userAdmins(): BelongsToMany
     {
         return $this->belongsToMany(UserAdmin::class, RoleUser::table(), 'role_id', 'user_id');
     }
 
+    /**
+     * @see RoleTest::testTenants()
+     */
     public function tenants(): BelongsToMany
     {
         return $this->belongsToMany(Tenant::class, TenantRole::table(), 'role_id', 'tenant_id');

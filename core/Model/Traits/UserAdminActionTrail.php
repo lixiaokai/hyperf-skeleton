@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Core\Model\Traits;
 
-use Core\Constants\Status;
 use Core\Model\Role;
 use Hyperf\Context\Context;
 
@@ -70,15 +69,13 @@ trait UserAdminActionTrail
     /**
      * 是否 - 超级管理员.
      *
-     * 检查拥有的角色中是否包含超管角色
+     * 说明：检查拥有的角色中是否包含超管角色
+     * 注意：超管角色状态永远都是开启的，这里不用加状态查询条件
      *
      * @see UserAdminActionTrailTest::testIsAdministrator()
      */
     public function isAdministrator(): bool
     {
-        return $this->roles()
-            ->where(Role::column('status'), Status::ENABLE)
-            ->get()
-            ->contains(fn (Role $role) => $role->isAdministrator());
+        return $this->roles->contains(fn (Role $role) => $role->isAdministrator());
     }
 }

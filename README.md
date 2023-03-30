@@ -407,7 +407,7 @@ php bin/hyperf.php db:seed --path=seeders/DemoSeeder.php # 指定具体文件
 > 1. 通常配置文件：[config/autoload/devtool.php](config/autoload/devtool.php)
 > 2. 特例配置文件：[config/autoload/databases.php](config/autoload/databases.php) `gen:model` 创建模型时是在数据库配置文件
 
-##  4. 发布配置
+##  5. 发布配置
 ```bash
 # 发布 Redis 消息异步队列配置 ( 如果要发布其他组件的配置，直接修改最后的组件名即可 )
 php bin/hyperf.php vendor:publish hyperf/async-queue

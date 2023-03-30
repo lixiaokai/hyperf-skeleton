@@ -10,7 +10,9 @@
 - 多平台短信发送服务
 - 多平台文件上传服务
 
-后台功能：
+总后台功能：
+
+说明：总后台为单租户模式，锁死租户 `id = 1` ( 配置 [config/autoload/tenant.php](config/autoload/tenant.php) )
 
 - 公共 ( 无需登录 )
   - 用户登录
@@ -83,9 +85,9 @@ Dockerfile 的各个版本： [hyperf/hyperf-docker](https://github.com/hyperf/h
 > 1. swoole 4.8.x 需要 php7.2 +
 > 2. swoole 5.x.x 需要 php8.0 +
 
-# 三、安装或更新依赖
+# 三、安装或更新依赖、数据库表和基础数据
 
-> 首次执行如下 2 选 1 命令即可，以后如果需要更新依赖则执行更新命令即可
+## 1. 安装获更新依赖，以后如果需要更新依赖则执行更新命令即可
 
 ```bash
 # 安装依赖 ( 默认 php 版本 8.0.x )
@@ -120,6 +122,13 @@ Hyperf 自从 2.0 开始，需要使用到 composer 生成的 class_map，这就
 }
 ```
 
+## 2. 数据库迁移：
+
+```bash
+# 初始化数据表和基础数据
+# 账号: admin 密码: 123456
+php bin/hyperf.php migrate
+```
 
 # 四、常见问题
 
@@ -335,10 +344,14 @@ php bin/hyperf.php gen:aspect DemoAspect # 首字母大写
 php bin/hyperf.php gen:command DemoPermissions # 首字母大写
 
 # 生成：迁移
-# --create 创建表
-# --table 修改表
-php bin/hyperf.php gen:migration create_users_table --create=user
-php bin/hyperf.php gen:migration update_users_table --table=user
+# 文档：https://hyperf.wiki/3.0/#/zh-cn/db/migration
+php bin/hyperf.php gen:migration create_users_table --create=user # --create 创建表
+php bin/hyperf.php gen:migration update_users_table --table=user  # --table 修改表
+php bin/hyperf.php migrate                   # 运行
+php bin/hyperf.php migrate:rollback          # 回滚
+php bin/hyperf.php migrate:rollback --step=2 # 回滚最近的 2 次迁移
+php bin/hyperf.php migrate:reset             # 回滚所有迁移
+php bin/hyperf.php migrate:refresh           # 回滚并迁移 ( 高效重建迁移 )
 
 # 生成：进程
 php bin/hyperf.php gen:process DemoProcess # 首字母大写
@@ -351,7 +364,14 @@ php bin/hyperf.php gen:amqp-producer DemoProducer # 首字母大写 ( 生产者 
 php bin/hyperf.php gen:amqp-consumer DemoConsumer # 首字母大写 ( 消费者 )
 ```
 
-## 3. 执行数据填充
+## 3. 自定义命令
+
+```bash
+# 权限收集 ( 可重复执行 )
+php bin/hyperf.php collect:permissions
+```
+
+## 4. 执行数据填充
 ```bash
 php bin/hyperf.php db:seed --path=seeders/DemoSeeder.php # 指定具体文件
 ```

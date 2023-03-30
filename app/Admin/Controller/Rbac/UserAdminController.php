@@ -8,7 +8,6 @@ use App\Admin\Collection\Rbac\UserAdminCollection;
 use App\Admin\Middleware\AuthMiddleware;
 use App\Admin\Request\Rbac\UserAdminRequest;
 use App\Admin\Resource\Rbac\UserAdminResource;
-use Core\Constants\AppId;
 use Core\Constants\ContextKey;
 use Core\Controller\AbstractController;
 use Core\Request\SearchRequest;

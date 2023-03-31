@@ -18,6 +18,8 @@ Hyperf 3.0.x 中台基础骨架
 
 说明：总后台为单租户模式，锁死租户 `id = 1` ( 配置 [config/autoload/tenant.php](config/autoload/tenant.php) )
 
+[接口文档](https://console-docs.apipost.cn/preview/43be93cdd14fb944/383cf50523192a4a)
+
 - 公共 ( 无需登录 )
   - 用户登录
     - [x] **手机号+密码** 登录 ( 登录错误次数限制 )

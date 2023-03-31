@@ -10,6 +10,9 @@ Hyperf 3.0.x 中台基础骨架
 - 多平台短信发送服务
 - 多平台文件上传服务
 - 数据表导入导出服务
+- Hyperf 自身秒级定时任务 ( 不用通过 Linux 的 crontab 命令实现 )
+- Hyperf 自身 Redis 实现延时消息队列
+- 等等
 
 总后台功能：
 
@@ -146,7 +149,11 @@ Hyperf 自从 2.0 开始，需要使用到 composer 生成的 class_map，这就
 }
 ```
 
-## 2. 数据库迁移：
+## 2. 配置 .env
+
+复制 [.env.example](.env.example) 并重命名为 `.env`，然后配置好数据库和 Redis 等
+
+## 3. 数据库迁移：
 
 ```bash
 # 初始化数据表和基础数据
@@ -222,6 +229,8 @@ namespace PHPSTORM_META {
 ![PhpStorm 自动化单元测试配置](doc/res/testConfig.png)
 
 步骤 1：如上图，指定 PHPUnit 库路径并保存即可
+
+注意：该 [bin/co-phpunit](bin/co-phpunit) 拷贝自 [vendor/bin/co-phpunit](vendor/bin/co-phpunit)，并做了一些修改才能兼容，切需要放在根 `bin` 目录下
 
 ![PhpStorm 快速创建单元测试](doc/res/testCreate.png)
 

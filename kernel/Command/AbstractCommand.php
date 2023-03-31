@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Kernel\Command;
 
 use Hyperf\Command\Command as HyperfCommand;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * 命令行 - 抽象基类.
@@ -14,7 +13,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 abstract class AbstractCommand extends HyperfCommand
 {
-    protected Stopwatch $stopwatch;
+    protected float $startTime;
 
     public function __construct(string $name = null)
     {
@@ -34,8 +33,7 @@ abstract class AbstractCommand extends HyperfCommand
      */
     protected function _timerStart()
     {
-        $this->stopwatch = new Stopwatch();
-        $this->stopwatch->start(__CLASS__);
+        $this->startTime = microtime(true);
     }
 
     /**
@@ -43,10 +41,10 @@ abstract class AbstractCommand extends HyperfCommand
      */
     protected function _timerStop()
     {
-        $stopwatchEvent = $this->stopwatch->stop(__CLASS__);
-        $duration = $stopwatchEvent->getDuration() / 1000; // 执行时间
-        $memory = $stopwatchEvent->getMemory() / 1024 / 1024; // 消耗内存
+        $endTime = microtime(true);
+        $seconds = round($endTime - $this->startTime, 3);
+        $memoryUsage = round(memory_get_usage() / 1024 / 1024, 2);
 
-        $this->info("耗时: {$duration} S | 消耗内存: {$memory} MB");
+        $this->info("执行完毕 ( 耗时: {$seconds}s | 消耗内存: {$memoryUsage}MB )");
     }
 }

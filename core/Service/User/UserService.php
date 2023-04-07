@@ -53,6 +53,22 @@ class UserService extends AbstractService
     }
 
     /**
+     * 用户 - 详情 ( 根据用户名 ).
+     */
+    public function getByUsername(string $username): User
+    {
+        return $this->repo->getByUsername($username);
+    }
+
+    /**
+     * 用户 - 详情 ( 根据邮箱 ).
+     */
+    public function getByEmail(string $email): User
+    {
+        return $this->repo->getByEmail($email);
+    }
+
+    /**
      * 用户 - 创建.
      */
     public function create(array $data): User

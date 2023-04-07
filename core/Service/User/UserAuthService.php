@@ -2,6 +2,7 @@
 
 namespace Core\Service\User;
 
+use Core\Constants\AccountType;
 use Core\Constants\CaptchaType;
 use Core\Constants\ContextKey;
 use Core\Contract\UserInterface;
@@ -22,11 +23,18 @@ class UserAuthService extends AbstractService
     /**
      * 用户 - 账号登录.
      *
-     * 方式：手机号 + 密码
+     * 方式：手机号|账号|邮箱 + 密码
+     *
+     * @param string $accountType 账号类型 ( @see AccountType::class )
      */
-    public function passwordLogin(string $phone, string $password, int $tenantId, string $appId): UserInterface
+    public function passwordLogin(string $account, string $password, string $accountType, int $tenantId, string $appId): UserInterface
     {
-        $user = $this->userService->getByPhone($phone);
+        $user = match ($accountType) {
+            AccountType::EMAIL => $this->userService->getByEmail($account),
+            AccountType::PHONE => $this->userService->getByPhone($account),
+            default => $this->userService->getByUsername($account),
+        };
+
         if ($user->isDisable()) {
             throw new BusinessException('基础账号已禁用');
         }

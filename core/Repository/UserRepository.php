@@ -28,7 +28,25 @@ class UserRepository extends AbstractRepository
         try {
             return $this->modelClass::where('phone', $phone)->firstOrFail();
         } catch (ModelNotFoundException) {
-            throw new NotFoundException('基础用户不存在');
+            throw new NotFoundException('用户不存在');
+        }
+    }
+
+    public function getByUsername(string $username): Model|User
+    {
+        try {
+            return $this->modelClass::where('username', $username)->firstOrFail();
+        } catch (ModelNotFoundException) {
+            throw new NotFoundException('用户不存在');
+        }
+    }
+
+    public function getByEmail(string $email): Model|User
+    {
+        try {
+            return $this->modelClass::where('email', $email)->firstOrFail();
+        } catch (ModelNotFoundException) {
+            throw new NotFoundException('用户不存在');
         }
     }
 

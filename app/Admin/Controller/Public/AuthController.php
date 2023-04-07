@@ -34,15 +34,15 @@ class AuthController extends AbstractController
     /**
      * 账号 - 登录.
      *
-     * 方式：手机号 + 密码
+     * 方式：手机号|账号|邮箱 + 密码
      */
-    #[PostMapping('account-login'), LoginLimit(id: 'phone', prefix: AppId::ADMIN . ':account')]
+    #[PostMapping('account-login'), LoginLimit(id: 'account', prefix: AppId::ADMIN . ':account')]
     public function accountLogin(AccountLoginRequest $request): ResponseInterface
     {
-        ['phone' => $phone, 'password' => $password] = $request->validated();
+        ['account' => $account, 'password' => $password] = $request->validated();
         $appId = AppId::ADMIN;
         $tenantId = config('tenant.admin.id');
-        $user = $this->userAdminAuthService->passwordLogin($phone, $password, $tenantId, $appId);
+        $user = $this->userAdminAuthService->accountLogin($account, $password, $tenantId, $appId);
 
         return LoginResource::make($user);
     }

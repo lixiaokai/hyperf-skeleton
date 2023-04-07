@@ -12,7 +12,7 @@ class AccountLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => ['bail', 'required', 'mobile'],
+            'account' => ['bail', 'required', 'string', 'min:3', 'max:50'],
             'password' => ['bail', 'required', 'min:6'],
         ];
     }
@@ -20,7 +20,7 @@ class AccountLoginRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'phone' => '手机号',
+            'account' => '账号',
             'password' => '密码',
         ];
     }

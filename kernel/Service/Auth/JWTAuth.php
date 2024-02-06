@@ -24,12 +24,7 @@ class JWTAuth
      */
     public static function uid(): int
     {
-        static $uid = null;
-        if ($uid === null) {
-            $uid = JWTAuth::decode(JWTUtil::getRequestToken())->uid;
-        }
-
-        return $uid;
+        return JWTAuth::decode(JWTUtil::getRequestToken())->uid;
     }
 
     /**

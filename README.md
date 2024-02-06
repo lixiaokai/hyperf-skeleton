@@ -423,3 +423,44 @@ php bin/hyperf.php db:seed --path=seeders/DemoSeeder.php # 指定具体文件
 # 发布 Redis 消息异步队列配置 ( 如果要发布其他组件的配置，直接修改最后的组件名即可 )
 php bin/hyperf.php vendor:publish hyperf/async-queue
 ```
+# 九、注意事项
+
+## 1. 函数中尽量不要使用 static 去定义变量
+
+```php
+// JWTAuth.php
+class JWTAuth
+{
+    /**
+     * 获取 - 请求 UID.
+     */
+    public static function uid(): int
+    {
+        // 例如这里使用了 static 去定义变量为静态变量，结果导致改值永远不改变
+        // 这是因为 hyperf 是永驻内存的，第一次运行时则把该信息写入了内存，后面除非重启 hyperf 服务
+        // 否则每次取到的值都是第一次运行时的值
+        static $uid = null;
+        if ($uid === null) {
+            $uid = JWTAuth::decode(JWTUtil::getRequestToken())->uid;
+        }
+        
+        return $uid;
+    }
+}
+```
+
+正确做法是，不使用 static 去定义变量 ( 如果真要使用，需要具体分析应用场景 ) ，改成如下：
+
+```php
+// JWTAuth.php
+class JWTAuth
+{
+    /**
+     * 获取 - 请求 UID.
+     */
+    public static function uid(): int
+    {
+        return return JWTAuth::decode(JWTUtil::getRequestToken())->uid;;
+    }
+}
+```

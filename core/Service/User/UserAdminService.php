@@ -35,7 +35,7 @@ class UserAdminService extends AbstractService
     public function search(array $searchParams = []): PaginatorInterface
     {
         $query = $this->repo->getQuery()
-            ->with('user')
+            ->with(['user', 'roles'])
             ->orderByDesc('id');
 
         return $this->repo->search($searchParams, $query);

@@ -33,6 +33,7 @@
         "hyperf/resource": "~3.0.0",
         "hyperf/validation": "~3.0.0",
         "overtrue/easy-sms": "^2.4",
+        "overtrue/wechat": "^5.0",
         "phpdocumentor/reflection-docblock": "^5.3",
         "yadakhov/insert-on-duplicate-key": "^1.3"
     },
